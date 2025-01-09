@@ -8,7 +8,7 @@
   - [Licensing](#licensing)
   <!--toc:end-->
 
-This is the cappuccino language project.
+This is the cappuchin programming language project.
 
 ## Building
 
