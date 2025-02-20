@@ -1,0 +1,24 @@
+{
+    $schema: "https://docs.renovatebot.com/renovate-schema.json",
+    automergeType: "pr",
+    patch: {
+        automerge: true
+    },
+    minor: {
+        automerge: true
+    },
+    extends: [
+        "config:best-practices",
+        ":dependencyDashboard",
+        ":enableVulnerabilityAlerts",
+        ":rebaseStalePrs",
+        ":semanticCommits",
+        ":semanticPrefixChore",
+        ":separateMajorReleases",
+        ":prImmediately"
+    ],
+    prConcurrentLimit: 0,
+    lockFileMaintenance: {
+        enabled: true
+    }
+}
