@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: classabbyamp/treeless-checkout-action@v1
+        uses: classabbyamp/treeless-checkout-action@bd3615a6e9d5546151e17d72193eea0d6f297398 # v1
 
       - name: 📐 Check clang-format
         run: cmake -D FORMAT_COMMAND=clang-format -P cmake/lint.cmake
@@ -204,7 +204,7 @@ jobs:
 
       - name: Checkout (non macos)
         if: ${{ ! startsWith(matrix.toolchain.runs_on, 'macos') }}
-        uses: classabbyamp/treeless-checkout-action@v1
+        uses: classabbyamp/treeless-checkout-action@bd3615a6e9d5546151e17d72193eea0d6f297398 # v1
 
       - name: Checkout (macos)
         if: ${{ startsWith(matrix.toolchain.runs_on, 'macos') }}
@@ -229,7 +229,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: classabbyamp/treeless-checkout-action@v1
+        uses: classabbyamp/treeless-checkout-action@bd3615a6e9d5546151e17d72193eea0d6f297398 # v1
 
       - name: Configure
         run: >-
