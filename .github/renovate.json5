@@ -32,7 +32,7 @@
                 "container:\\s*\"?(?<depName>[^\"]+):(?<currentValue>[^\"]+)\"?"
             ],
             depNameTemplate: "{{depName}}",
-            versioning: "docker",
+            versioningTemplate: "docker",
         }
     ]
 }
