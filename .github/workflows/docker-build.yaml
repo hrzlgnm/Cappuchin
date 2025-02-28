@@ -31,16 +31,16 @@ jobs:
           if git rev-parse HEAD^ >/dev/null 2>&1; then
             CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep '^.github/docker/.*/Dockerfile' | cut -d '/' -f3 | uniq)
           else
-            CHANGED_FILES=$(git ls-tree --name-only HEAD .github/docker | cut -d '/' -f3 | uniq)
+            CHANGED_FILES=$(git ls-tree --name-only HEAD .github/docker/* | cut -d '/' -f3 | uniq)
           fi
 
           echo "PACKAGES=$(echo "$CHANGED_FILES" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
 
-      - name: Force rebuild all if triggered by workflow_dispatch
+      - name: Force build all if triggered by workflow_dispatch
         if: github.event_name == 'workflow_dispatch'
         run: |
-          CHANGED_FILES=$(git ls-tree --name-only HEAD .github/docker | cut -d '/' -f3 | uniq)
-          echo "PACKAGES=$(echo "$CHANGED_FILES" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
+          DIRS=$(git ls-tree --name-only HEAD .github/docker/* | cut -d '/' -f3 | uniq)
+          echo "PACKAGES=$(echo "$DIRS" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
 
       - name: Build and Push Docker Images
         if: env.PACKAGES != '[]'
