@@ -11,7 +11,6 @@ RUN \
     libc++abi-13-dev \
     libc6-dev \
     libstdc++-11-dev \
-    ninja-build \
-    python3 && \
+    ninja-build && \
     rm -rf /var/lib/apt/lists/*
 LABEL org.opencontainers.image.source="https://github.com/hrzlgnm/Cappuchin"
