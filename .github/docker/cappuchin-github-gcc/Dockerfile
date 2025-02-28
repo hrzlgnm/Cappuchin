@@ -3,5 +3,4 @@ RUN xbps-install -Syu || xbps-install -yu xbps \
     && xbps-install -yu \
     && xbps-install -y bash git cmake ninja gcc libsanitizer-devel make \
     && xbps-remove -Ooy
-
 LABEL org.opencontainers.image.source="https://github.com/hrzlgnm/Cappuchin"
