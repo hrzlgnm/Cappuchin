@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # Fetch at least the last 2 commits for git diff to work
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
@@ -24,7 +26,13 @@ jobs:
       - name: Detect Changed Dockerfiles
         id: changes
         run: |
-          echo "PACKAGES=$(git diff --name-only HEAD^ HEAD | grep '^.github/docker/.*/Dockerfile' | cut -d '/' -f3 | uniq | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
+          if git rev-parse HEAD^ >/dev/null 2>&1; then
+            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep '^.github/docker/.*/Dockerfile' | cut -d '/' -f3 | uniq)
+          else
+            CHANGED_FILES=$(git ls-tree --name-only HEAD .github/docker | cut -d '/' -f3 | uniq)  # List all Dockerfiles on first commit
+          fi
+
+          echo "PACKAGES=$(echo "$CHANGED_FILES" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
 
       - name: Build and Push Docker Images
         if: env.PACKAGES != '[]'
