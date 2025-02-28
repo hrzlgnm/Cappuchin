@@ -4,4 +4,5 @@ RUN xbps-install -Syu || xbps-install -yu xbps \
     && xbps-install -y bash git cmake clang ninja clang clang-tools-extra cppcheck wget tar gzip jq \
     && xbps-remove -Ooy
 
+LABEL org.opencontainers.image.source="https://github.com/hrzlgnm/Cappuchin"
 
