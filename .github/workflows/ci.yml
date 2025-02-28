@@ -176,7 +176,7 @@ jobs:
               WARNINGS: "",
             }
     runs-on: ${{ matrix.toolchain.runs_on }}
-    container: ${{ matrix.toolchain.container }}
+    container: ${{ matrix.toolchain.container_image }}
     env:
       ASAN_OPTIONS: ${{ matrix.toolchain.ASAN_OPTIONS }}
       CMAKE_BUILD_TYPE: ${{ matrix.toolchain.CMAKE_BUILD_TYPE }}
