@@ -33,6 +33,7 @@
             ],
             depNameTemplate: "{{depName}}",
             versioningTemplate: "docker",
+            datasourceTemplate: "docker",
         }
     ]
 }
