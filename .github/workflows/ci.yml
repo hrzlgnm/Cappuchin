@@ -17,7 +17,7 @@ jobs:
   Lint:
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1"
+      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:780101beda9b69cfffea52f77985179f179900bbfce0a4d9a5249a21a47491de"
 
     steps:
       - name: Checkout
@@ -225,7 +225,7 @@ jobs:
     needs: [Lint]
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1"
+      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:780101beda9b69cfffea52f77985179f179900bbfce0a4d9a5249a21a47491de"
 
     steps:
       - name: Checkout
