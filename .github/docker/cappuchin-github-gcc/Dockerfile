@@ -1,4 +1,4 @@
-FROM ghcr.io/void-linux/void-glibc@sha256:804626633255f0a58a5433b313b9215576a8e028c76b64dd27007bcf271bb9f1
+FROM ghcr.io/void-linux/void-glibc@sha256:d1008b3b77371fc60bb32f40cd2553399f933ec61a388bbaed5636afe7fb6e94
 RUN xbps-install -Syu || xbps-install -yu xbps \
     && xbps-install -yu \
     && xbps-install -y bash git cmake ninja gcc libsanitizer-devel make \
