@@ -21,17 +21,4 @@
     lockFileMaintenance: {
         enabled: true
     },
-    customManagers: [
-        {
-            matchStringsStrategy: "any",
-            customType: "regex",
-            fileMatch: [
-                "^\\.github/workflows/.*\\.yml$"
-            ],
-            matchStrings: [
-                "container:\\s*\"?(?<depName>[^\"]+):(?<currentValue>[^\"]+)\"?"
-            ],
-            datasourceTemplate: "docker",
-        }
-    ]
 }
