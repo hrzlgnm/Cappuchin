@@ -20,5 +20,19 @@
     prConcurrentLimit: 0,
     lockFileMaintenance: {
         enabled: true
-    }
+    },
+    customManagers: [
+        {
+            matchStringsStrategy: "any",
+            customType: "regex",
+            fileMatch: [
+                "^\\.github/workflows/.*\\.yml$"
+            ],
+            matchStrings: [
+                "container:\\s*\"?(?<depName>[^\"]+):(?<currentValue>[^\"]+)\"?"
+            ],
+            depNameTemplate: "{{depName}}",
+            versioning: "docker",
+        }
+    ]
 }
