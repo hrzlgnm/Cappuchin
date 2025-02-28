@@ -31,8 +31,6 @@
             matchStrings: [
                 "container:\\s*\"?(?<depName>[^\"]+):(?<currentValue>[^\"]+)\"?"
             ],
-            depNameTemplate: "{{depName}}",
-            versioningTemplate: "docker",
             datasourceTemplate: "docker",
         }
     ]
