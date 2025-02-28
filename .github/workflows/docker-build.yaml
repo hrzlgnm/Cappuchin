@@ -46,8 +46,10 @@ jobs:
         if: env.PACKAGES != '[]'
         run: |
           for PACKAGE in $(echo $PACKAGES | jq -r '.[]'); do
-            IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/$PACKAGE:v1"
-            echo "Building and pushing $IMAGE_NAME"
-            docker build -t $IMAGE_NAME .github/docker/$PACKAGE
-            docker push $IMAGE_NAME
+            IMAGE_NAME_V1="ghcr.io/${{ github.repository_owner }}/$PACKAGE:v1"
+            IMAGE_NAME_LATEST="ghcr.io/${{ github.repository_owner }}/$PACKAGE:latest"
+            echo "Building and pushing $IMAGE_NAME_V1 and $IMAGE_NAME_LATEST"
+            docker build -t "$IMAGE_NAME_V1" -t "$IMAGE_NAME_LATEST" ".github/docker/$PACKAGE"
+            docker push "$IMAGE_NAME_V1"
+            docker push "$IMAGE_NAME_LATEST"
           done
