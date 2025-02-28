@@ -31,7 +31,7 @@
             datasourceTemplate: "docker",
             versioningTemplate: "docker",
             matchStrings: [
-                'image: "(?<depName>\\S+?):(?<currentValue>\\S+)"',
+                'container_image: "(?<depName>\\S+?):(?<currentValue>\\S+)"',
             ],
         }
     ]
