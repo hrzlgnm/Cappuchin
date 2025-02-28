@@ -7,7 +7,8 @@ on:
     branches:
       - main
   workflow_dispatch:
-
+  schedule:
+    - cron: "0 0 1 * *"
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -25,7 +26,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
       - name: Detect Changed Dockerfiles
-        if: github.event_name != 'workflow_dispatch'
+        if: github.event_name == 'push'
         id: changes
         run: |
           if git rev-parse HEAD^ >/dev/null 2>&1; then
@@ -36,8 +37,8 @@ jobs:
 
           echo "PACKAGES=$(echo "$CHANGED_FILES" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
 
-      - name: Force build all if triggered by workflow_dispatch
-        if: github.event_name == 'workflow_dispatch'
+      - name: Force build all if triggered by workflow_dispatch or schedule
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: |
           DIRS=$(git ls-tree --name-only HEAD .github/docker/* | cut -d '/' -f3 | uniq)
           echo "PACKAGES=$(echo "$DIRS" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
