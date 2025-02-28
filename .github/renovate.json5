@@ -36,4 +36,11 @@
             ],
         }
     ]
+    packageRules: [
+    {
+        matchDatasources: ["docker"],
+        pinDigests: true,
+        automerge: true,
+    }
+  ]
 }
