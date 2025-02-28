@@ -28,6 +28,7 @@
             fileMatch: [
                 "^\\.github/workflows/.*\\.yml$"
             ],
+            depTypeTemplate: "container",
             datasourceTemplate: "docker",
             versioningTemplate: "docker",
             matchStrings: [
