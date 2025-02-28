@@ -15,3 +15,5 @@ RUN \
     ninja-build \
     python3 && \
     rm -rf /var/lib/apt/lists/*
+
+LABEL org.opencontainers.image.source="https://github.com/hrzlgnm/Cappuchin"
