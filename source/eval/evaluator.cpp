@@ -39,7 +39,7 @@
 #include "environment.hpp"
 
 evaluator::evaluator(environment* existing_env)
-    : m_env {existing_env != nullptr ? existing_env : make<environment>()}
+    : m_env {existing_env != nullptr ? existing_env : allocate<environment>()}
 {
 }
 
@@ -59,7 +59,7 @@ void evaluator::visit(const array_literal& expr)
         }
         arr.push_back(m_result);
     }
-    m_result = make<array_object>(std::move(arr));
+    m_result = allocate<array_object>(std::move(arr));
 }
 
 void evaluator::visit(const assign_expression& expr)
@@ -172,7 +172,7 @@ void evaluator::visit(const hash_literal& expr)
         }
         result.insert({eval_key->as<hashable>()->hash_key(), eval_val});
     }
-    m_result = make<hash_object>(std::move(result));
+    m_result = allocate<hash_object>(std::move(result));
 }
 
 void evaluator::visit(const identifier& expr)
@@ -263,7 +263,7 @@ void evaluator::visit(const index_expression& expr)
             m_result = null();
             return;
         }
-        m_result = make<string_object>(str.substr(static_cast<std::size_t>(index), 1));
+        m_result = allocate<string_object>(str.substr(static_cast<std::size_t>(index), 1));
         return;
     }
 
@@ -286,12 +286,12 @@ void evaluator::visit(const index_expression& expr)
 
 void evaluator::visit(const integer_literal& expr)
 {
-    m_result = make<integer_object>(expr.value);
+    m_result = allocate<integer_object>(expr.value);
 }
 
 void evaluator::visit(const decimal_literal& expr)
 {
-    m_result = make<decimal_object>(expr.value);
+    m_result = allocate<decimal_object>(expr.value);
 }
 
 void evaluator::visit(const program& expr)
@@ -331,7 +331,7 @@ void evaluator::visit(const return_statement& expr)
         if (evaluated->is_error()) {
             return;
         }
-        m_result = make<return_value_object>(evaluated);
+        m_result = allocate<return_value_object>(evaluated);
         return;
     }
     m_result = null();
@@ -368,7 +368,7 @@ void evaluator::visit(const block_statement& expr)
 
 void evaluator::visit(const string_literal& expr)
 {
-    m_result = make<string_object>(expr.value);
+    m_result = allocate<string_object>(expr.value);
 }
 
 void evaluator::visit(const unary_expression& expr)
@@ -382,10 +382,10 @@ void evaluator::visit(const unary_expression& expr)
     switch (expr.op) {
         case minus:
             if (evaluated_value->is(object::object_type::integer)) {
-                m_result = make<integer_object>(-evaluated_value->as<integer_object>()->value);
+                m_result = allocate<integer_object>(-evaluated_value->as<integer_object>()->value);
                 return;
             } else if (evaluated_value->is(object::object_type::decimal)) {
-                m_result = make<decimal_object>(-evaluated_value->as<decimal_object>()->value);
+                m_result = allocate<decimal_object>(-evaluated_value->as<decimal_object>()->value);
                 return;
             }
             m_result = make_error("unknown operator: -{}", evaluated_value->type());
@@ -415,14 +415,14 @@ void evaluator::visit(const call_expression& expr)
 
 void evaluator::visit(const function_literal& expr)
 {
-    m_result = make<function_object>(expr.parameters, expr.body, m_env);
+    m_result = allocate<function_object>(expr.parameters, expr.body, m_env);
 }
 
 void evaluator::apply_function(const object* function_or_builtin, array_object::value_type&& args)
 {
     if (function_or_builtin->is(object::object_type::function)) {
         const auto* func = function_or_builtin->as<function_object>();
-        auto* locals = make<environment>(func->closure_env);
+        auto* locals = allocate<environment>(func->closure_env);
         for (auto arg_itr = args.begin(); const auto* parameter : func->parameters) {
             locals->set(parameter->value, *(arg_itr++));
         }
@@ -565,7 +565,7 @@ auto run(std::string_view input) -> const object*
     auto [prgrm, _] = check_program(input);
     environment env;
     for (const auto& builtin : builtin::builtins()) {
-        env.set(builtin->name, make<builtin_object>(builtin));
+        env.set(builtin->name, allocate<builtin_object>(builtin));
     }
     evaluator ev(&env);
     auto result = ev.evaluate(prgrm);

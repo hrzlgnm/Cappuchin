@@ -342,7 +342,7 @@ struct error_object final : object
 template<typename... T>
 auto make_error(fmt::format_string<T...> fmt, T&&... args) -> object*
 {
-    return make<error_object>(fmt::format(fmt, std::forward<T>(args)...));
+    return allocate<error_object>(fmt::format(fmt, std::forward<T>(args)...));
 }
 
 struct array_object final : object
