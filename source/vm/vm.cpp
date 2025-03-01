@@ -29,13 +29,13 @@
 
 auto vm::create(bytecode code) -> vm
 {
-    return create_with_state(std::move(code), make<constants>(globals_size));
+    return create_with_state(std::move(code), allocate<constants>(globals_size));
 }
 
 auto vm::create_with_state(bytecode code, constants* globals) -> vm
 {
-    auto* main_fn = make<compiled_function_object>(std::move(code.instrs), 0, 0);
-    auto* main_closure = make<closure_object>(main_fn);
+    auto* main_fn = allocate<compiled_function_object>(std::move(code.instrs), 0, 0);
+    auto* main_closure = allocate<closure_object>(main_fn);
     const frame main_frame {.cl = main_closure};
     frames frms;
     frms[0] = main_frame;
@@ -200,7 +200,7 @@ auto vm::run() -> void
                 current_frame().ip += 1;
                 const auto builtin_index = instr[ip + 1UL];
                 const auto* const builtin = builtin::builtins()[builtin_index];
-                push(make<builtin_object>(builtin));
+                push(allocate<builtin_object>(builtin));
             } break;
             case opcodes::set_free: {
                 current_frame().ip += 1;
@@ -321,11 +321,11 @@ auto vm::exec_minus() -> void
 {
     const auto* operand = pop();
     if (operand->is(object::object_type::integer)) {
-        push(make<integer_object>(-operand->as<integer_object>()->value));
+        push(allocate<integer_object>(-operand->as<integer_object>()->value));
         return;
     }
     if (operand->is(object::object_type::decimal)) {
-        push(make<decimal_object>(-operand->as<decimal_object>()->value));
+        push(allocate<decimal_object>(-operand->as<decimal_object>()->value));
         return;
     }
 
@@ -366,7 +366,7 @@ auto vm::build_array(int start, int end) const -> const object*
     for (auto idx = start; idx < end; idx++) {
         arr.push_back(m_stack[idx]);
     }
-    return make<array_object>(std::move(arr));
+    return allocate<array_object>(std::move(arr));
 }
 
 auto vm::build_hash(int start, int end) const -> const object*
@@ -377,7 +377,7 @@ auto vm::build_hash(int start, int end) const -> const object*
         const auto* val = m_stack[idx + 1];
         hsh[key->as<hashable>()->hash_key()] = val;
     }
-    return make<hash_object>(std::move(hsh));
+    return allocate<hash_object>(std::move(hsh));
 }
 
 namespace
@@ -411,7 +411,7 @@ auto vm::exec_index(const object* left, const object* index) -> void
             push(null());
             return;
         }
-        push(make<string_object>(left->as<string_object>()->value.substr(static_cast<std::size_t>(idx), 1)));
+        push(allocate<string_object>(left->as<string_object>()->value.substr(static_cast<std::size_t>(idx), 1)));
         return;
     }
     if (left->is(hash) && index->is_hashable()) {
@@ -479,7 +479,7 @@ auto vm::push_closure(uint16_t const_idx, uint8_t num_free) -> void
         free.push_back(m_stack[m_sp - num_free + i]);
     }
     m_sp -= num_free;
-    push(make<closure_object>(constant->as<compiled_function_object>(), free));
+    push(allocate<closure_object>(constant->as<compiled_function_object>(), free));
 }
 
 namespace

@@ -43,7 +43,7 @@ class gc
 
 template<typename T, typename... Args>
     requires std::derived_from<T, struct object>
-auto make(Args&&... args) -> T*
+auto allocate(Args&&... args) -> T*
 {
     T* p = new T(std::forward<Args>(args)...);
     gc<object>::track(p);
@@ -52,7 +52,7 @@ auto make(Args&&... args) -> T*
 
 template<typename T, typename... Args>
     requires std::derived_from<T, struct expression>
-auto make(Args&&... args) -> T*
+auto allocate(Args&&... args) -> T*
 {
     T* p = new T(std::forward<Args>(args)...);
     gc<expression>::track(p);
@@ -60,7 +60,7 @@ auto make(Args&&... args) -> T*
 }
 
 template<typename T, typename... Args>
-auto make(Args&&... args) -> T*
+auto allocate(Args&&... args) -> T*
 {
     T* p = new T(std::forward<Args>(args)...);
     gc<T>::track(p);

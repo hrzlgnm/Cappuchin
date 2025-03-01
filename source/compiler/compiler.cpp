@@ -48,7 +48,7 @@ auto compiler::create() -> compiler
     for (auto idx = 0; const auto& builtin : builtin::builtins()) {
         symbols->define_builtin(idx++, builtin->name);
     }
-    return {make<constants>(), symbols};
+    return {allocate<constants>(), symbols};
 }
 
 compiler::compiler(constants* consts, symbol_table* symbols)
@@ -389,7 +389,7 @@ void compiler::visit(const while_statement& expr)
     for (const auto& sym : free) {
         load_symbol(sym);
     }
-    auto* cmpl = make<compiled_function_object>(std::move(instrs), num_locals, 0);
+    auto* cmpl = allocate<compiled_function_object>(std::move(instrs), num_locals, 0);
     cmpl->inside_loop = true;
     auto function_index = add_constant(cmpl);
     emit(closure, {function_index, free.size()});
@@ -415,12 +415,12 @@ void compiler::visit(const index_expression& expr)
 
 void compiler::visit(const integer_literal& expr)
 {
-    emit(opcodes::constant, add_constant(make<integer_object>(expr.value)));
+    emit(opcodes::constant, add_constant(allocate<integer_object>(expr.value)));
 }
 
 void compiler::visit(const decimal_literal& expr)
 {
-    emit(opcodes::constant, add_constant(make<decimal_object>(expr.value)));
+    emit(opcodes::constant, add_constant(allocate<decimal_object>(expr.value)));
 }
 
 void compiler::visit(const program& expr)
@@ -477,7 +477,7 @@ void compiler::visit(const block_statement& expr)
 
 void compiler::visit(const string_literal& expr)
 {
-    emit(opcodes::constant, add_constant(make<string_object>(expr.value)));
+    emit(opcodes::constant, add_constant(allocate<string_object>(expr.value)));
 }
 
 void compiler::visit(const unary_expression& expr)
@@ -520,7 +520,7 @@ void compiler::visit(const function_literal& expr)
         load_symbol(sym);
     }
     auto function_index = add_constant(
-        make<compiled_function_object>(std::move(instrs), num_locals, static_cast<int>(expr.parameters.size())));
+        allocate<compiled_function_object>(std::move(instrs), num_locals, static_cast<int>(expr.parameters.size())));
     emit(closure, {function_index, free.size()});
 }
 

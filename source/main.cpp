@@ -208,9 +208,9 @@ auto run_file(const command_line_args& opts) -> int
             std::cout << result->inspect() << '\n';
         }
     } else {
-        auto* global_env = make<environment>();
+        auto* global_env = allocate<environment>();
         for (const auto& builtin : builtin::builtins()) {
-            global_env->set(builtin->name, make<builtin_object>(builtin));
+            global_env->set(builtin->name, allocate<builtin_object>(builtin));
         }
         evaluator ev {global_env};
         const auto* result = ev.evaluate(prgrm);
@@ -229,13 +229,13 @@ auto run_repl(const command_line_args& opts) -> int
     std::cout << "Cappuchin programming language using engine: " << opts.mode << ".\n";
     std::cout << get_build_type() << " built with " << get_compiler_identifier() << '\n';
     std::cout << "Feel free to type in commands\n";
-    auto* global_env = opts.mode == engine::eval ? make<environment>() : nullptr;
+    auto* global_env = opts.mode == engine::eval ? allocate<environment>() : nullptr;
     auto* symbols = opts.mode == engine::vm ? symbol_table::create() : nullptr;
     constants consts;
     constants globals(globals_size);
     for (auto idx = 0; const auto& builtin : builtin::builtins()) {
         if (global_env != nullptr) {
-            global_env->set(builtin->name, make<builtin_object>(builtin));
+            global_env->set(builtin->name, allocate<builtin_object>(builtin));
         }
         if (symbols != nullptr) {
             symbols->define_builtin(idx, builtin->name);

@@ -103,7 +103,7 @@ auto multiply_sequence_helper(const T* source, integer_object::value_type count)
     for (integer_object::value_type i = 0; i < count; i++) {
         std::copy(source->value.cbegin(), source->value.cend(), std::back_inserter(target));
     }
-    return make<T>(std::move(target));
+    return allocate<T>(std::move(target));
 }
 
 auto math_mod(integer_object::value_type lhs, integer_object::value_type rhs) -> integer_object::value_type
@@ -231,7 +231,7 @@ auto string_object::operator>=(const object& other) const -> const object*
 auto string_object::operator+(const object& other) const -> const object*
 {
     if (other.is(string)) {
-        return make<string_object>(value + other.val<string_object>());
+        return allocate<string_object>(value + other.val<string_object>());
     }
     return nullptr;
 }
@@ -291,8 +291,8 @@ auto boolean_object::operator+(const object& other) const -> const object*
         return other + *this;
     }
     if (other.is(boolean)) {
-        return make<integer_object>(value_to<integer_object>()
-                                    + other.as<boolean_object>()->value_to<integer_object>());
+        return allocate<integer_object>(value_to<integer_object>()
+                                        + other.as<boolean_object>()->value_to<integer_object>());
     }
     return nullptr;
 }
@@ -300,14 +300,14 @@ auto boolean_object::operator+(const object& other) const -> const object*
 auto boolean_object::operator-(const object& other) const -> const object*
 {
     if (other.is(integer)) {
-        return make<integer_object>(value_to<integer_object>() - other.val<integer_object>());
+        return allocate<integer_object>(value_to<integer_object>() - other.val<integer_object>());
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(value_to<decimal_object>() - other.val<decimal_object>());
+        return allocate<decimal_object>(value_to<decimal_object>() - other.val<decimal_object>());
     }
     if (other.is(boolean)) {
-        return make<integer_object>(value_to<integer_object>()
-                                    - other.as<boolean_object>()->value_to<integer_object>());
+        return allocate<integer_object>(value_to<integer_object>()
+                                        - other.as<boolean_object>()->value_to<integer_object>());
     }
     return nullptr;
 }
@@ -321,8 +321,8 @@ auto boolean_object::operator*(const object& other) const -> const object*
         return other * *this;
     }
     if (other.is(boolean)) {
-        return make<integer_object>(value_to<integer_object>()
-                                    - other.as<boolean_object>()->value_to<integer_object>());
+        return allocate<integer_object>(value_to<integer_object>()
+                                        - other.as<boolean_object>()->value_to<integer_object>());
     }
     return nullptr;
 }
@@ -334,19 +334,19 @@ auto boolean_object::operator/(const object& other) const -> const object*
         if (other_value == 0) {
             return make_error("division by zero");
         }
-        return make<decimal_object>(value_to<decimal_object>()
-                                    / other.as<integer_object>()->value_to<decimal_object>());
+        return allocate<decimal_object>(value_to<decimal_object>()
+                                        / other.as<integer_object>()->value_to<decimal_object>());
     }
     if (other.is(boolean)) {
         const auto other_value = other.as<boolean_object>()->value_to<integer_object>();
         if (other_value == 0) {
             return make_error("division by zero");
         }
-        return make<decimal_object>(value_to<decimal_object>()
-                                    / other.as<boolean_object>()->value_to<decimal_object>());
+        return allocate<decimal_object>(value_to<decimal_object>()
+                                        / other.as<boolean_object>()->value_to<decimal_object>());
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(value_to<decimal_object>() / other.val<decimal_object>());
+        return allocate<decimal_object>(value_to<decimal_object>() / other.val<decimal_object>());
     }
     return nullptr;
 }
@@ -358,17 +358,17 @@ auto boolean_object::operator%(const object& other) const -> const object*
         if (other_value == 0) {
             return make_error("division by zero");
         }
-        return make<integer_object>(math_mod(value_to<integer_object>(), other_value));
+        return allocate<integer_object>(math_mod(value_to<integer_object>(), other_value));
     }
     if (other.is(boolean)) {
         const auto other_value = other.as<boolean_object>()->value_to<integer_object>();
         if (other_value == 0) {
             return make_error("division by zero");
         }
-        return make<integer_object>(math_mod(value_to<integer_object>(), other_value));
+        return allocate<integer_object>(math_mod(value_to<integer_object>(), other_value));
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(math_mod(value_to<decimal_object>(), other.val<decimal_object>()));
+        return allocate<decimal_object>(math_mod(value_to<decimal_object>(), other.val<decimal_object>()));
     }
     return nullptr;
 }
@@ -376,7 +376,7 @@ auto boolean_object::operator%(const object& other) const -> const object*
 auto boolean_object::operator&(const object& other) const -> const object*
 {
     if (other.is(boolean)) {
-        return make<boolean_object>(value & other.val<boolean_object>());
+        return allocate<boolean_object>(value & other.val<boolean_object>());
     }
     if (other.is(integer)) {
         return other & *this;
@@ -387,7 +387,7 @@ auto boolean_object::operator&(const object& other) const -> const object*
 auto boolean_object::operator|(const object& other) const -> const object*
 {
     if (other.is(boolean)) {
-        return make<boolean_object>(value | other.val<boolean_object>());
+        return allocate<boolean_object>(value | other.val<boolean_object>());
     }
     if (other.is(integer)) {
         return other | *this;
@@ -398,7 +398,7 @@ auto boolean_object::operator|(const object& other) const -> const object*
 auto boolean_object::operator^(const object& other) const -> const object*
 {
     if (other.is(boolean)) {
-        return make<boolean_object>(value ^ other.val<boolean_object>());
+        return allocate<boolean_object>(value ^ other.val<boolean_object>());
     }
     if (other.is(integer)) {
         return other ^ *this;
@@ -409,10 +409,10 @@ auto boolean_object::operator^(const object& other) const -> const object*
 auto boolean_object::operator<<(const object& other) const -> const object*
 {
     if (other.is(boolean)) {
-        return make<integer_object>(value_to<integer_object>() << other.val<boolean_object>());
+        return allocate<integer_object>(value_to<integer_object>() << other.val<boolean_object>());
     }
     if (other.is(integer)) {
-        return make<integer_object>(value_to<integer_object>() << other.val<integer_object>());
+        return allocate<integer_object>(value_to<integer_object>() << other.val<integer_object>());
     }
     return nullptr;
 }
@@ -420,10 +420,10 @@ auto boolean_object::operator<<(const object& other) const -> const object*
 auto boolean_object::operator>>(const object& other) const -> const object*
 {
     if (other.is(boolean)) {
-        return make<integer_object>(value_to<integer_object>() >> other.val<boolean_object>());
+        return allocate<integer_object>(value_to<integer_object>() >> other.val<boolean_object>());
     }
     if (other.is(integer)) {
-        return make<integer_object>(value_to<integer_object>() >> other.val<integer_object>());
+        return allocate<integer_object>(value_to<integer_object>() >> other.val<integer_object>());
     }
     return nullptr;
 }
@@ -469,13 +469,13 @@ auto integer_object::operator>=(const object& other) const -> const object*
 auto integer_object::operator+(const object& other) const -> const object*
 {
     if (other.is(integer)) {
-        return make<integer_object>(value + other.val<integer_object>());
+        return allocate<integer_object>(value + other.val<integer_object>());
     }
     if (other.is(boolean)) {
-        return make<integer_object>(value + other.as<boolean_object>()->value_to<integer_object>());
+        return allocate<integer_object>(value + other.as<boolean_object>()->value_to<integer_object>());
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(other.val<decimal_object>() + value_to<decimal_object>());
+        return allocate<decimal_object>(other.val<decimal_object>() + value_to<decimal_object>());
     }
     return nullptr;
 }
@@ -483,13 +483,13 @@ auto integer_object::operator+(const object& other) const -> const object*
 auto integer_object::operator-(const object& other) const -> const object*
 {
     if (other.is(integer)) {
-        return make<integer_object>(value - other.val<integer_object>());
+        return allocate<integer_object>(value - other.val<integer_object>());
     }
     if (other.is(boolean)) {
-        return make<integer_object>(value - other.as<boolean_object>()->value_to<integer_object>());
+        return allocate<integer_object>(value - other.as<boolean_object>()->value_to<integer_object>());
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(value_to<decimal_object>() - other.val<decimal_object>());
+        return allocate<decimal_object>(value_to<decimal_object>() - other.val<decimal_object>());
     }
     return nullptr;
 }
@@ -497,13 +497,13 @@ auto integer_object::operator-(const object& other) const -> const object*
 auto integer_object::operator*(const object& other) const -> const object*
 {
     if (other.is(integer)) {
-        return make<integer_object>(value * other.val<integer_object>());
+        return allocate<integer_object>(value * other.val<integer_object>());
     }
     if (other.is(boolean)) {
-        return make<integer_object>(value * other.as<boolean_object>()->value_to<integer_object>());
+        return allocate<integer_object>(value * other.as<boolean_object>()->value_to<integer_object>());
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(value_to<decimal_object>() * other.val<decimal_object>());
+        return allocate<decimal_object>(value_to<decimal_object>() * other.val<decimal_object>());
     }
     if (other.is(array)) {
         return multiply_sequence_helper(other.as<array_object>(), value);
@@ -522,19 +522,19 @@ auto integer_object::operator/(const object& other) const -> const object*
         if (other_value == 0) {
             return make_error("division by zero");
         }
-        return make<decimal_object>(value_to<decimal_object>()
-                                    / other.as<integer_object>()->value_to<decimal_object>());
+        return allocate<decimal_object>(value_to<decimal_object>()
+                                        / other.as<integer_object>()->value_to<decimal_object>());
     }
     if (other.is(boolean)) {
         const auto other_value = other.as<boolean_object>()->value_to<integer_object>();
         if (other_value == 0) {
             return make_error("division by zero");
         }
-        return make<decimal_object>(value_to<decimal_object>()
-                                    / other.as<boolean_object>()->value_to<decimal_object>());
+        return allocate<decimal_object>(value_to<decimal_object>()
+                                        / other.as<boolean_object>()->value_to<decimal_object>());
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(value_to<decimal_object>() / other.val<decimal_object>());
+        return allocate<decimal_object>(value_to<decimal_object>() / other.val<decimal_object>());
     }
     return nullptr;
 }
@@ -546,17 +546,17 @@ auto integer_object::operator%(const object& other) const -> const object*
         if (other_value == 0) {
             return make_error("division by zero");
         }
-        return make<integer_object>(math_mod(value, other_value));
+        return allocate<integer_object>(math_mod(value, other_value));
     }
     if (other.is(boolean)) {
         const auto other_value = other.as<boolean_object>()->value_to<integer_object>();
         if (other_value == 0) {
             return make_error("division by zero");
         }
-        return make<integer_object>(math_mod(value, other_value));
+        return allocate<integer_object>(math_mod(value, other_value));
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(math_mod(value_to<decimal_object>(), other.val<decimal_object>()));
+        return allocate<decimal_object>(math_mod(value_to<decimal_object>(), other.val<decimal_object>()));
     }
     return nullptr;
 }
@@ -564,11 +564,11 @@ auto integer_object::operator%(const object& other) const -> const object*
 auto integer_object::operator|(const object& other) const -> const object*
 {
     if (other.is(integer)) {
-        return make<integer_object>(value | other.val<integer_object>());
+        return allocate<integer_object>(value | other.val<integer_object>());
     }
     if (other.is(boolean)) {
         const auto other_value = other.as<boolean_object>()->value_to<integer_object>();
-        return make<integer_object>(value | other_value);
+        return allocate<integer_object>(value | other_value);
     }
     return nullptr;
 }
@@ -576,11 +576,11 @@ auto integer_object::operator|(const object& other) const -> const object*
 auto integer_object::operator^(const object& other) const -> const object*
 {
     if (other.is(integer)) {
-        return make<integer_object>(value ^ other.val<integer_object>());
+        return allocate<integer_object>(value ^ other.val<integer_object>());
     }
     if (other.is(boolean)) {
         const auto other_value = other.as<boolean_object>()->value_to<integer_object>();
-        return make<integer_object>(value ^ other_value);
+        return allocate<integer_object>(value ^ other_value);
     }
     return nullptr;
 }
@@ -588,11 +588,11 @@ auto integer_object::operator^(const object& other) const -> const object*
 auto integer_object::operator<<(const object& other) const -> const object*
 {
     if (other.is(integer)) {
-        return make<integer_object>(value << other.val<integer_object>());
+        return allocate<integer_object>(value << other.val<integer_object>());
     }
     if (other.is(boolean)) {
         const auto other_value = other.as<boolean_object>()->value_to<integer_object>();
-        return make<integer_object>(value << other_value);
+        return allocate<integer_object>(value << other_value);
     }
     return nullptr;
 }
@@ -600,11 +600,11 @@ auto integer_object::operator<<(const object& other) const -> const object*
 auto integer_object::operator>>(const object& other) const -> const object*
 {
     if (other.is(integer)) {
-        return make<integer_object>(value >> other.val<integer_object>());
+        return allocate<integer_object>(value >> other.val<integer_object>());
     }
     if (other.is(boolean)) {
         const auto other_value = other.as<boolean_object>()->value_to<integer_object>();
-        return make<integer_object>(value >> other_value);
+        return allocate<integer_object>(value >> other_value);
     }
     return nullptr;
 }
@@ -612,11 +612,11 @@ auto integer_object::operator>>(const object& other) const -> const object*
 auto integer_object::operator&(const object& other) const -> const object*
 {
     if (other.is(integer)) {
-        return make<integer_object>(value & other.val<integer_object>());
+        return allocate<integer_object>(value & other.val<integer_object>());
     }
     if (other.is(boolean)) {
         const auto other_value = other.as<boolean_object>()->value_to<integer_object>();
-        return make<integer_object>(value & other_value);
+        return allocate<integer_object>(value & other_value);
     }
     return nullptr;
 }
@@ -635,13 +635,13 @@ auto decimal_object::operator==(const object& other) const -> const object*
 auto decimal_object::operator+(const object& other) const -> const object*
 {
     if (other.is(boolean)) {
-        return make<decimal_object>(value + other.as<boolean_object>()->value_to<decimal_object>());
+        return allocate<decimal_object>(value + other.as<boolean_object>()->value_to<decimal_object>());
     }
     if (other.is(integer)) {
-        return make<decimal_object>(value + other.as<integer_object>()->value_to<decimal_object>());
+        return allocate<decimal_object>(value + other.as<integer_object>()->value_to<decimal_object>());
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(value + other.val<decimal_object>());
+        return allocate<decimal_object>(value + other.val<decimal_object>());
     }
     return nullptr;
 }
@@ -649,13 +649,13 @@ auto decimal_object::operator+(const object& other) const -> const object*
 auto decimal_object::operator-(const object& other) const -> const object*
 {
     if (other.is(boolean)) {
-        return make<decimal_object>(value - other.as<boolean_object>()->value_to<decimal_object>());
+        return allocate<decimal_object>(value - other.as<boolean_object>()->value_to<decimal_object>());
     }
     if (other.is(integer)) {
-        return make<decimal_object>(value - other.as<integer_object>()->value_to<decimal_object>());
+        return allocate<decimal_object>(value - other.as<integer_object>()->value_to<decimal_object>());
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(value - other.val<decimal_object>());
+        return allocate<decimal_object>(value - other.val<decimal_object>());
     }
     return nullptr;
 }
@@ -663,13 +663,13 @@ auto decimal_object::operator-(const object& other) const -> const object*
 auto decimal_object::operator*(const object& other) const -> const object*
 {
     if (other.is(boolean)) {
-        return make<decimal_object>(value * other.as<boolean_object>()->value_to<decimal_object>());
+        return allocate<decimal_object>(value * other.as<boolean_object>()->value_to<decimal_object>());
     }
     if (other.is(integer)) {
-        return make<decimal_object>(value * other.as<integer_object>()->value_to<decimal_object>());
+        return allocate<decimal_object>(value * other.as<integer_object>()->value_to<decimal_object>());
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(value * other.val<decimal_object>());
+        return allocate<decimal_object>(value * other.val<decimal_object>());
     }
     return nullptr;
 }
@@ -677,13 +677,13 @@ auto decimal_object::operator*(const object& other) const -> const object*
 auto decimal_object::operator/(const object& other) const -> const object*
 {
     if (other.is(boolean)) {
-        return make<decimal_object>(value / other.as<boolean_object>()->value_to<decimal_object>());
+        return allocate<decimal_object>(value / other.as<boolean_object>()->value_to<decimal_object>());
     }
     if (other.is(integer)) {
-        return make<decimal_object>(value / other.as<integer_object>()->value_to<decimal_object>());
+        return allocate<decimal_object>(value / other.as<integer_object>()->value_to<decimal_object>());
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(value / other.val<decimal_object>());
+        return allocate<decimal_object>(value / other.val<decimal_object>());
     }
     return nullptr;
 }
@@ -691,13 +691,13 @@ auto decimal_object::operator/(const object& other) const -> const object*
 auto decimal_object::operator%(const object& other) const -> const object*
 {
     if (other.is(boolean)) {
-        return make<decimal_object>(math_mod(value, other.as<boolean_object>()->value_to<decimal_object>()));
+        return allocate<decimal_object>(math_mod(value, other.as<boolean_object>()->value_to<decimal_object>()));
     }
     if (other.is(integer)) {
-        return make<decimal_object>(math_mod(value, other.as<integer_object>()->value_to<decimal_object>()));
+        return allocate<decimal_object>(math_mod(value, other.as<integer_object>()->value_to<decimal_object>()));
     }
     if (other.is(decimal)) {
-        return make<decimal_object>(math_mod(value, other.val<decimal_object>()));
+        return allocate<decimal_object>(math_mod(value, other.val<decimal_object>()));
     }
     return nullptr;
 }
@@ -728,7 +728,7 @@ auto object_floor_div(const object* lhs, const object* rhs) -> const object*
 {
     const auto* div = (*lhs / *rhs);
     if (div->is(decimal)) {
-        return make<decimal_object>(std::floor(div->val<decimal_object>()));
+        return allocate<decimal_object>(std::floor(div->val<decimal_object>()));
     }
     return div;
 }
@@ -799,7 +799,7 @@ auto array_object::operator+(const object& other) const -> const object*
         value_type concat = value;
         const auto& other_value = other.as<array_object>()->value;
         std::copy(other_value.cbegin(), other_value.cend(), std::back_inserter(concat));
-        return make<array_object>(std::move(concat));
+        return allocate<array_object>(std::move(concat));
     }
     return nullptr;
 }
@@ -860,7 +860,7 @@ auto hash_object::operator+(const object& other) const -> const object*
         for (const auto& pair : other_value) {
             concat.insert_or_assign(pair.first, pair.second);
         }
-        return make<hash_object>(std::move(concat));
+        return allocate<hash_object>(std::move(concat));
     }
     return nullptr;
 }

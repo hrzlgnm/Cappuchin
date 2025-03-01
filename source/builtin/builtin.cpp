@@ -38,17 +38,17 @@ const builtin len {
         using enum object::object_type;
         if (maybe_string_or_array_or_hash->is(string)) {
             const auto& str = maybe_string_or_array_or_hash->as<string_object>()->value;
-            return make<integer_object>(static_cast<int64_t>(str.size()));
+            return allocate<integer_object>(static_cast<int64_t>(str.size()));
         }
         if (maybe_string_or_array_or_hash->is(array)) {
             const auto& arr = maybe_string_or_array_or_hash->as<array_object>()->value;
 
-            return make<integer_object>(static_cast<int64_t>(arr.size()));
+            return allocate<integer_object>(static_cast<int64_t>(arr.size()));
         }
         if (maybe_string_or_array_or_hash->is(hash)) {
             const auto& hsh = maybe_string_or_array_or_hash->as<hash_object>()->value;
 
-            return make<integer_object>(static_cast<int64_t>(hsh.size()));
+            return allocate<integer_object>(static_cast<int64_t>(hsh.size()));
         }
         return make_error("argument of type {} to len() is not supported", maybe_string_or_array_or_hash->type());
     }};
@@ -86,7 +86,7 @@ const builtin first {
         if (maybe_string_or_array->is(string)) {
             const auto& str = maybe_string_or_array->as<string_object>()->value;
             if (!str.empty()) {
-                return make<string_object>(str.substr(0, 1));
+                return allocate<string_object>(str.substr(0, 1));
             }
             return null();
         }
@@ -113,7 +113,7 @@ const builtin last {
         if (maybe_string_or_array->is(string)) {
             const auto& str = maybe_string_or_array->as<string_object>()->value;
             if (!str.empty()) {
-                return make<string_object>(str.substr(str.length() - 1, 1));
+                return allocate<string_object>(str.substr(str.length() - 1, 1));
             }
             return null();
         }
@@ -140,7 +140,7 @@ const builtin rest {
         if (maybe_string_or_array->is(string)) {
             const auto& str = maybe_string_or_array->as<string_object>()->value;
             if (str.size() > 1) {
-                return make<string_object>(str.substr(1));
+                return allocate<string_object>(str.substr(1));
             }
             return null();
         }
@@ -149,7 +149,7 @@ const builtin rest {
             if (arr.size() > 1) {
                 array_object::value_type rest;
                 std::copy(arr.cbegin() + 1, arr.cend(), std::back_inserter(rest));
-                return make<array_object>(std::move(rest));
+                return allocate<array_object>(std::move(rest));
             }
             return null();
         }
@@ -171,12 +171,12 @@ const builtin push {
             if (lhs->is(array)) {
                 auto copy = lhs->as<array_object>()->value;
                 copy.push_back(rhs);
-                return make<array_object>(std::move(copy));
+                return allocate<array_object>(std::move(copy));
             }
             if (lhs->is(string) && rhs->is(string)) {
                 auto copy = lhs->as<string_object>()->value;
                 copy.append(rhs->as<string_object>()->value);
-                return make<string_object>(std::move(copy));
+                return allocate<string_object>(std::move(copy));
             }
             return make_error("argument of type {} and {} to push() are not supported", lhs->type(), rhs->type());
         }
@@ -190,7 +190,7 @@ const builtin push {
                 }
                 auto copy = lhs->as<hash_object>()->value;
                 copy.insert_or_assign(k->as<hashable>()->hash_key(), v);
-                return make<hash_object>(std::move(copy));
+                return allocate<hash_object>(std::move(copy));
             }
             return make_error(
                 "argument of type {}, {} and {} to push() are not supported", lhs->type(), k->type(), v->type());
@@ -207,7 +207,7 @@ const builtin type {"type",
                                               arguments.size());
                         }
                         const auto& val = arguments[0];
-                        return make<string_object>(fmt::format("{}", val->type()));
+                        return allocate<string_object>(fmt::format("{}", val->type()));
                     }};
 const builtin chr {"chr",
                    {"int"},
@@ -221,7 +221,7 @@ const builtin chr {"chr",
                        if (val->is(object::object_type::integer)) {
                            const auto& as_int = val->as<integer_object>()->value;
                            if (isascii(static_cast<int>(as_int))) {
-                               return make<string_object>(fmt::format("{}", static_cast<char>(as_int)));
+                               return allocate<string_object>(fmt::format("{}", static_cast<char>(as_int)));
                            }
                            return make_error("number {} is out of range to be an ascii character", as_int);
                        }

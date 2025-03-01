@@ -143,7 +143,7 @@ parser::parser(lexer lxr)
 
 auto parser::parse_program() -> program*
 {
-    auto* prog = make<program>(m_current_token.loc);
+    auto* prog = allocate<program>(m_current_token.loc);
     while (m_current_token.type != token_type::eof) {
         auto* stmt = parse_statement();
         if (stmt != nullptr) {
@@ -191,7 +191,7 @@ auto parser::parse_statement() -> statement*
 
 auto parser::parse_let_statement() -> statement*
 {
-    auto* stmt = make<let_statement>(m_current_token.loc);
+    auto* stmt = allocate<let_statement>(m_current_token.loc);
     stmt->l = m_current_token.loc;
     using enum token_type;
     if (!get(ident)) {
@@ -218,7 +218,7 @@ auto parser::parse_let_statement() -> statement*
 
 auto parser::parse_assign_statement() -> statement*
 {
-    auto* stmt = make<assign_expression>(m_current_token.loc);
+    auto* stmt = allocate<assign_expression>(m_current_token.loc);
     using enum token_type;
 
     stmt->name = parse_identifier();
@@ -239,7 +239,7 @@ auto parser::parse_assign_statement() -> statement*
 auto parser::parse_return_statement() -> statement*
 {
     using enum token_type;
-    auto* stmt = make<return_statement>(m_current_token.loc);
+    auto* stmt = allocate<return_statement>(m_current_token.loc);
 
     next_token();
     stmt->value = parse_expression(lowest);
@@ -252,7 +252,7 @@ auto parser::parse_return_statement() -> statement*
 
 auto parser::parse_expression_statement() -> statement*
 {
-    auto* expr_stmt = make<expression_statement>(m_current_token.loc);
+    auto* expr_stmt = allocate<expression_statement>(m_current_token.loc);
     expr_stmt->expr = parse_expression(lowest);
     if (peek_token_is(token_type::semicolon)) {
         next_token();
@@ -282,12 +282,12 @@ auto parser::parse_expression(int precedence) -> expression*
 
 auto parser::parse_identifier() const -> identifier*
 {
-    return make<identifier>(std::string(m_current_token.literal), m_current_token.loc);
+    return allocate<identifier>(std::string(m_current_token.literal), m_current_token.loc);
 }
 
 auto parser::parse_integer_literal() -> expression*
 {
-    auto* lit = make<integer_literal>(m_current_token.loc);
+    auto* lit = allocate<integer_literal>(m_current_token.loc);
     try {
         lit->value = std::stoll(std::string {m_current_token.literal});
     } catch (const std::out_of_range&) {
@@ -299,7 +299,7 @@ auto parser::parse_integer_literal() -> expression*
 
 auto parser::parse_decimal_literal() -> expression*
 {
-    auto* lit = make<decimal_literal>(m_current_token.loc);
+    auto* lit = allocate<decimal_literal>(m_current_token.loc);
     try {
         lit->value = std::stod(std::string {m_current_token.literal});
     } catch (const std::out_of_range&) {
@@ -311,7 +311,7 @@ auto parser::parse_decimal_literal() -> expression*
 
 auto parser::parse_unary_expression() -> expression*
 {
-    auto* unary = make<unary_expression>(m_current_token.loc);
+    auto* unary = allocate<unary_expression>(m_current_token.loc);
     unary->op = m_current_token.type;
 
     next_token();
@@ -321,7 +321,7 @@ auto parser::parse_unary_expression() -> expression*
 
 auto parser::parse_boolean() -> expression*
 {
-    return make<boolean_literal>(current_token_is(token_type::tru), m_current_token.loc);
+    return allocate<boolean_literal>(current_token_is(token_type::tru), m_current_token.loc);
 }
 
 auto parser::parse_grouped_expression() -> expression*
@@ -337,7 +337,7 @@ auto parser::parse_grouped_expression() -> expression*
 auto parser::parse_if_expression() -> expression*
 {
     using enum token_type;
-    auto* expr = make<if_expression>(m_current_token.loc);
+    auto* expr = allocate<if_expression>(m_current_token.loc);
     if (!get(lparen)) {
         return {};
     }
@@ -368,7 +368,7 @@ auto parser::parse_if_expression() -> expression*
 auto parser::parse_while_statement() -> expression*
 {
     using enum token_type;
-    auto* expr = make<while_statement>(m_current_token.loc);
+    auto* expr = allocate<while_statement>(m_current_token.loc);
     if (!get(lparen)) {
         return {};
     }
@@ -400,7 +400,7 @@ auto parser::parse_function_expression() -> expression*
         return {};
     }
     auto* body = parse_block_statement();
-    return make<function_literal>(std::move(parameters), body, loc);
+    return allocate<function_literal>(std::move(parameters), body, loc);
 }
 
 auto parser::parse_function_parameters() -> identifiers
@@ -429,7 +429,7 @@ auto parser::parse_function_parameters() -> identifiers
 auto parser::parse_block_statement() -> block_statement*
 {
     using enum token_type;
-    auto* block = make<block_statement>(m_current_token.loc);
+    auto* block = allocate<block_statement>(m_current_token.loc);
     next_token();
     while (!current_token_is(rsquirly) && !current_token_is(eof)) {
         auto* stmt = parse_statement();
@@ -445,7 +445,7 @@ auto parser::parse_block_statement() -> block_statement*
 auto parser::parse_break_statement() -> statement*
 {
     using enum token_type;
-    auto* b = make<break_statement>(m_current_token.loc);
+    auto* b = allocate<break_statement>(m_current_token.loc);
     if (peek_token_is(semicolon)) {
         next_token();
     }
@@ -455,7 +455,7 @@ auto parser::parse_break_statement() -> statement*
 auto parser::parse_continue_statement() -> statement*
 {
     using enum token_type;
-    auto* b = make<continue_statement>(m_current_token.loc);
+    auto* b = allocate<continue_statement>(m_current_token.loc);
     if (peek_token_is(semicolon)) {
         next_token();
     }
@@ -464,7 +464,7 @@ auto parser::parse_continue_statement() -> statement*
 
 auto parser::parse_call_expression(expression* function) -> expression*
 {
-    auto* call = make<call_expression>(m_current_token.loc);
+    auto* call = allocate<call_expression>(m_current_token.loc);
     call->function = function;
     call->arguments = parse_expressions(token_type::rparen);
     return call;
@@ -472,7 +472,7 @@ auto parser::parse_call_expression(expression* function) -> expression*
 
 auto parser::parse_binary_expression(expression* left) -> expression*
 {
-    auto* bin_expr = make<binary_expression>(m_current_token.loc);
+    auto* bin_expr = allocate<binary_expression>(m_current_token.loc);
     bin_expr->op = m_current_token.type;
     bin_expr->left = left;
 
@@ -485,7 +485,7 @@ auto parser::parse_binary_expression(expression* left) -> expression*
 
 auto parser::parse_string_literal() const -> expression*
 {
-    return make<string_literal>(std::string {m_current_token.literal}, m_current_token.loc);
+    return allocate<string_literal>(std::string {m_current_token.literal}, m_current_token.loc);
 }
 
 auto parser::parse_expressions(token_type end) -> expressions
@@ -514,14 +514,14 @@ auto parser::parse_expressions(token_type end) -> expressions
 
 auto parser::parse_array_expression() -> expression*
 {
-    auto* array_expr = make<array_literal>(m_current_token.loc);
+    auto* array_expr = allocate<array_literal>(m_current_token.loc);
     array_expr->elements = parse_expressions(token_type::rbracket);
     return array_expr;
 }
 
 auto parser::parse_index_expression(expression* left) -> expression*
 {
-    auto* index_expr = make<index_expression>(m_current_token.loc);
+    auto* index_expr = allocate<index_expression>(m_current_token.loc);
     index_expr->left = left;
     next_token();
     index_expr->index = parse_expression(lowest);
@@ -535,7 +535,7 @@ auto parser::parse_index_expression(expression* left) -> expression*
 
 auto parser::parse_hash_literal() -> expression*
 {
-    auto* hash = make<hash_literal>(m_current_token.loc);
+    auto* hash = allocate<hash_literal>(m_current_token.loc);
     using enum token_type;
     while (!peek_token_is(rsquirly)) {
         next_token();
@@ -559,7 +559,7 @@ auto parser::parse_hash_literal() -> expression*
 
 auto parser::parse_null_literal() -> expression*
 {
-    return make<null_literal>(m_current_token.loc);
+    return allocate<null_literal>(m_current_token.loc);
 }
 
 auto parser::get(token_type type) -> bool
@@ -876,12 +876,12 @@ return 993322;
 TEST_CASE("string")
 {
     using enum token_type;
-    auto name = make<identifier>("myVar", location {"<stdin>", 1, 1});
-    auto value = make<identifier>("anotherVar", location {"<stdin>", 1, 9});
+    auto name = allocate<identifier>("myVar", location {"<stdin>", 1, 1});
+    auto value = allocate<identifier>("anotherVar", location {"<stdin>", 1, 9});
 
     program prgrm {location {"<stdin>", 1, 1}};
 
-    auto let_stmt = make<let_statement>(location {});
+    auto let_stmt = allocate<let_statement>(location {});
 
     let_stmt->name = name;
     let_stmt->value = value;
