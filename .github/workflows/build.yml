@@ -1,17 +1,7 @@
-name: Continuous Integration
+name: "Reusable build workflow"
 
 on:
-  push:
-    branches:
-      - main
-
-  pull_request:
-    branches:
-      - main
-
-concurrency:
-  group: ${{ format('ci-{0}', github.ref) }}
-  cancel-in-progress: true
+  workflow_call:
 
 jobs:
   Lint:
