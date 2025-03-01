@@ -2,9 +2,9 @@
 
 ## Updating the Docker image
 
-[!NOTE]
-This is usually not needed, as the Docker image is automatically built and updated
-by the GitHub Actions workflow defined in the `.github/workflows/docker-build.yml` file.
+> [!NOTE]
+> This is usually not needed to be done manually, as the Docker image is automatically built and pushed
+> by the GitHub Actions workflow defined in the `.github/workflows/docker-build.yml` file.
 
 Pick a version number for the new Docker image (e.g. `v3`), then run the
 following commands:
