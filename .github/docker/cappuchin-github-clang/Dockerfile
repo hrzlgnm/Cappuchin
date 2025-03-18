@@ -1,4 +1,4 @@
-FROM debian:bookworm@sha256:35286826a88dc879b4f438b645ba574a55a14187b483d09213a024dc0c0a64ed
+FROM debian:bookworm@sha256:5626f5de9604f616c4465d3eaccbcf35090c14372831a605d0083385bc7285ba
 RUN \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
