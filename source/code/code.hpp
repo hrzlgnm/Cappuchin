@@ -98,7 +98,7 @@ const definition_type definitions {
     {opcodes::equal, definition {.name = "OpEqual"}},
     {opcodes::not_equal, definition {.name = "OpNotEquql"}},
     {opcodes::greater_than, definition {.name = "OpGreaterThan"}},
-    {opcodes::greater_equal, definition {.name = "OpGreaterEuqal"}},
+    {opcodes::greater_equal, definition {.name = "OpGreaterEqual"}},
     {opcodes::minus, definition {.name = "OpMinus"}},
     {opcodes::bang, definition {.name = "OpBang"}},
     {opcodes::jump_not_truthy, definition {.name = "OpJumpNotTruthy", .operand_widths = {2}}},
