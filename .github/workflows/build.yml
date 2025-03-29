@@ -127,6 +127,43 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
+              name: "Clang 17 glibc",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:43e605dff31cdce369baccbe86e58fa180613259d83e8a6fcaef5d04e5f64c49",
+              CC: clang,
+              CXX: clang++,
+              CFLAGS: "",
+              CMAKE_BUILD_TYPE: "Debug",
+              WARNINGS: "-Werror;{1}",
+              CMAKE_FLAGS: "-G Ninja",
+              sccache: "sccache",
+            }
+          - {
+              runs_on: ubuntu-latest,
+              name: "Clang 17 glibc ASAN+UBSAN",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:43e605dff31cdce369baccbe86e58fa180613259d83e8a6fcaef5d04e5f64c49",
+              CC: clang,
+              CXX: clang++,
+              CFLAGS: "-fsanitize=address,undefined -fsanitize-address-use-after-scope -fno-sanitize-recover=address,undefined -fuse-ld=gold",
+              CMAKE_BUILD_TYPE: "Debug",
+              WARNINGS: "-Werror;{1}",
+              CMAKE_FLAGS: "-G Ninja",
+              ASAN_OPTIONS: "strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1",
+              sccache: "sccache",
+            }
+          - {
+              runs_on: ubuntu-latest,
+              name: "Clang 17 glibc Release",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:43e605dff31cdce369baccbe86e58fa180613259d83e8a6fcaef5d04e5f64c49",
+              CC: clang,
+              CXX: clang++,
+              CFLAGS: "",
+              CMAKE_BUILD_TYPE: "Release",
+              WARNINGS: "-Werror;{1}",
+              CMAKE_FLAGS: "-G Ninja",
+              sccache: "sccache",
+            }
+          - {
+              runs_on: ubuntu-latest,
               name: "GCC 13",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:9030ff556cb015384ffb0b41711680d039734d6add4b61b0edccc1fd7229e98b",
               CC: gcc,
