@@ -7,7 +7,7 @@ jobs:
   Lint:
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:796a1135476542777f8aa5195587cbdbede83e47a682b1e79bc8574ea063c9e4"
+      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:5abc127f2d79a757a19b5e1aed98f68539146aea879cf401ad460b8e068f4ceb"
 
     steps:
       - name: Checkout
@@ -86,7 +86,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "Clang 17 musl",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:796a1135476542777f8aa5195587cbdbede83e47a682b1e79bc8574ea063c9e4",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:5abc127f2d79a757a19b5e1aed98f68539146aea879cf401ad460b8e068f4ceb",
               CC: clang,
               CXX: clang++,
               CFLAGS: "",
@@ -97,7 +97,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "Clang 17 musl ASAN+UBSAN",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:796a1135476542777f8aa5195587cbdbede83e47a682b1e79bc8574ea063c9e4",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:5abc127f2d79a757a19b5e1aed98f68539146aea879cf401ad460b8e068f4ceb",
               CC: clang,
               CXX: clang++,
               CFLAGS: "-fsanitize=address,undefined -fsanitize-address-use-after-scope -fno-sanitize-recover=address,undefined -fuse-ld=gold",
@@ -109,7 +109,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "Clang 17 musl Release",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:796a1135476542777f8aa5195587cbdbede83e47a682b1e79bc8574ea063c9e4",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:5abc127f2d79a757a19b5e1aed98f68539146aea879cf401ad460b8e068f4ceb",
               CC: clang,
               CXX: clang++,
               CFLAGS: "",
@@ -215,7 +215,7 @@ jobs:
     needs: [Lint]
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:796a1135476542777f8aa5195587cbdbede83e47a682b1e79bc8574ea063c9e4"
+      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:5abc127f2d79a757a19b5e1aed98f68539146aea879cf401ad460b8e068f4ceb"
 
     steps:
       - name: Checkout
