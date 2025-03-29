@@ -101,6 +101,7 @@ jobs:
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "-Werror;{1}",
               CMAKE_FLAGS: "-G Ninja",
+              sccache: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
