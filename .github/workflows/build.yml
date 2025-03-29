@@ -39,9 +39,9 @@ jobs:
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "-Werror;{1}",
               CMAKE_FLAGS: "-G Ninja",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
-              homebrew_packages: "ninja sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
+              homebrew_packages: "ninja sccache",
             }
           - {
               runs_on: ubuntu-latest,
@@ -53,8 +53,8 @@ jobs:
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "-Werror;{1}",
               CMAKE_FLAGS: "-G Ninja",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
@@ -66,8 +66,8 @@ jobs:
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "-Werror;{1}",
               CMAKE_FLAGS: "-G Ninja",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
@@ -80,8 +80,8 @@ jobs:
               WARNINGS: "-Werror;{1}",
               ASAN_OPTIONS: "strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1",
               CMAKE_FLAGS: "-G Ninja",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
@@ -93,8 +93,8 @@ jobs:
               CMAKE_BUILD_TYPE: "Release",
               WARNINGS: "-Werror;{1}",
               CMAKE_FLAGS: "-G Ninja",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
@@ -106,8 +106,8 @@ jobs:
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "-Werror;{1}",
               CMAKE_FLAGS: "-G Ninja",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
@@ -120,8 +120,8 @@ jobs:
               WARNINGS: "-Werror;{1}",
               CMAKE_FLAGS: "-G Ninja",
               ASAN_OPTIONS: "strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
@@ -133,8 +133,8 @@ jobs:
               CMAKE_BUILD_TYPE: "Release",
               WARNINGS: "-Werror;{1}",
               CMAKE_FLAGS: "-G Ninja",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
@@ -146,8 +146,8 @@ jobs:
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "-Werror;{0}",
               CMAKE_FLAGS: "-G Ninja",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
@@ -160,8 +160,8 @@ jobs:
               WARNINGS: "-Werror;{0}",
               CMAKE_FLAGS: "-G Ninja",
               ASAN_OPTIONS: "strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
@@ -173,8 +173,8 @@ jobs:
               CMAKE_BUILD_TYPE: "Release",
               WARNINGS: "-Werror;{0}",
               CMAKE_FLAGS: "-G Ninja",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
             }
           - {
               runs_on: windows-latest,
@@ -182,8 +182,8 @@ jobs:
               CFLAGS: "",
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
             }
           - {
               runs_on: windows-latest,
@@ -191,8 +191,8 @@ jobs:
               CFLAGS: "",
               CMAKE_BUILD_TYPE: "Release",
               WARNINGS: "",
-              C_LAUNCHER: "sscache",
-              CXX_LAUNCHER: "sscache",
+              C_LAUNCHER: "sccache",
+              CXX_LAUNCHER: "sccache",
             }
     runs-on: ${{ matrix.toolchain.runs_on }}
     container: ${{ matrix.toolchain.container_image }}
@@ -225,6 +225,8 @@ jobs:
           script: |
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+      - name: Run sccache-cache
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Install dependencies (Homebrew)
         if: ${{ matrix.toolchain.homebrew_packages }}
