@@ -182,8 +182,6 @@ jobs:
               CFLAGS: "",
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "",
-              C_LAUNCHER: "sccache",
-              CXX_LAUNCHER: "sccache",
             }
           - {
               runs_on: windows-latest,
@@ -191,8 +189,6 @@ jobs:
               CFLAGS: "",
               CMAKE_BUILD_TYPE: "Release",
               WARNINGS: "",
-              C_LAUNCHER: "sccache",
-              CXX_LAUNCHER: "sccache",
             }
     runs-on: ${{ matrix.toolchain.runs_on }}
     container: ${{ matrix.toolchain.container_image }}
