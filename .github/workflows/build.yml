@@ -215,8 +215,8 @@ jobs:
         ) }}
 
     steps:
-      - name: Run sccache-cache
-        uses: mozilla-actions/sccache-action@v0.0.9
+      # - name: Run sccache-cache
+      #   uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Install dependencies (Homebrew)
         if: ${{ matrix.toolchain.homebrew_packages }}
