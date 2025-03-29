@@ -128,18 +128,19 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "GCC 13",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:39badac2d09fd89397958b884bf86d20af845a6bfaaab76b0be0e2557a3ee68f",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:9030ff556cb015384ffb0b41711680d039734d6add4b61b0edccc1fd7229e98b",
               CC: gcc,
               CXX: g++,
               CFLAGS: "",
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "-Werror;{0}",
               CMAKE_FLAGS: "-G Ninja",
+              sccache: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
               name: "GCC 13 ASAN+UBSAN",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:39badac2d09fd89397958b884bf86d20af845a6bfaaab76b0be0e2557a3ee68f",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:9030ff556cb015384ffb0b41711680d039734d6add4b61b0edccc1fd7229e98b",
               CC: gcc,
               CXX: g++,
               CFLAGS: "-fsanitize=address,undefined -fsanitize-address-use-after-scope -fno-sanitize-recover=address,undefined -fuse-ld=gold",
@@ -147,17 +148,19 @@ jobs:
               WARNINGS: "-Werror;{0}",
               CMAKE_FLAGS: "-G Ninja",
               ASAN_OPTIONS: "strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1",
+              sccache: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
               name: "GCC 13 Release",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:39badac2d09fd89397958b884bf86d20af845a6bfaaab76b0be0e2557a3ee68f",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:9030ff556cb015384ffb0b41711680d039734d6add4b61b0edccc1fd7229e98b",
               CC: gcc,
               CXX: g++,
               CFLAGS: "",
               CMAKE_BUILD_TYPE: "Release",
               WARNINGS: "-Werror;{0}",
               CMAKE_FLAGS: "-G Ninja",
+              sccache: "sccache",
             }
           - {
               runs_on: windows-latest,
