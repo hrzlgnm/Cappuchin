@@ -101,7 +101,6 @@ jobs:
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "-Werror;{1}",
               CMAKE_FLAGS: "-G Ninja",
-              sccache: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
@@ -125,6 +124,43 @@ jobs:
               CMAKE_BUILD_TYPE: "Release",
               WARNINGS: "-Werror;{1}",
               CMAKE_FLAGS: "-G Ninja",
+            }
+          - {
+              runs_on: ubuntu-latest,
+              name: "Clang 17 glibc",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:43e605dff31cdce369baccbe86e58fa180613259d83e8a6fcaef5d04e5f64c49",
+              CC: clang,
+              CXX: clang++,
+              CFLAGS: "",
+              CMAKE_BUILD_TYPE: "Debug",
+              WARNINGS: "-Werror;{1}",
+              CMAKE_FLAGS: "-G Ninja",
+              sccache: "sccache",
+            }
+          - {
+              runs_on: ubuntu-latest,
+              name: "Clang 17 glibc ASAN+UBSAN",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:43e605dff31cdce369baccbe86e58fa180613259d83e8a6fcaef5d04e5f64c49",
+              CC: clang,
+              CXX: clang++,
+              CFLAGS: "-fsanitize=address,undefined -fsanitize-address-use-after-scope -fno-sanitize-recover=address,undefined -fuse-ld=gold",
+              CMAKE_BUILD_TYPE: "Debug",
+              WARNINGS: "-Werror;{1}",
+              CMAKE_FLAGS: "-G Ninja",
+              ASAN_OPTIONS: "strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1",
+              sccache: "sccache",
+            }
+          - {
+              runs_on: ubuntu-latest,
+              name: "Clang 17 glibc Release",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:43e605dff31cdce369baccbe86e58fa180613259d83e8a6fcaef5d04e5f64c49",
+              CC: clang,
+              CXX: clang++,
+              CFLAGS: "",
+              CMAKE_BUILD_TYPE: "Release",
+              WARNINGS: "-Werror;{1}",
+              CMAKE_FLAGS: "-G Ninja",
+              sccache: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
@@ -205,11 +241,6 @@ jobs:
       - name: Run sccache-action
         if: ${{ matrix.toolchain.sccache }}
         uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
-
-      - name: Banan
-        shell: bash
-        run: |
-          env
 
       - name: Install dependencies (Homebrew)
         if: ${{ matrix.toolchain.homebrew_packages }}
