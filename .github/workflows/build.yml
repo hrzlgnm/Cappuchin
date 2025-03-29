@@ -202,13 +202,14 @@ jobs:
         ) }}
 
     steps:
+      - name: Run sccache-action
+        if: ${{ matrix.toolchain.sccache }}
+        uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
+
       - name: Banan
         shell: bash
         run: |
           env
-      - name: Run sccache-action
-        if: ${{ matrix.toolchain.sccache }}
-        uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
 
       - name: Install dependencies (Homebrew)
         if: ${{ matrix.toolchain.homebrew_packages }}
