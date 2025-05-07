@@ -1,47 +1,49 @@
 {
-    $schema: "https://docs.renovatebot.com/renovate-schema.json",
-    automergeType: "pr",
+    $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+    automergeType: 'pr',
     patch: {
-        automerge: true
+        automerge: true,
     },
     minor: {
-        automerge: true
+        automerge: true,
     },
     extends: [
-        "config:best-practices",
-        ":dependencyDashboard",
-        ":enableVulnerabilityAlerts",
-        ":rebaseStalePrs",
-        ":semanticCommits",
-        ":semanticPrefixChore",
-        ":separateMajorReleases",
-        ":prImmediately"
+        'config:best-practices',
+        ':dependencyDashboard',
+        ':enableVulnerabilityAlerts',
+        ':rebaseStalePrs',
+        ':semanticCommits',
+        ':semanticPrefixChore',
+        ':separateMajorReleases',
+        ':prImmediately',
     ],
     prConcurrentLimit: 0,
     lockFileMaintenance: {
-        enabled: true
+        enabled: true,
     },
     customManagers: [
         {
-            matchStringsStrategy: "any",
-            customType: "regex",
-            fileMatch: [
-                "^\\.github/workflows/.*\\.yml$"
+            matchStringsStrategy: 'any',
+            customType: 'regex',
+            managerFilePatterns: [
+                '/^\\.github/workflows/.*\\.yml$/',
             ],
-            depTypeTemplate: "container",
-            datasourceTemplate: "docker",
-            versioningTemplate: "docker",
+            depTypeTemplate: 'container',
+            datasourceTemplate: 'docker',
+            versioningTemplate: 'docker',
             matchStrings: [
-                'container_image: "(?<depName>.*?):(?<currentValue>.*?)(?:@(?<currentDigest>sha256:[a-f0-9]+))?",'
+                'container_image: "(?<depName>.*?):(?<currentValue>.*?)(?:@(?<currentDigest>sha256:[a-f0-9]+))?",',
             ],
             autoReplaceStringTemplate: 'container_image: "{{depName}}{{#if newValue}}:{{newValue}}{{/if}}{{#if newDigest}}@{{newDigest}}{{/if}}",',
-        }
+        },
     ],
     packageRules: [
-    {
-        matchDatasources: ["docker"],
-        pinDigests: true,
-        automerge: true,
-    }
-  ]
+        {
+            matchDatasources: [
+                'docker',
+            ],
+            pinDigests: true,
+            automerge: true,
+        },
+    ],
 }
