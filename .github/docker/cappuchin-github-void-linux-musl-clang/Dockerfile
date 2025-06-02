@@ -1,4 +1,4 @@
-FROM ghcr.io/void-linux/void-musl@sha256:66dce8377795b612014f609b2b491e5da3c879b4b039efe23ee6badf8c80f888
+FROM ghcr.io/void-linux/void-musl@sha256:43bf90b60f3164e2723e067773ad8f9487121b367c989357419dc339f952c731
 RUN xbps-install -Syu || xbps-install -yu xbps \
     && xbps-install -yu \
     && xbps-install -y bash clang clang-tools-extra cmake cppcheck git gzip jq ninja tar wget rust-sccache nodejs \
