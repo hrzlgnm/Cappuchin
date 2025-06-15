@@ -227,6 +227,7 @@ jobs:
       CMAKE_SHARED_LINKER_FLAGS: ${{ matrix.toolchain.CFLAGS }}
       CMAKE_C_COMPILER_LAUNCHER: ${{ matrix.toolchain.sccache }}
       CMAKE_CXX_COMPILER_LAUNCHER: ${{ matrix.toolchain.sccache }}
+      SCCACHE_GHA_ENABLED: true
 
       # Format of WARNINGS:
       # {0} GCC warnings
