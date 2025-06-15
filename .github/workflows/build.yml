@@ -40,7 +40,7 @@ jobs:
               WARNINGS: "-Werror;{1}",
               CMAKE_FLAGS: "-G Ninja",
               sccache: "sccache",
-              homebrew_packages: "ninja sccache",
+              homebrew_packages: "sccache",
             }
           - {
               runs_on: ubuntu-latest,
