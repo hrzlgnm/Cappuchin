@@ -272,7 +272,7 @@ jobs:
         run: ctest --verbose --build-config ${{matrix.toolchain.CMAKE_BUILD_TYPE}}
 
       - name: Upload test report artifacts (non musl)
-        if: ${{ contains(matrix.toolchain.name, 'musl') }}
+        if: ${{ !contains(matrix.toolchain.name, 'musl') }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: "${{ matrix.toolchain.name }}-junit-report"
