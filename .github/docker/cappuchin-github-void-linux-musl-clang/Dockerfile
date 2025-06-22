@@ -7,6 +7,7 @@ RUN xbps-install -Syu || xbps-install -yu xbps \
     clang-tools-extra \
     cmake \
     cppcheck \
+    curl \
     git \
     gzip \
     jq \
