@@ -28,7 +28,6 @@ jobs:
         uses: crate-ci/typos@b1ae8d918b6e85bd611117d3d9a3be4f903ee5e4 # v1.33.1
 
   Build-And-Test:
-    needs: [Lint]
     name: ${{ matrix.toolchain.name }}
     strategy:
       fail-fast: false
@@ -262,18 +261,27 @@ jobs:
       - name: Configure
         run: |
           env | grep '^ASAN_OPTIONS\|^CMAKE\|^CAPPUCHIN' | sort
-          cmake -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" ${CMAKE_C_COMPILER+-DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}"} ${CMAKE_CXX_COMPILER+-DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}"} -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS}" -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS}" -DCMAKE_SHARED_LINKER_FLAGS="${CMAKE_SHARED_LINKER_FLAGS}" ${CMAKE_EXTRA_FLAGS} -S . -B ../build
+          cmake -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" ${CMAKE_C_COMPILER+-DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}"} ${CMAKE_CXX_COMPILER+-DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}"} -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS}" -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS}" -DCMAKE_SHARED_LINKER_FLAGS="${CMAKE_SHARED_LINKER_FLAGS}" ${CMAKE_EXTRA_FLAGS} -S . -B ./build
         shell: bash
 
       - name: build
-        run: cmake --build ../build --config ${{matrix.toolchain.CMAKE_BUILD_TYPE}}
+        run: cmake --build ./build --config ${{matrix.toolchain.CMAKE_BUILD_TYPE}}
 
       - name: test
-        working-directory: ../build
+        working-directory: ./build
         run: ctest --verbose --build-config ${{matrix.toolchain.CMAKE_BUILD_TYPE}}
 
+      - name: JUnit Report
+        if: always()
+        uses: mikepenz/action-junit-report@a83fd2b5d58d4fc702e690c1ea688d702d28d281 # v5
+        with:
+          report_paths: "**/junit.xml"
+          fail_on_parse_error: true
+          require_tests: true
+          include_passed: true
+          check_name: "${{ matrix.toolchain.name }} JUnit Report"
+
   Static-Analysis:
-    needs: [Lint]
     runs-on: ubuntu-latest
     container:
       image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:e75c29d64bfe26499dbe1a34a1609f3cfdf84d6986e6d466ad3ec767c4fbd2ce"
