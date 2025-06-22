@@ -291,13 +291,15 @@ jobs:
           # Extract owner and repo
           OWNER=$(echo $REPO | cut -d'/' -f1)
           REPO_NAME=$(echo $REPO | cut -d'/' -f2)
+          ARTIFACT_NAME="${{ matrix.toolchain.name }}-junit-report"
+          ARTIFACT_NAME=${ARTIFACT_NAME// /%20}
           ls -laRt | grep junit
           # Create the artifact
           curl -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Content-Type: text/xml" \
             --data-binary "@build/test/doctest/junit.xml" \
-            "https://uploads.github.com/repos/$OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts?name=${{ matrix.toolchain.name }}-junit-report"
+            "https://uploads.github.com/repos/$OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts?name=$ARTIFACT_NAME"
 
   JUnit:
     needs: [Build-And-Test]
