@@ -296,7 +296,7 @@ jobs:
           curl -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Content-Type: text/xml" \
-            --data-binary "@junit.xml" \
+            --data-binary "@build/test/doctest/junit.xml" \
             "https://uploads.github.com/repos/$OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts?name=${{ matrix.toolchain.name }}-junit-report"
 
   JUnit:
