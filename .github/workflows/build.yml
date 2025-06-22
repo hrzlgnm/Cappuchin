@@ -29,6 +29,8 @@ jobs:
 
   Build-And-Test:
     name: ${{ matrix.toolchain.name }}
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -280,6 +282,32 @@ jobs:
           require_tests: true
           include_passed: true
           check_name: "${{ matrix.toolchain.name }} JUnit Report"
+
+      - name: Upload test report artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: "${{ matrix.toolchain.name }} junit report"
+          path: |
+            build/junit.xml
+
+  JUnit:
+    needs: [Build-And-Test]
+    runs-on: ubuntu-latest
+    container:
+      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:fd73f6997d2a05eccae7360dbe86166eaf1f9bc1c970f261c31ce902e9a8711c"
+
+    steps:
+      - name: Download all produced artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+
+      - name: Create JUnit Report
+        if: always()
+        uses: mikepenz/action-junit-report@a83fd2b5d58d4fc702e690c1ea688d702d28d281 # v5
+        with:
+          report_paths: "**/junit.xml"
+          fail_on_parse_error: true
+          require_tests: true
+          include_passed: true
 
   Static-Analysis:
     runs-on: ubuntu-latest
