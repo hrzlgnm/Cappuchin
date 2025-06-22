@@ -3,21 +3,22 @@
     automergeType: 'pr',
     extends: [
         'config:best-practices',
-        ":automergeDigest",
-        ":automergeMinor",
-        ":automergePatch",
-        ':dependencyDashboard',
+        'security:openssf-scorecard',
+        ':automergeDigest',
+        ':automergeMinor',
+        ':automergePr',
+        ':automergeRequireAllStatusChecks',
+        ':combinePatchMinorReleases',
+        ':docker',
         ':enableVulnerabilityAlerts',
+        ':maintainLockFilesMonthly',
+        ':prConcurrentLimit10',
+        ':prHourlyLimit1'
+        ':prImmediately',
         ':rebaseStalePrs',
         ':semanticCommits',
-        ':semanticPrefixChore',
         ':separateMajorReleases',
-        ':prImmediately',
     ],
-    prConcurrentLimit: 0,
-    lockFileMaintenance: {
-        enabled: true,
-    },
     customManagers: [
         {
             matchStringsStrategy: 'any',
@@ -29,9 +30,9 @@
             datasourceTemplate: 'docker',
             versioningTemplate: 'docker',
             matchStrings: [
-                'container_image: "(?<depName>.*?):(?<currentValue>.*?)(?:@(?<currentDigest>sha256:[a-f0-9]+))?",',
+                'container_image: '(?<depName>.*?):(?<currentValue>.*?)(?:@(?<currentDigest>sha256:[a-f0-9]+))?',',
             ],
-            autoReplaceStringTemplate: 'container_image: "{{depName}}{{#if newValue}}:{{newValue}}{{/if}}{{#if newDigest}}@{{newDigest}}{{/if}}",',
+            autoReplaceStringTemplate: 'container_image: '{{depName}}{{#if newValue}}:{{newValue}}{{/if}}{{#if newDigest}}@{{newDigest}}{{/if}}',',
         },
         {
             customType: 'regex',
