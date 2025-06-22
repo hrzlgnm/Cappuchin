@@ -271,16 +271,17 @@ jobs:
         working-directory: ./build
         run: ctest --verbose --build-config ${{matrix.toolchain.CMAKE_BUILD_TYPE}}
 
-      - name: Uploadtest report artifact
+      - name: Upload test report artifact
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUN_ID: ${{ github.run_id }}
           REPO: ${{ github.repository }}
+        shell: bash
         run: |
           # Extract owner and repo
           OWNER=$(echo $REPO | cut -d'/' -f1)
           REPO_NAME=$(echo $REPO | cut -d'/' -f2)
-          find -name 'junit.xml'
+          ls -laRt | grep junit
           # Create the artifact
           curl -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
