@@ -13,7 +13,7 @@
         ':enableVulnerabilityAlerts',
         ':maintainLockFilesMonthly',
         ':prConcurrentLimit10',
-        ':prHourlyLimit1'
+        ':prHourlyLimit1',
         ':prImmediately',
         ':rebaseStalePrs',
         ':semanticCommits',
