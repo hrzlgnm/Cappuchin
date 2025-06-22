@@ -16,7 +16,12 @@ jobs:
       - name: Checkout
         uses: classabbyamp/treeless-checkout-action@bd3615a6e9d5546151e17d72193eea0d6f297398 # v1
 
+      - name: 📐 Check cmake format
+        if: always()
+        run: gersemi --check --diff .
+
       - name: 📐 Check clang-format
+        if: always()
         run: cmake -D FORMAT_COMMAND=clang-format -P cmake/lint.cmake
 
       - name: 📝 Check spelling using typos-action
