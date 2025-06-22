@@ -6,11 +6,6 @@ on:
 env:
   SCCACHE_GHA_ENABLED: "on"
 
-permissions:
-  contents: read
-  pull-requests: write
-  checks: write
-
 jobs:
   Lint:
     runs-on: ubuntu-latest
@@ -275,16 +270,6 @@ jobs:
       - name: test
         working-directory: ./build
         run: ctest --verbose --build-config ${{matrix.toolchain.CMAKE_BUILD_TYPE}}
-
-      - name: JUnit Report
-        if: always()
-        uses: mikepenz/action-junit-report@a83fd2b5d58d4fc702e690c1ea688d702d28d281 # v5
-        with:
-          report_paths: "**/junit.xml"
-          fail_on_parse_error: true
-          require_tests: true
-          include_passed: true
-          check_name: "${{ matrix.toolchain.name }} JUnit Report"
 
       - name: Upload test report artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
