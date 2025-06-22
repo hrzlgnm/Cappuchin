@@ -277,7 +277,7 @@ jobs:
         with:
           name: "${{ matrix.toolchain.name }}-junit-report"
           path: |
-            build/junit.xml
+            build/doctest/junit.xml
 
       - name: Upload test report artifact (musl)
         # node cannot run with musl runtime
