@@ -280,7 +280,7 @@ jobs:
           # Extract owner and repo
           OWNER=$(echo $REPO | cut -d'/' -f1)
           REPO_NAME=$(echo $REPO | cut -d'/' -f2)
-
+          find -name 'junit.xml'
           # Create the artifact
           curl -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
