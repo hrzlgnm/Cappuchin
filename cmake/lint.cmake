@@ -11,7 +11,10 @@ default(PATTERNS source/*.cpp source/*.hpp test/*.cpp test/*.hpp)
 default(FIX NO)
 
 set(flag --output-replacements-xml)
-set(args OUTPUT_VARIABLE output)
+set(args
+    OUTPUT_VARIABLE
+    output
+)
 if(FIX)
     set(flag -i)
     set(args "")
@@ -24,9 +27,12 @@ string(LENGTH "${CMAKE_SOURCE_DIR}/" path_prefix_length)
 
 foreach(file IN LISTS files)
     execute_process(
-    COMMAND "${FORMAT_COMMAND}" --style=file "${flag}" "${file}"
-    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-    RESULT_VARIABLE result ${args})
+        COMMAND
+            "${FORMAT_COMMAND}" --style=file "${flag}" "${file}"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        RESULT_VARIABLE result
+        ${args}
+    )
     if(NOT result EQUAL "0")
         message(FATAL_ERROR "'${file}': formatter returned with ${result}")
     endif()
