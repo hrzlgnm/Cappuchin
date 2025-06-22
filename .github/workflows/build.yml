@@ -6,6 +6,11 @@ on:
 env:
   SCCACHE_GHA_ENABLED: "on"
 
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
 jobs:
   Lint:
     runs-on: ubuntu-latest
@@ -29,8 +34,6 @@ jobs:
 
   Build-And-Test:
     name: ${{ matrix.toolchain.name }}
-    permissions:
-      contents: write
     strategy:
       fail-fast: false
       matrix:
