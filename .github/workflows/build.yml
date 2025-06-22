@@ -282,6 +282,7 @@ jobs:
   JUnit:
     needs: [Build-And-Test]
     runs-on: ubuntu-latest
+    if: always()
     container:
       image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:fd73f6997d2a05eccae7360dbe86166eaf1f9bc1c970f261c31ce902e9a8711c"
 
