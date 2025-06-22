@@ -271,12 +271,22 @@ jobs:
         working-directory: ./build
         run: ctest --verbose --build-config ${{matrix.toolchain.CMAKE_BUILD_TYPE}}
 
-      - name: Upload test report artifacts
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: "${{ matrix.toolchain.name }} junit report"
-          path: |
-            build/junit.xml
+      - name: Uploadtest report artifact
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+          REPO: ${{ github.repository }}
+        run: |
+          # Extract owner and repo
+          OWNER=$(echo $REPO | cut -d'/' -f1)
+          REPO_NAME=$(echo $REPO | cut -d'/' -f2)
+
+          # Create the artifact
+          curl -X POST \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Content-Type: text/xml" \
+            --data-binary "@build/junit.xml" \
+            "https://uploads.github.com/repos/$OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts?name=${{ matrix.toolchain.name }}-junit-report"
 
   JUnit:
     needs: [Build-And-Test]
