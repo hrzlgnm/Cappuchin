@@ -60,6 +60,6 @@ fibonacci(35);
         auto end = std::chrono::steady_clock::now();
         duration = end - start;
     }
-    fmt::print("engine={}, result={}, duration={}\n", (engine_vm ? "vm" : "eval"), result->inspect(), duration.count());
+    fmt::print("engine={}, result={}, duration={}\n", engine_vm ? "vm" : "eval", result->inspect(), duration.count());
     return 0;
 }

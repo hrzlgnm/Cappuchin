@@ -75,7 +75,7 @@ auto symbol_table::define(const std::string& name) -> symbol
     using enum symbol_scope;
     return m_store[name] = symbol {
                .name = name,
-               .scope = (m_outer != nullptr) ? local : global,
+               .scope = m_outer != nullptr ? local : global,
                .index = m_defs++,
            };
 }
@@ -236,7 +236,7 @@ TEST_CASE("resolve")
         locals->define("d");
 
         using enum symbol_scope;
-        std::array expecteds {
+        const std::array expecteds {
             symbol {"a", global, 0, std::nullopt},
             symbol {"b", global, 1, std::nullopt},
             symbol {"c", local, 0, std::nullopt},

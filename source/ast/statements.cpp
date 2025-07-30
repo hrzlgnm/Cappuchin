@@ -9,7 +9,7 @@
 
 auto let_statement::string() const -> std::string
 {
-    return fmt::format("let {} = {};", name->string(), (value != nullptr) ? value->string() : std::string());
+    return fmt::format("let {} = {};", name->string(), value != nullptr ? value->string() : std::string());
 }
 
 void let_statement::accept(visitor& visitor) const
@@ -19,7 +19,7 @@ void let_statement::accept(visitor& visitor) const
 
 auto return_statement::string() const -> std::string
 {
-    return fmt::format("return {};", (value != nullptr) ? value->string() : std::string());
+    return fmt::format("return {};", value != nullptr ? value->string() : std::string());
 }
 
 void return_statement::accept(visitor& visitor) const

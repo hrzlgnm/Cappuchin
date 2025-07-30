@@ -231,8 +231,7 @@ void compiler::visit(const assign_expression& expr)
     expr.value->accept(*this);
     const auto maybe_symbol = resolve_symbol(expr.name->value);
     assert(maybe_symbol.has_value());
-    const auto& sym = maybe_symbol.value();
-    if (sym.scope == symbol_scope::global) {
+    if (const auto& sym = maybe_symbol.value(); sym.scope == symbol_scope::global) {
         emit(opcodes::set_global, sym.index);
     } else if (sym.scope == symbol_scope::local) {
         emit(opcodes::set_local, sym.index);
@@ -581,7 +580,7 @@ struct ctc
 
 auto check_instructions(const std::vector<instructions>& instructions, const ::instructions& code)
 {
-    auto flattened = flatten(instructions);
+    const auto flattened = flatten(instructions);
     CHECK_EQ(flattened.size(), code.size());
     INFO("expected: \n", to_string(flattened), "got: \n", to_string(code));
     CHECK_EQ(flattened, code);
