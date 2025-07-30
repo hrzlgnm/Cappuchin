@@ -279,7 +279,7 @@ TEST_SUITE("analyzer")
                   .expected_exception_string = "<stdin>:1:40: cannot reassign the current function being defined: f"},
         };
         for (const auto& [input, expected_exception_string] : tests) {
-            INFO(input, " expected error: ", std::string(expected_exception_string));
+            INFO(input, " expected error: ", expected_exception_string);
             CHECK_THROWS_WITH_AS(analyze(input), expected_exception_string, std::runtime_error);
         }
     }
