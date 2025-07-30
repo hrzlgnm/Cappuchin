@@ -5,6 +5,8 @@
 
 #include <lexer/location.hpp>
 
+struct visitor;
+
 struct expression
 {
     explicit expression(location loc)
@@ -19,7 +21,7 @@ struct expression
     auto operator=(expression&&) -> expression& = delete;
 
     [[nodiscard]] virtual auto string() const -> std::string = 0;
-    virtual void accept(struct visitor& visitor) const = 0;
+    virtual void accept(visitor& visitor) const = 0;
 
     [[nodiscard]] auto loc() const { return l; }
 
