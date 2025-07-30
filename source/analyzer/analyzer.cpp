@@ -80,7 +80,8 @@ void analyzer::visit(const assign_expression& expr)
     }
     // NOLINTBEGIN(bugprone-unchecked-optional-access)
     if (const auto& symbol = maybe_symbol.value();
-        symbol.is_function() || (symbol.is_outer() && symbol.ptr.value().is_function())) {
+        symbol.is_function() || (symbol.is_outer() && symbol.ptr.value().is_function()))
+    {
         fail(fmt::format("{}: cannot reassign the current function being defined: {}", expr.l, expr.name->value));
     }
     // NOLINTEND(bugprone-unchecked-optional-access)
@@ -278,8 +279,8 @@ TEST_SUITE("analyzer")
                   .expected_exception_string = "<stdin>:1:40: cannot reassign the current function being defined: f"},
         };
         for (const auto& [input, expected_exception_string] : tests) {
-            INFO( input, " expected error: ", std::string( expected_exception_string));
-            CHECK_THROWS_WITH_AS(analyze( input),  expected_exception_string, std::runtime_error);
+            INFO(input, " expected error: ", std::string(expected_exception_string));
+            CHECK_THROWS_WITH_AS(analyze(input), expected_exception_string, std::runtime_error);
         }
     }
 }
