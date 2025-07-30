@@ -13,7 +13,7 @@ struct analyzer final : visitor
     void analyze(const program* prgrm) noexcept(false);
 
     void visit(const array_literal& expr) final;
-    void visit(const assign_expression& expr) final;
+    void visit(const assign_expression& expr) override final;
     void visit(const binary_expression& expr) final;
     void visit(const block_statement& expr) final;
     void visit(const break_statement& expr) final;

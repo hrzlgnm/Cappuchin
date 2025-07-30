@@ -1,5 +1,4 @@
 #include <cstddef>
-#include <cstdint>
 #include <deque>
 #include <string>
 #include <unordered_map>
@@ -246,8 +245,7 @@ void evaluator::visit(const index_expression& expr)
     if (evaluated_left->is(array) && evaluated_index->is(integer)) {
         const auto& arr = evaluated_left->as<array_object>()->value;
         auto index = evaluated_index->as<integer_object>()->value;
-        auto max = static_cast<int64_t>(arr.size() - 1);
-        if (index < 0 || index > max) {
+        if (auto max = static_cast<int64_t>(arr.size() - 1); index < 0 || index > max) {
             m_result = null();
             return;
         }
@@ -258,8 +256,7 @@ void evaluator::visit(const index_expression& expr)
     if (evaluated_left->is(string) && evaluated_index->is(integer)) {
         const auto& str = evaluated_left->as<string_object>()->value;
         auto index = evaluated_index->as<integer_object>()->value;
-        auto max = static_cast<int64_t>(str.size() - 1);
-        if (index < 0 || index > max) {
+        if (auto max = static_cast<int64_t>(str.size() - 1); index < 0 || index > max) {
             m_result = null();
             return;
         }

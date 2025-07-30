@@ -262,7 +262,7 @@ auto parser::parse_expression_statement() -> statement*
 
 auto parser::parse_expression(int precedence) -> expression*
 {
-    auto unary = m_unary_parsers[m_current_token.type];
+    const auto unary = m_unary_parsers[m_current_token.type];
     if (!unary) {
         no_unary_expression_error(m_current_token.type);
         return {};
@@ -412,7 +412,7 @@ auto parser::parse_function_parameters() -> identifiers
         return parameters;
     }
     next_token();
-    auto* param = parse_identifier();
+    const auto* param = parse_identifier();
     parameters.push_back(param);
     while (peek_token_is(comma)) {
         next_token();
@@ -476,7 +476,7 @@ auto parser::parse_binary_expression(expression* left) -> expression*
     bin_expr->op = m_current_token.type;
     bin_expr->left = left;
 
-    auto precedence = current_precedence();
+    const auto precedence = current_precedence();
     next_token();
     bin_expr->right = parse_expression(precedence);
 
@@ -488,7 +488,7 @@ auto parser::parse_string_literal() const -> expression*
     return allocate<string_literal>(std::string {m_current_token.literal}, m_current_token.loc);
 }
 
-auto parser::parse_expressions(token_type end) -> expressions
+auto parser::parse_expressions(const token_type end) -> expressions
 {
     using enum token_type;
     expressions list;
@@ -770,7 +770,7 @@ let y = 10;
 let foobar = 838383;
         )");
     REQUIRE_EQ(program->statements.size(), 3);
-    auto expected_identifiers = std::vector<std::string> {
+    const auto expected_identifiers = std::vector<std::string> {
         "x",
         "y",
         "foobar",
@@ -790,7 +790,7 @@ y = 10;
 foobar = 838383;
         )");
     REQUIRE_EQ(program->statements.size(), 3);
-    auto expected_identifiers = std::vector<std::string> {"x", "y", "foobar", "x"};
+    const auto expected_identifiers = std::vector<std::string> {"x", "y", "foobar", "x"};
     for (size_t i = 0; i < 3; ++i) {
         require_assign_expression(program->statements[i], expected_identifiers[i]);
     }
@@ -850,7 +850,7 @@ let y = 10;
 let 838383;
         )"}};
     prsr.parse_program();
-    auto errors = prsr.errors();
+    const auto errors = prsr.errors();
     CHECK_FALSE(errors.empty());
 }
 
@@ -876,12 +876,12 @@ return 993322;
 TEST_CASE("string")
 {
     using enum token_type;
-    auto name = allocate<identifier>("myVar", location {"<stdin>", 1, 1});
-    auto value = allocate<identifier>("anotherVar", location {"<stdin>", 1, 9});
+    const auto name = allocate<identifier>("myVar", location {"<stdin>", 1, 1});
+    const auto value = allocate<identifier>("anotherVar", location {"<stdin>", 1, 9});
 
     program prgrm {location {"<stdin>", 1, 1}};
 
-    auto let_stmt = allocate<let_statement>(location {});
+    const auto let_stmt = allocate<let_statement>(location {});
 
     let_stmt->name = name;
     let_stmt->value = value;
@@ -979,7 +979,7 @@ TEST_CASE("operatorPrecedence")
         std::string expected;
     };
 
-    std::array tests {
+    const std::array tests {
         op {
             "-a * b",
             "((-a) * b)",
@@ -1216,7 +1216,7 @@ TEST_CASE("whileStatement")
 TEST_CASE("breakStatement")
 {
     using namespace std::string_view_literals;
-    std::array tests {
+    const std::array tests {
         "break"sv,
         "break;"sv,
     };
@@ -1230,7 +1230,7 @@ TEST_CASE("breakStatement")
 TEST_CASE("continueStatement")
 {
     using namespace std::string_view_literals;
-    std::array tests {
+    const std::array tests {
         "continue"sv,
         "continue;"sv,
     };
@@ -1337,9 +1337,9 @@ TEST_CASE("hashLiteralStringKeys")
 {
     auto [prgrm, _] = check_program(R"({"one": 1, "two": 2, "three": 3})");
     auto* hash_lit = require_expression<hash_literal>(prgrm);
-    std::array keys {"one", "two", "three"};
-    std::array values {1, 2, 3};
     for (auto idx = 0UL; const auto& [k, v] : hash_lit->pairs) {
+        constexpr std::array values {1, 2, 3};
+        constexpr std::array keys {"one", "two", "three"};
         require_string_literal(k, keys[idx]);
         require_integer_literal(v, values[idx]);
         idx++;
@@ -1350,7 +1350,6 @@ TEST_CASE("hashLiteralWithExpression")
 {
     auto [prgrm, _] = check_program(R"({"one": 0 + 1, "two": 10 - 8, "three": 15 / 5})");
     auto* hash_lit = require_expression<hash_literal>(prgrm);
-    std::array keys {"one", "two", "three"};
 
     struct test
     {
@@ -1359,9 +1358,13 @@ TEST_CASE("hashLiteralWithExpression")
         int64_t right;
     };
 
-    std::array expected {
-        test {0, token_type::plus, 1}, test {10, token_type::minus, 8}, test {15, token_type::slash, 5}};
+    const std::array expected {
+        test {0, token_type::plus, 1},
+        test {10, token_type::minus, 8},
+        test {15, token_type::slash, 5},
+    };
     for (size_t idx = 0; const auto& [k, v] : hash_lit->pairs) {
+        constexpr std::array keys {"one", "two", "three"};
         require_string_literal(k, keys[idx]);
         require_binary_expression(v, expected[idx].left, expected[idx].oper, expected[idx].right);
         idx++;

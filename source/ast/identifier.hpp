@@ -16,7 +16,7 @@ struct identifier final : expression
     }
 
     [[nodiscard]] auto string() const -> std::string override;
-    void accept(struct visitor& visitor) const override;
+    void accept(visitor& visitor) const override;
 
     std::string value;
 };

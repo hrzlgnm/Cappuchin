@@ -6,7 +6,6 @@
 #include <ast/boolean_literal.hpp>
 #include <ast/call_expression.hpp>
 #include <ast/decimal_literal.hpp>
-#include <ast/expression.hpp>
 #include <ast/function_literal.hpp>
 #include <ast/hash_literal.hpp>
 #include <ast/identifier.hpp>
@@ -18,8 +17,6 @@
 #include <ast/statements.hpp>
 #include <ast/string_literal.hpp>
 #include <ast/unary_expression.hpp>
-
-#include "expression.hpp"
 
 struct visitor
 {

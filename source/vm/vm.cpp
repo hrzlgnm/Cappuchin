@@ -54,13 +54,11 @@ auto vm::run() -> void
     for (; current_frame().ip < current_frame().cl->fn->instrs.size(); current_frame().ip++) {
         const auto ip = current_frame().ip;
         const auto& instr = current_frame().cl->fn->instrs;
-        const auto op = static_cast<opcodes>(instr[ip]);
-        switch (op) {
+        switch (const auto op = static_cast<opcodes>(instr[ip])) {
             case opcodes::constant: {
                 current_frame().ip += 2;
                 const auto const_idx = read_uint16_big_endian(instr, ip + 1UL);
-                const auto* constant = (*m_constants)[const_idx];
-                if (constant == nullptr) {
+                if (const auto* constant = (*m_constants)[const_idx]; constant == nullptr) {
                     throw std::runtime_error(fmt::format("constant at index {} does not exist", const_idx));
                 }
                 push((*m_constants)[const_idx]);
@@ -104,8 +102,7 @@ auto vm::run() -> void
             } break;
             case opcodes::jump_not_truthy: {
                 current_frame().ip += 2;
-                const auto* condition = pop();
-                if (!condition->is_truthy()) {
+                if (const auto* condition = pop(); !condition->is_truthy()) {
                     current_frame().ip = read_uint16_big_endian(instr, ip + 1UL) - 1;
                 }
             } break;
@@ -152,13 +149,13 @@ auto vm::run() -> void
             } break;
             case opcodes::brake: {
                 current_frame().ip += 1;
-                auto& frame = pop_frame();
+                const auto& frame = pop_frame();
                 m_sp = frame.base_ptr - 1;
                 push(fals());
             } break;
             case opcodes::cont: {
                 current_frame().ip += 1;
-                auto& frame = pop_frame();
+                const auto& frame = pop_frame();
                 m_sp = frame.base_ptr - 1;
                 push(tru());
             } break;
@@ -179,13 +176,13 @@ auto vm::run() -> void
             case opcodes::set_local: {
                 current_frame().ip += 1;
                 const auto local_index = instr[ip + 1UL];
-                auto& frame = current_frame();
+                const auto& frame = current_frame();
                 m_stack[frame.base_ptr + local_index] = pop();
             } break;
             case opcodes::get_local: {
                 current_frame().ip += 1;
                 const auto local_index = instr[ip + 1UL];
-                auto& frame = current_frame();
+                const auto& frame = current_frame();
                 push(m_stack[frame.base_ptr + local_index]);
             } break;
             case opcodes::set_outer:
@@ -395,9 +392,8 @@ auto vm::exec_index(const object* left, const object* index) -> void
 {
     using enum object::object_type;
     if (left->is(array) && index->is(integer)) {
-        auto idx = index->as<integer_object>()->value;
-        auto max = static_cast<int64_t>(left->as<array_object>()->value.size()) - 1;
-        if (idx < 0 || idx > max) {
+        const auto idx = index->as<integer_object>()->value;
+        if (auto max = static_cast<int64_t>(left->as<array_object>()->value.size()) - 1; idx < 0 || idx > max) {
             push(null());
             return;
         }
@@ -405,9 +401,8 @@ auto vm::exec_index(const object* left, const object* index) -> void
         return;
     }
     if (left->is(string) && index->is(integer)) {
-        auto idx = index->as<integer_object>()->value;
-        auto max = static_cast<int64_t>(left->as<string_object>()->value.size()) - 1;
-        if (idx < 0 || idx > max) {
+        const auto idx = index->as<integer_object>()->value;
+        if (auto max = static_cast<int64_t>(left->as<string_object>()->value.size()) - 1; idx < 0 || idx > max) {
             push(null());
             return;
         }

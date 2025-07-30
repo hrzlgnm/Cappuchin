@@ -171,7 +171,7 @@ void debug_byte_code(const bytecode& byte_code, const symbol_table* symbols)
 {
     std::cout << "Instructions: \n" << to_string(byte_code.instrs);
     std::cout << "Constants:\n";
-    for (auto idx = 0; const auto* constant : (*byte_code.consts)) {
+    for (auto idx = 0; const auto* constant : *byte_code.consts) {
         std::cout << idx << ": " << constant->inspect() << '\n';
         idx++;
     }
@@ -186,7 +186,7 @@ auto run_file(const command_line_args& opts) -> int
         std::cerr << "ERROR: could not open file: " << opts.file << '\n';
         return 1;
     }
-    const std::string contents {(std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>())};
+    const std::string contents {(std::istreambuf_iterator(ifs)), (std::istreambuf_iterator<char>())};
     auto lxr = lexer {contents, opts.file};
     auto prsr = parser {lxr};
     auto* prgrm = prsr.parse_program();
@@ -203,8 +203,7 @@ auto run_file(const command_line_args& opts) -> int
         }
         auto machine = vm::create(cmplr.byte_code());
         machine.run();
-        const auto* result = machine.last_popped();
-        if (!result->is_null()) {
+        if (const auto* result = machine.last_popped(); !result->is_null()) {
             std::cout << result->inspect() << '\n';
         }
     } else {
@@ -213,8 +212,7 @@ auto run_file(const command_line_args& opts) -> int
             global_env->set(builtin->name, allocate<builtin_object>(builtin));
         }
         evaluator ev {global_env};
-        const auto* result = ev.evaluate(prgrm);
-        if (!result->is_null()) {
+        if (const auto* result = ev.evaluate(prgrm); !result->is_null()) {
             std::cout << result->inspect() << '\n';
         }
         if (opts.debug) {
@@ -243,7 +241,7 @@ auto run_repl(const command_line_args& opts) -> int
         idx++;
     }
 
-    auto show_prompt = []() { std::cout << prompt; };
+    auto show_prompt = [] { std::cout << prompt; };
     auto input = std::string {};
     show_prompt();
     while (getline(std::cin, input)) {
@@ -273,8 +271,7 @@ auto run_repl(const command_line_args& opts) -> int
                 }
                 auto machine = vm::create_with_state(cmplr.byte_code(), &globals);
                 machine.run();
-                const auto* result = machine.last_popped();
-                if (!result->is_null()) {
+                if (const auto* result = machine.last_popped(); !result->is_null()) {
                     std::cout << result->inspect() << '\n';
                 }
             } catch (const std::exception& e) {
@@ -286,8 +283,7 @@ auto run_repl(const command_line_args& opts) -> int
             try {
                 evaluator ev {global_env};
 
-                const auto* result = ev.evaluate(prgrm);
-                if (!result->is_null()) {
+                if (const auto* result = ev.evaluate(prgrm); !result->is_null()) {
                     std::cout << result->inspect() << '\n';
                 }
             } catch (const std::exception& e) {
@@ -307,8 +303,8 @@ auto run_repl(const command_line_args& opts) -> int
 
 auto main(int argc, char* argv[]) -> int
 {
-    auto program = std::string_view(*argv);
-    auto opts = parse_command_line(program, argc - 1, ++argv);
+    const auto program = std::string_view(*argv);
+    const auto opts = parse_command_line(program, argc - 1, ++argv);
     if (opts.help) {
         show_usage(program);
     }

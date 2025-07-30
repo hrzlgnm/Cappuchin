@@ -78,9 +78,9 @@ void analyzer::visit(const assign_expression& expr)
     if (!maybe_symbol.has_value()) {
         fail(fmt::format("{}: identifier not found: {}", expr.l, expr.name->value));
     }
-    const auto& symbol = maybe_symbol.value();
     // NOLINTBEGIN(bugprone-unchecked-optional-access)
-    if (symbol.is_function() || (symbol.is_outer() && symbol.ptr.value().is_function())) {
+    if (const auto& symbol = maybe_symbol.value();
+        symbol.is_function() || (symbol.is_outer() && symbol.ptr.value().is_function())) {
         fail(fmt::format("{}: cannot reassign the current function being defined: {}", expr.l, expr.name->value));
     }
     // NOLINTEND(bugprone-unchecked-optional-access)
@@ -103,8 +103,7 @@ void analyzer::visit(const hash_literal& expr)
 
 void analyzer::visit(const identifier& expr)
 {
-    auto symbol = m_symbols->resolve(expr.value);
-    if (!symbol.has_value()) {
+    if (auto symbol = m_symbols->resolve(expr.value); !symbol.has_value()) {
         fail(fmt::format("{}: identifier not found: {}", expr.l, expr.value));
     }
 }
@@ -142,10 +141,8 @@ void analyzer::visit(const program& expr)
 
 void analyzer::visit(const let_statement& expr)
 {
-    auto symbol = m_symbols->resolve(expr.name->value);
-    if (symbol.has_value()) {
-        const auto& value = symbol.value();
-        if (value.is_local() || (value.is_global() && m_symbols->is_global())) {
+    if (auto symbol = m_symbols->resolve(expr.name->value); symbol.has_value()) {
+        if (const auto& value = symbol.value(); value.is_local() || (value.is_global() && m_symbols->is_global())) {
             fail(fmt::format("{}: {} is already defined", expr.l, expr.name->value));
         }
     }
@@ -280,9 +277,9 @@ TEST_SUITE("analyzer")
             test {.input = "let f = fn(x) { if (x > 0) { f(x - 1); f = 2; } }",
                   .expected_exception_string = "<stdin>:1:40: cannot reassign the current function being defined: f"},
         };
-        for (const auto& test : tests) {
-            INFO(test.input, " expected error: ", std::string(test.expected_exception_string));
-            CHECK_THROWS_WITH_AS(analyze(test.input), test.expected_exception_string, std::runtime_error);
+        for (const auto& [input, expected_exception_string] : tests) {
+            INFO( input, " expected error: ", std::string( expected_exception_string));
+            CHECK_THROWS_WITH_AS(analyze( input),  expected_exception_string, std::runtime_error);
         }
     }
 }
