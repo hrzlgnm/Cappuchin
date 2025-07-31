@@ -24,7 +24,7 @@ auto operator==(const symbol& lhs, const symbol& rhs) -> bool
     return lhs.name == rhs.name && lhs.scope == rhs.scope && lhs.index == rhs.index && lhs.ptr == rhs.ptr;
 }
 
-auto operator<<(std::ostream& ost, symbol_scope scope) -> std::ostream&
+auto operator<<(std::ostream& ost, const symbol_scope scope) -> std::ostream&
 {
     using enum symbol_scope;
     switch (scope) {
@@ -64,7 +64,7 @@ auto symbol_table::create_enclosed(symbol_table* outer, bool inside_loop) -> sym
     return allocate<symbol_table>(outer, inside_loop);
 }
 
-symbol_table::symbol_table(symbol_table* outer, bool inside_loop)
+symbol_table::symbol_table(symbol_table* outer, const bool inside_loop)
     : m_outer {outer}
     , m_inside_loop {inside_loop}
 {
@@ -80,7 +80,7 @@ auto symbol_table::define(const std::string& name) -> symbol
            };
 }
 
-auto symbol_table::define_builtin(int index, const std::string& name) -> symbol
+auto symbol_table::define_builtin(const int index, const std::string& name) -> symbol
 {
     return m_store[name] = symbol {
                .name = name,
@@ -98,7 +98,7 @@ auto symbol_table::define_function_name(const std::string& name) -> symbol
            };
 }
 
-auto symbol_table::define_outer(const symbol& original, int level) -> symbol
+auto symbol_table::define_outer(const symbol& original, const int level) -> symbol
 {
     using enum symbol_scope;
     if (original.scope == local || original.scope == free || original.scope == function) {

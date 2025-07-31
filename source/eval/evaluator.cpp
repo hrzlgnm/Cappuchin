@@ -72,7 +72,7 @@ void evaluator::visit(const assign_expression& expr)
 
 namespace
 {
-auto apply_binary_operator(token_type oper, const object* left, const object* right) -> const object*
+auto apply_binary_operator(const token_type oper, const object* left, const object* right) -> const object*
 {
     using enum token_type;
     switch (oper) {
@@ -435,7 +435,7 @@ void evaluator::apply_function(const object* function_or_builtin, array_object::
     }
     if (function_or_builtin->is(object::object_type::builtin)) {
         const auto* builtin = function_or_builtin->as<builtin_object>();
-        m_result = builtin->builtin->body(std::move(args));
+        m_result = builtin->bltn->body(std::move(args));
         return;
     }
     m_result = make_error("calling a value of type {} is not supported", function_or_builtin->type());
@@ -466,10 +466,10 @@ struct error
 using array = std::vector<std::variant<std::string, int64_t>>;
 using hash = std::unordered_map<std::string, int64_t>;
 using null_type = std::monostate;
-const null_type null_value {};
+constexpr null_type null_value {};
 
 // NOLINTBEGIN(*)
-auto require_eq(const object* obj, const int64_t expected, std::string_view input) -> void
+auto require_eq(const object* obj, const int64_t expected, const std::string_view input) -> void
 {
     INFO(input, " expected: integer ", " with: ", expected, " got: ", obj->type(), " with: ", obj->inspect());
     REQUIRE(obj->is(object::object_type::integer));
@@ -477,7 +477,7 @@ auto require_eq(const object* obj, const int64_t expected, std::string_view inpu
     REQUIRE(actual == expected);
 }
 
-auto require_eq(const object* obj, const bool expected, std::string_view input) -> void
+auto require_eq(const object* obj, const bool expected, const std::string_view input) -> void
 {
     INFO(input, " expected: boolean ", " with: ", expected, " got: ", obj->type(), " with: ", obj->inspect());
     REQUIRE(obj->is(object::object_type::boolean));
@@ -485,7 +485,7 @@ auto require_eq(const object* obj, const bool expected, std::string_view input) 
     REQUIRE(actual == expected);
 }
 
-auto require_eq(const object* obj, const std::string& expected, std::string_view input) -> void
+auto require_eq(const object* obj, const std::string& expected, const std::string_view input) -> void
 {
     INFO(input, " expected: string with: ", expected, " got: ", obj->type(), " with: ", obj->inspect());
     REQUIRE(obj->is(object::object_type::string));
@@ -493,7 +493,7 @@ auto require_eq(const object* obj, const std::string& expected, std::string_view
     REQUIRE(actual == expected);
 }
 
-auto require_eq(const object* obj, double expected, std::string_view input) -> void
+auto require_eq(const object* obj, const double expected, const std::string_view input) -> void
 {
     INFO(input, " expected: decimal with: ", expected, " got: ", obj->type(), " with: ", obj->inspect());
     REQUIRE(obj->is(object::object_type::decimal));
@@ -501,7 +501,7 @@ auto require_eq(const object* obj, double expected, std::string_view input) -> v
     REQUIRE(actual == dt::Approx(expected));
 }
 
-auto require_array_eq(const object* obj, const array& expected, std::string_view input) -> void
+auto require_array_eq(const object* obj, const array& expected, const std::string_view input) -> void
 {
     INFO(input, " expected: array with: ", expected.size(), "elements got: ", obj->type(), " with: ", obj->inspect());
     REQUIRE(obj->is(object::object_type::array));
@@ -518,7 +518,7 @@ auto require_array_eq(const object* obj, const array& expected, std::string_view
     }
 }
 
-auto require_hash_eq(const object* obj, const hash& expected, std::string_view input) -> void
+auto require_hash_eq(const object* obj, const hash& expected, const std::string_view input) -> void
 {
     INFO(input, " expected: hash with: ", expected.size(), " got: ", obj->type(), " with: ", obj->inspect());
     REQUIRE(obj->is(object::object_type::hash));
@@ -531,7 +531,7 @@ auto require_hash_eq(const object* obj, const hash& expected, std::string_view i
     }
 }
 
-auto require_error_eq(const object* obj, const std::string& expected, std::string_view input) -> void
+auto require_error_eq(const object* obj, const std::string& expected, const std::string_view input) -> void
 {
     INFO(input, " expected: error with message: ", expected, " got: ", obj->type(), " with: ", obj->inspect());
     REQUIRE(obj->is(object::object_type::error));
@@ -546,26 +546,26 @@ auto check_no_parse_errors(const parser& prsr) -> bool
     return prsr.errors().empty();
 }
 
-using parsed_program = std::pair<program*, parser>;
+using parsed_program = std::pair<const program*, parser>;
 
-auto check_program(std::string_view input) -> parsed_program
+auto check_program(const std::string_view input) -> parsed_program
 {
     auto prsr = parser {lexer {input}};
-    auto prgrm = prsr.parse_program();
+    const auto prgrm = prsr.parse_program();
     INFO("while parsing: `", input, "`");
     CHECK(check_no_parse_errors(prsr));
     return {prgrm, std::move(prsr)};
 }
 
-auto run(std::string_view input) -> const object*
+auto run(const std::string_view input) -> const object*
 {
-    auto [prgrm, _] = check_program(input);
+    const auto [prgrm, _] = check_program(input);
     environment env;
     for (const auto& builtin : builtin::builtins()) {
         env.set(builtin->name, allocate<builtin_object>(builtin));
     }
     evaluator ev(&env);
-    auto result = ev.evaluate(prgrm);
+    const auto result = ev.evaluate(prgrm);
     REQUIRE(result);
     return result;
 }
@@ -575,7 +575,7 @@ auto run_multi(std::deque<std::string>& inputs) -> const object*
     environment env;
     const object* result = nullptr;
     while (!inputs.empty()) {
-        auto [prgrm, _] = check_program(inputs.front());
+        const auto [prgrm, _] = check_program(inputs.front());
         evaluator ev {&env};
         result = ev.evaluate(prgrm);
         inputs.pop_front();

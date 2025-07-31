@@ -146,19 +146,19 @@ auto build_two_token_lookup() -> two_token_lookup
     return lookup;
 }
 
-inline auto is_letter(char chr) -> bool
+inline auto is_letter(const char chr) -> bool
 {
     return std::isalpha(static_cast<unsigned char>(chr)) != 0 || chr == '_';
 }
 
-inline auto is_digit(char chr) -> bool
+inline auto is_digit(const char chr) -> bool
 {
     return std::isdigit(static_cast<unsigned char>(chr)) != 0;
 }
 
 }  // namespace
 
-lexer::lexer(std::string_view input, std::string_view filename)
+lexer::lexer(const std::string_view input, const std::string_view filename)
     : m_input {input}
     , m_filename {filename}
 {
@@ -228,7 +228,7 @@ auto lexer::skip_whitespace() -> void
     }
 }
 
-auto lexer::peek_char() -> std::string_view::value_type
+auto lexer::peek_char() const -> std::string_view::value_type
 {
     if (m_read_position >= m_input.size()) {
         return '\0';
@@ -243,7 +243,7 @@ auto lexer::read_identifier_or_keyword() -> token
     while (is_letter(m_byte)) {
         read_char();
     }
-    auto end = m_position;
+    const auto end = m_position;
     const auto count = end - position;
     const auto identifier_or_keyword = m_input.substr(position, count);
     // MSVC compiler will not be happy with a const auto* const itr here
@@ -270,8 +270,8 @@ auto lexer::read_number() -> token
         }
         read_char();
     }
-    auto end = m_position;
-    auto count = end - position;
+    const auto end = m_position;
+    const auto count = end - position;
     if (dot_count == 0) {
         return token {.type = token_type::integer, .literal = m_input.substr(position, count), .loc = loc};
     }
@@ -296,7 +296,7 @@ auto lexer::read_string() -> token
     return read_char(), token {.type = token_type::string, .literal = m_input.substr(position, count), .loc = loc};
 }
 
-auto lexer::current_loc() -> location
+auto lexer::current_loc() const -> location
 {
     const auto column = m_row == 0 ? m_read_position - m_bol : m_read_position - m_bol - 1;
     return location {.filename = m_filename, .line = m_row + 1, .column = column};
@@ -344,7 +344,7 @@ null
 <=
 >=
 )"};
-    const std::array expected_tokens {
+    constexpr std::array expected_tokens {
         token {.type = let,
                .literal = "let",
                .loc {

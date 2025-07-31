@@ -9,7 +9,7 @@ struct visitor;
 
 struct expression
 {
-    explicit expression(location loc)
+    explicit expression(const location& loc)
         : l {loc}
     {
     }

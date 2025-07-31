@@ -43,7 +43,7 @@ auto object_eq(const object& lhs, const object& rhs) -> bool
 
 constexpr auto epsilon = 1e-9;
 
-auto are_almost_equal(double a, double b) -> bool
+auto are_almost_equal(const double a, const double b) -> bool
 {
     return std::fabs(a - b) < epsilon;
 }
@@ -97,7 +97,7 @@ auto ge_helper(const T* t, const object& other) -> const object*
 }
 
 template<typename T>
-auto multiply_sequence_helper(const T* source, integer_object::value_type count) -> const object*
+auto multiply_sequence_helper(const T* source, const integer_object::value_type count) -> const object*
 {
     typename T::value_type target;
     for (integer_object::value_type i = 0; i < count; i++) {
@@ -106,12 +106,12 @@ auto multiply_sequence_helper(const T* source, integer_object::value_type count)
     return allocate<T>(std::move(target));
 }
 
-auto math_mod(integer_object::value_type lhs, integer_object::value_type rhs) -> integer_object::value_type
+auto math_mod(const integer_object::value_type lhs, const integer_object::value_type rhs) -> integer_object::value_type
 {
     return ((lhs % rhs) + rhs) % rhs;
 }
 
-auto math_mod(decimal_object::value_type lhs, decimal_object::value_type rhs) -> decimal_object::value_type
+auto math_mod(const decimal_object::value_type lhs, const decimal_object::value_type rhs) -> decimal_object::value_type
 {
     return std::fmod(std::fmod(lhs, rhs) + rhs, rhs);
 }
@@ -172,40 +172,40 @@ auto object::operator||(const object& other) const -> const object*
 
 builtin_object::builtin_object(const struct builtin* bltn)
 
-    : builtin {bltn}
+    : bltn {bltn}
 {
 }
 
-auto operator<<(std::ostream& ostrm, object::object_type type) -> std::ostream&
+auto operator<<(std::ostream& out, object::object_type type) -> std::ostream&
 {
     using enum object::object_type;
     switch (type) {
         case integer:
-            return ostrm << "integer";
+            return out << "integer";
         case decimal:
-            return ostrm << "decimal";
+            return out << "decimal";
         case boolean:
-            return ostrm << "boolean";
+            return out << "boolean";
         case string:
-            return ostrm << "string";
+            return out << "string";
         case error:
-            return ostrm << "error";
+            return out << "error";
         case array:
-            return ostrm << "array";
+            return out << "array";
         case hash:
-            return ostrm << "hash";
+            return out << "hash";
         case function:
-            return ostrm << "function";
+            return out << "function";
         case compiled_function:
-            return ostrm << "compiled_function";
+            return out << "compiled_function";
         case closure:
-            return ostrm << "closure";
+            return out << "closure";
         case builtin:
-            return ostrm << "builtin";
+            return out << "builtin";
         case return_value:
-            return ostrm << "return_value";
+            return out << "return_value";
     }
-    return ostrm << "unknown " << std::hex << static_cast<int>(type);
+    return out << "unknown " << std::hex << static_cast<int>(type);
 }
 
 auto string_object::hash_key() const -> key_type
@@ -330,16 +330,14 @@ auto boolean_object::operator*(const object& other) const -> const object*
 auto boolean_object::operator/(const object& other) const -> const object*
 {
     if (other.is(integer)) {
-        const auto other_value = other.val<integer_object>();
-        if (other_value == 0) {
+        if (const auto other_value = other.val<integer_object>(); other_value == 0) {
             return make_error("division by zero");
         }
         return allocate<decimal_object>(value_to<decimal_object>()
                                         / other.as<integer_object>()->value_to<decimal_object>());
     }
     if (other.is(boolean)) {
-        const auto other_value = other.as<boolean_object>()->value_to<integer_object>();
-        if (other_value == 0) {
+        if (const auto other_value = other.as<boolean_object>()->value_to<integer_object>(); other_value == 0) {
             return make_error("division by zero");
         }
         return allocate<decimal_object>(value_to<decimal_object>()
@@ -518,16 +516,14 @@ auto integer_object::operator*(const object& other) const -> const object*
 auto integer_object::operator/(const object& other) const -> const object*
 {
     if (other.is(integer)) {
-        const auto other_value = other.val<integer_object>();
-        if (other_value == 0) {
+        if (const auto other_value = other.val<integer_object>(); other_value == 0) {
             return make_error("division by zero");
         }
         return allocate<decimal_object>(value_to<decimal_object>()
                                         / other.as<integer_object>()->value_to<decimal_object>());
     }
     if (other.is(boolean)) {
-        const auto other_value = other.as<boolean_object>()->value_to<integer_object>();
-        if (other_value == 0) {
+        if (const auto other_value = other.as<boolean_object>()->value_to<integer_object>(); other_value == 0) {
             return make_error("division by zero");
         }
         return allocate<decimal_object>(value_to<decimal_object>()
@@ -735,7 +731,7 @@ auto object_floor_div(const object* lhs, const object* rhs) -> const object*
 
 auto builtin_object::inspect() const -> std::string
 {
-    return fmt::format("builtin {}({}){{...}}", builtin->name, fmt::join(builtin->parameters, ", "));
+    return fmt::format("builtin {}({}){{...}}", bltn->name, fmt::join(bltn->parameters, ", "));
 }
 
 auto return_value_object::inspect() const -> std::string
@@ -808,9 +804,9 @@ auto operator<<(std::ostream& strm, const hashable::key_type& t) -> std::ostream
 {
     std::visit(
         overloaded {
-            [&](int64_t val) { strm << val; },
+            [&](const int64_t val) { strm << val; },
             [&](const std::string& val) { strm << '"' << val << '"'; },
-            [&](bool val) { strm << std::boolalpha << val; },
+            [&](const bool val) { strm << std::boolalpha << val; },
         },
         t);
     return strm;
@@ -856,8 +852,7 @@ auto hash_object::operator+(const object& other) const -> const object*
 {
     if (other.is(hash)) {
         value_type concat = value;
-        const auto& other_value = other.as<hash_object>()->value;
-        for (const auto& pair : other_value) {
+        for (const auto& other_value = other.as<hash_object>()->value; const auto& pair : other_value) {
             concat.insert_or_assign(pair.first, pair.second);
         }
         return allocate<hash_object>(std::move(concat));
@@ -891,7 +886,7 @@ namespace
 {
 // NOLINTBEGIN(*)
 
-auto check_op_defined(const object* res, std::string_view op, const object& lhs, const object& rhs) -> bool
+auto check_op_defined(const object* res, const std::string_view op, const object& lhs, const object& rhs) -> bool
 {
     if (res == nullptr) {
         INFO("operator ", lhs.type(), " ", op, " ", rhs.type(), " is not defined ");

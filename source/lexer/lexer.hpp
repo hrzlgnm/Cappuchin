@@ -13,11 +13,11 @@ class lexer final
   private:
     auto read_char() -> void;
     auto skip_whitespace() -> void;
-    auto peek_char() -> std::string_view::value_type;
+    auto peek_char() const -> std::string_view::value_type;
     auto read_identifier_or_keyword() -> token;
     auto read_number() -> token;
     auto read_string() -> token;
-    auto current_loc() -> location;
+    auto current_loc() const -> location;
 
     std::string_view m_input;
     std::string_view m_filename;

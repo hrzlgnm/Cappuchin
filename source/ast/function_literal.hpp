@@ -8,13 +8,13 @@
 
 struct function_literal final : expression
 {
-    function_literal(identifiers&& params, const block_statement* bod, location loc)
+    function_literal(identifiers&& params, const block_statement* bod, const location& loc)
         : expression {loc}
         , parameters {std::move(params)}
         , body {bod} {};
 
-    [[nodiscard]] auto string() const -> std::string final;
-    void accept(struct visitor& visitor) const final;
+    [[nodiscard]] auto string() const -> std::string override;
+    void accept(struct visitor& visitor) const override;
 
     std::string name;
     identifiers parameters;

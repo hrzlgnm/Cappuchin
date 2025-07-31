@@ -9,7 +9,7 @@
 
 struct identifier final : expression
 {
-    explicit identifier(std::string val, location loc)
+    explicit identifier(std::string val, const location& loc)
         : expression {loc}
         , value {std::move(val)}
     {

@@ -15,7 +15,7 @@ class gc
   private:
     static void cleanup()
     {
-        for (T* obj : get_store()) {
+        for (const T* obj : get_store()) {
             delete obj;
         }
     }

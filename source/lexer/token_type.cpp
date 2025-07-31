@@ -3,7 +3,7 @@
 
 #include "token_type.hpp"
 
-auto operator<<(std::ostream& ostream, token_type type) -> std::ostream&
+auto operator<<(std::ostream& ostream, const token_type type) -> std::ostream&
 {
     using enum token_type;
     switch (type) {
