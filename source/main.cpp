@@ -58,17 +58,17 @@ auto print_parse_errors(const std::vector<std::string>& errors)
     }
 }
 
-auto show_error(std::string_view error_kind, std::string_view error_message)
+auto show_error(const std::string_view error_kind, const std::string_view error_message)
 {
     std::cerr << "Whoops! We ran into some " << error_kind << " error: \n  " << error_message << '\n';
 }
 
-auto print_compile_error(std::string_view error)
+auto print_compile_error(const std::string_view error)
 {
     show_error("compiler", error);
 }
 
-auto print_eval_error(std::string_view error)
+auto print_eval_error(const std::string_view error)
 {
     show_error("evaluation", error);
 }
@@ -79,7 +79,7 @@ enum class engine : std::uint8_t
     eval,
 };
 
-auto operator<<(std::ostream& strm, engine en) -> std::ostream&
+auto operator<<(std::ostream& strm, const engine en) -> std::ostream&
 {
     switch (en) {
         case engine::vm:
@@ -134,7 +134,7 @@ auto get_build_type() -> std::string
     // NOLINTEND(concurrency-mt-unsafe)
 }
 
-auto parse_command_line(std::string_view program, int argc, char** argv) -> command_line_args
+auto parse_command_line(const std::string_view program, const int argc, char** argv) -> command_line_args
 {
     command_line_args opts {};
     for (std::string_view arg : std::span(argv, static_cast<std::size_t>(argc))) {

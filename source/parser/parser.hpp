@@ -15,7 +15,7 @@
 class parser final
 {
   public:
-    explicit parser(lexer lxr);
+    explicit parser(const lexer& lxr);
     auto parse_program() -> program*;
     auto errors() const -> const std::vector<std::string>&;
 

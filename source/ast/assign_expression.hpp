@@ -6,8 +6,8 @@
 struct assign_expression final : expression
 {
     using expression::expression;
-    [[nodiscard]] auto string() const -> std::string final;
-    void accept(visitor& visitor) const final;
+    [[nodiscard]] auto string() const -> std::string override;
+    void accept(visitor& visitor) const override;
 
     const identifier* name {};
     const expression* value {};

@@ -30,7 +30,7 @@ struct compilation_scope final
     emitted_instruction previous_instr;
 };
 
-struct compiler final : public visitor
+struct compiler final : visitor
 {
     auto compile(const program* program) -> void;
     [[nodiscard]] static auto create() -> compiler;
@@ -44,9 +44,9 @@ struct compiler final : public visitor
     [[nodiscard]] auto add_instructions(const instructions& ins) -> std::size_t;
     auto emit(opcodes opcode, const operands& operands = {}) -> std::size_t;
 
-    auto emit(opcodes opcode, std::size_t operand) -> std::size_t { return emit(opcode, std::vector {operand}); }
+    auto emit(const opcodes opcode, const std::size_t operand) -> std::size_t { return emit(opcode, std::vector {operand}); }
 
-    auto emit(opcodes opcode, int operand) -> std::size_t
+    auto emit(const opcodes opcode, const int operand) -> std::size_t
     {
         return emit(opcode, std::vector {static_cast<std::size_t>(operand)});
     }
@@ -71,29 +71,29 @@ struct compiler final : public visitor
     [[nodiscard]] auto all_symbols() const -> const symbol_table* { return m_symbols; }
 
   protected:
-    void visit(const array_literal& expr) final;
-    void visit(const assign_expression& expr) final;
-    void visit(const binary_expression& expr) final;
-    void visit(const block_statement& expr) final;
-    void visit(const boolean_literal& expr) final;
-    void visit(const break_statement& expr) final;
-    void visit(const call_expression& expr) final;
-    void visit(const continue_statement& expr) final;
-    void visit(const decimal_literal& expr) final;
-    void visit(const expression_statement& expr) final;
-    void visit(const function_literal& expr) final;
-    void visit(const hash_literal& expr) final;
-    void visit(const identifier& expr) final;
-    void visit(const if_expression& expr) final;
-    void visit(const index_expression& expr) final;
-    void visit(const integer_literal& expr) final;
-    void visit(const let_statement& expr) final;
-    void visit(const null_literal& expr) final;
-    void visit(const program& expr) final;
-    void visit(const return_statement& expr) final;
-    void visit(const string_literal& expr) final;
-    void visit(const unary_expression& expr) final;
-    void visit(const while_statement& expr) final;
+    void visit(const array_literal& expr) override;
+    void visit(const assign_expression& expr) override;
+    void visit(const binary_expression& expr) override;
+    void visit(const block_statement& expr) override;
+    void visit(const boolean_literal& expr) override;
+    void visit(const break_statement& expr) override;
+    void visit(const call_expression& expr) override;
+    void visit(const continue_statement& expr) override;
+    void visit(const decimal_literal& expr) override;
+    void visit(const expression_statement& expr) override;
+    void visit(const function_literal& expr) override;
+    void visit(const hash_literal& expr) override;
+    void visit(const identifier& expr) override;
+    void visit(const if_expression& expr) override;
+    void visit(const index_expression& expr) override;
+    void visit(const integer_literal& expr) override;
+    void visit(const let_statement& expr) override;
+    void visit(const null_literal& expr) override;
+    void visit(const program& expr) override;
+    void visit(const return_statement& expr) override;
+    void visit(const string_literal& expr) override;
+    void visit(const unary_expression& expr) override;
+    void visit(const while_statement& expr) override;
 
   private:
     constants* m_consts {};

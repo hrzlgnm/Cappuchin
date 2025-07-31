@@ -1,5 +1,4 @@
 #include <array>
-#include <cstddef>
 #include <cstdint>
 #include <optional>
 #include <ostream>
@@ -121,7 +120,7 @@ auto make(opcodes opcode, const operands& operands) -> instructions
     instructions instr;
     instr.push_back(static_cast<uint8_t>(opcode));
     for (size_t idx = 0; const auto operand : operands) {
-        switch (auto width = definition.operand_widths[idx]) {
+        switch (const auto width = definition.operand_widths[idx]) {
             case 2:
                 write_uint16_big_endian(
                     instr, static_cast<std::uint16_t>(instr.size()), static_cast<std::uint16_t>(operand));
@@ -137,7 +136,7 @@ auto make(opcodes opcode, const operands& operands) -> instructions
     return instr;
 }
 
-auto make(opcodes opcode, size_t operand) -> instructions
+auto make(const opcodes opcode, const size_t operand) -> instructions
 {
     operands rands;
     rands.push_back(operand);
@@ -167,7 +166,7 @@ auto read_operands(const definition& def, const instructions& instr) -> std::pai
     return result;
 }
 
-auto lookup(opcodes opcode) -> std::optional<definition>
+auto lookup(const opcodes opcode) -> std::optional<definition>
 {
     if (!definitions.contains(opcode)) {
         return std::nullopt;
@@ -218,7 +217,7 @@ auto to_string(const instructions& code) -> std::string
 constexpr auto bits_in_byte = 8U;
 constexpr auto byte_mask = 0xFFU;
 
-auto read_uint16_big_endian(const std::vector<uint8_t>& bytes, size_t offset) -> uint16_t
+auto read_uint16_big_endian(const std::vector<uint8_t>& bytes, const size_t offset) -> uint16_t
 {
     if (offset + 2 > bytes.size()) {
         throw std::out_of_range("Offset is out of bounds");
@@ -230,7 +229,7 @@ auto read_uint16_big_endian(const std::vector<uint8_t>& bytes, size_t offset) ->
     return result;
 }
 
-void write_uint16_big_endian(std::vector<uint8_t>& bytes, size_t offset, uint16_t value)
+void write_uint16_big_endian(std::vector<uint8_t>& bytes, const size_t offset, const uint16_t value)
 {
     if (offset + 2 > bytes.size()) {
         bytes.resize(offset + 2);
@@ -306,15 +305,15 @@ TEST_SUITE("code")
 0006 OpConstant 65535
 0009 OpClosure 65535 255
 )";
-        std::vector<instructions> instrs {
+        const std::vector<instructions> instrs {
             make(opcodes::add),
             make(opcodes::get_local, 1),
             make(opcodes::constant, 2),
             make(opcodes::constant, 65535),
             make(opcodes::closure, {65535, 255}),
         };
-        auto concatenated = flatten(instrs);
-        auto actual = to_string(concatenated);
+        const auto concatenated = flatten(instrs);
+        const auto actual = to_string(concatenated);
         REQUIRE_EQ(expected, actual);
     }
 

@@ -74,7 +74,7 @@ void analyzer::visit(const array_literal& expr)
 
 void analyzer::visit(const assign_expression& expr)
 {
-    auto maybe_symbol = m_symbols->resolve(expr.name->value);
+    const auto maybe_symbol = m_symbols->resolve(expr.name->value);
     if (!maybe_symbol.has_value()) {
         fail(fmt::format("{}: identifier not found: {}", expr.l, expr.name->value));
     }
@@ -219,20 +219,20 @@ auto check_no_parse_errors(const parser& prsr) -> bool
     return prsr.errors().empty();
 }
 
-using parsed_program = std::pair<program*, parser>;
+using parsed_program = std::pair<const program*, parser>;
 
-auto check_program(std::string_view input) -> parsed_program
+auto check_program(const std::string_view input) -> parsed_program
 {
     auto prsr = parser {lexer {input}};
-    auto* prgrm = prsr.parse_program();
+    const auto* prgrm = prsr.parse_program();
     INFO("while parsing: `", input, "`");
     CHECK(check_no_parse_errors(prsr));
     return {prgrm, std::move(prsr)};
 }
 
-auto analyze(std::string_view input) noexcept(false) -> void
+auto analyze(const std::string_view input) noexcept(false) -> void
 {
-    auto [prgrm, _] = check_program(input);
+    const auto [prgrm, _] = check_program(input);
     analyze_program(prgrm, nullptr, nullptr);
 }
 
@@ -279,7 +279,7 @@ TEST_SUITE("analyzer")
                   .expected_exception_string = "<stdin>:1:40: cannot reassign the current function being defined: f"},
         };
         for (const auto& tst : tests) {
-            INFO(tst.input, " expected error: ", tst.expected_exception_string);
+            INFO(tst.input, " expected error: ", std::string(tst.expected_exception_string));
             CHECK_THROWS_WITH_AS(analyze(tst.input), tst.expected_exception_string, std::runtime_error);
         }
     }

@@ -8,8 +8,8 @@ using statement = expression;
 struct let_statement final : statement
 {
     using expression::expression;
-    [[nodiscard]] auto string() const -> std::string final;
-    void accept(visitor& visitor) const final;
+    [[nodiscard]] auto string() const -> std::string override;
+    void accept(visitor& visitor) const override;
 
     const identifier* name {};
     const expression* value {};
@@ -18,8 +18,8 @@ struct let_statement final : statement
 struct return_statement final : statement
 {
     using expression::expression;
-    [[nodiscard]] auto string() const -> std::string final;
-    void accept(visitor& visitor) const final;
+    [[nodiscard]] auto string() const -> std::string override;
+    void accept(visitor& visitor) const override;
 
     const expression* value {};
 };
@@ -27,22 +27,22 @@ struct return_statement final : statement
 struct break_statement final : statement
 {
     using expression::expression;
-    [[nodiscard]] auto string() const -> std::string final;
-    void accept(visitor& visitor) const final;
+    [[nodiscard]] auto string() const -> std::string override;
+    void accept(visitor& visitor) const override;
 };
 
 struct continue_statement final : statement
 {
     using expression::expression;
-    [[nodiscard]] auto string() const -> std::string final;
-    void accept(visitor& visitor) const final;
+    [[nodiscard]] auto string() const -> std::string override;
+    void accept(visitor& visitor) const override;
 };
 
 struct expression_statement final : statement
 {
     using expression::expression;
-    [[nodiscard]] auto string() const -> std::string final;
-    void accept(visitor& visitor) const final;
+    [[nodiscard]] auto string() const -> std::string override;
+    void accept(visitor& visitor) const override;
 
     const expression* expr {};
 };
@@ -50,8 +50,8 @@ struct expression_statement final : statement
 struct block_statement final : statement
 {
     using expression::expression;
-    [[nodiscard]] auto string() const -> std::string final;
-    void accept(visitor& visitor) const final;
+    [[nodiscard]] auto string() const -> std::string override;
+    void accept(visitor& visitor) const override;
 
     expressions statements;
 };
@@ -59,8 +59,8 @@ struct block_statement final : statement
 struct while_statement final : statement
 {
     using expression::expression;
-    [[nodiscard]] auto string() const -> std::string final;
-    void accept(visitor& visitor) const final;
+    [[nodiscard]] auto string() const -> std::string override;
+    void accept(visitor& visitor) const override;
 
     expression* condition {};
     block_statement* body {};

@@ -56,7 +56,7 @@ enum precedence : std::uint8_t
     idx,
 };
 
-auto precedence_of_token(token_type type) -> std::uint8_t
+auto precedence_of_token(const token_type type) -> std::uint8_t
 {
     switch (type) {
         case token_type::equals:
@@ -98,8 +98,8 @@ auto precedence_of_token(token_type type) -> std::uint8_t
 }
 }  // namespace
 
-parser::parser(lexer lxr)
-    : m_lxr(lxr)
+parser::parser(const lexer& lxr)
+    : m_lxr{lxr}
 {
     next_token();
     next_token();
@@ -145,8 +145,7 @@ auto parser::parse_program() -> program*
 {
     auto* prog = allocate<program>(m_current_token.loc);
     while (m_current_token.type != token_type::eof) {
-        auto* stmt = parse_statement();
-        if (stmt != nullptr) {
+        if (const auto* stmt = parse_statement(); stmt != nullptr) {
             prog->statements.push_back(stmt);
         }
         next_token();
@@ -260,7 +259,7 @@ auto parser::parse_expression_statement() -> statement*
     return expr_stmt;
 }
 
-auto parser::parse_expression(int precedence) -> expression*
+auto parser::parse_expression(const int precedence) -> expression*
 {
     const auto unary = m_unary_parsers[m_current_token.type];
     if (!unary) {
@@ -432,8 +431,7 @@ auto parser::parse_block_statement() -> block_statement*
     auto* block = allocate<block_statement>(m_current_token.loc);
     next_token();
     while (!current_token_is(rsquirly) && !current_token_is(eof)) {
-        auto* stmt = parse_statement();
-        if (stmt != nullptr) {
+        if (const auto* stmt = parse_statement(); stmt != nullptr) {
             block->statements.push_back(stmt);
         }
         next_token();
@@ -562,7 +560,7 @@ auto parser::parse_null_literal() -> expression*
     return allocate<null_literal>(m_current_token.loc);
 }
 
-auto parser::get(token_type type) -> bool
+auto parser::get(const token_type type) -> bool
 {
     if (m_peek_token.type == type) {
         next_token();
@@ -577,22 +575,22 @@ auto parser::peek_error(token_type type) -> void
     new_error("{}: expected next token to be {}, got {} instead", m_current_token.loc, type, m_peek_token.literal);
 }
 
-auto parser::register_binary(token_type type, binary_parser binary) -> void
+auto parser::register_binary(const token_type type, binary_parser binary) -> void
 {
     m_binary_parsers[type] = std::move(binary);
 }
 
-auto parser::register_unary(token_type type, unary_parser unary) -> void
+auto parser::register_unary(const token_type type, unary_parser unary) -> void
 {
     m_unary_parsers[type] = std::move(unary);
 }
 
-auto parser::current_token_is(token_type type) const -> bool
+auto parser::current_token_is(const token_type type) const -> bool
 {
     return m_current_token.type == type;
 }
 
-auto parser::peek_token_is(token_type type) const -> bool
+auto parser::peek_token_is(const token_type type) const -> bool
 {
     return m_peek_token.type == type;
 }
@@ -1216,7 +1214,7 @@ TEST_CASE("whileStatement")
 TEST_CASE("breakStatement")
 {
     using namespace std::string_view_literals;
-    const std::array tests {
+    constexpr std::array tests {
         "break"sv,
         "break;"sv,
     };
@@ -1230,7 +1228,7 @@ TEST_CASE("breakStatement")
 TEST_CASE("continueStatement")
 {
     using namespace std::string_view_literals;
-    const std::array tests {
+    constexpr std::array tests {
         "continue"sv,
         "continue;"sv,
     };
@@ -1358,7 +1356,7 @@ TEST_CASE("hashLiteralWithExpression")
         int64_t right;
     };
 
-    const std::array expected {
+    constexpr std::array expected {
         test {0, token_type::plus, 1},
         test {10, token_type::minus, 8},
         test {15, token_type::slash, 5},

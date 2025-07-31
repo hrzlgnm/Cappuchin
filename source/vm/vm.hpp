@@ -28,7 +28,7 @@ struct vm final
     [[nodiscard]] auto last_popped() const -> const object*;
 
   private:
-    vm(frames frames, const constants* consts, constants* globals);
+    vm(const frames& frames, const constants* consts, constants* globals);
     auto push(const object* obj) -> void;
     auto pop() -> const object*;
     auto exec_binary_op(opcodes opcode) -> void;

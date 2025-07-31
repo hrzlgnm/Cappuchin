@@ -14,7 +14,7 @@ auto operator<<(std::ostream& ostream, const token& token) -> std::ostream&
     return ostream << "token{" << token.type << ", `" << token.literal << "´ " << token.loc << "}";
 }
 
-[[nodiscard]] auto token::with_loc(location loc) const -> token
+[[nodiscard]] auto token::with_loc(const location& loc) const -> token
 {
     return token {.type = type, .literal = literal, .loc = loc};
 }

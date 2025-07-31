@@ -42,7 +42,7 @@ auto vm::create_with_state(bytecode code, constants* globals) -> vm
     return vm {frms, code.consts, globals};
 }
 
-vm::vm(frames frames, const constants* consts, constants* globals)
+vm::vm(const frames& frames, const constants* consts, constants* globals)
     : m_constants {consts}
     , m_globals {globals}
     , m_frames {frames}
@@ -251,7 +251,7 @@ auto vm::last_popped() const -> const object*
 namespace
 {
 
-auto apply_binary_operator(opcodes opcode, const object* left, const object* right) -> const object*
+auto apply_binary_operator(const opcodes opcode, const object* left, const object* right) -> const object*
 {
     using enum opcodes;
     switch (opcode) {
@@ -357,7 +357,7 @@ void vm::exec_get_outer(const int ip, const instructions& instr)
     }
 }
 
-auto vm::build_array(int start, int end) const -> const object*
+auto vm::build_array(const int start, const int end) const -> const object*
 {
     array_object::value_type arr;
     for (auto idx = start; idx < end; idx++) {
@@ -366,7 +366,7 @@ auto vm::build_array(int start, int end) const -> const object*
     return allocate<array_object>(std::move(arr));
 }
 
-auto vm::build_hash(int start, int end) const -> const object*
+auto vm::build_hash(const int start, const int end) const -> const object*
 {
     hash_object::value_type hsh;
     for (auto idx = start; idx < end; idx += 2) {
@@ -432,7 +432,7 @@ auto vm::exec_call(int num_args) -> void
         return;
     }
     if (callee->is(builtin)) {
-        const auto* const builtin = callee->as<builtin_object>()->builtin;
+        const auto* const builtin = callee->as<builtin_object>()->bltn;
         array_object::value_type args;
         for (auto idx = m_sp - num_args; idx < m_sp; idx++) {
             args.push_back(m_stack[idx]);
@@ -450,7 +450,7 @@ auto vm::current_frame() -> frame&
     return m_frames[m_frame_index - 1];
 }
 
-auto vm::push_frame(frame frm) -> void
+auto vm::push_frame(const frame frm) -> void
 {
     m_frames[m_frame_index] = frm;
     m_frame_index++;
@@ -462,7 +462,7 @@ auto vm::pop_frame() -> frame&
     return m_frames[m_frame_index];
 }
 
-auto vm::push_closure(uint16_t const_idx, uint8_t num_free) -> void
+auto vm::push_closure(const uint16_t const_idx, const uint8_t num_free) -> void
 {
     const auto* constant = (*m_constants)[const_idx];
     if (!constant->is(object::object_type::compiled_function)) {
@@ -494,9 +494,9 @@ auto check_no_parse_errors(const parser& prsr) -> bool
     return prsr.errors().empty();
 }
 
-using parsed_program = std::pair<program*, parser>;
+using parsed_program = std::pair<const program*, parser>;
 
-auto check_program(std::string_view input) -> parsed_program
+auto check_program(const std::string_view input) -> parsed_program
 {
     auto prsr = parser {lexer {input}};
     auto* prgrm = prsr.parse_program();
@@ -512,9 +512,9 @@ struct error
 
 using hash = std::unordered_map<hashable::key_type, int64_t>;
 using null_type = std::monostate;
-const null_type null_value {};
+constexpr null_type null_value {};
 
-auto require_is(const bool expected, const object*& actual_obj, std::string_view input) -> void
+auto require_is(const bool expected, const object*& actual_obj, const std::string_view input) -> void
 {
     INFO(input,
          " expected: boolean with: ",
@@ -529,7 +529,7 @@ auto require_is(const bool expected, const object*& actual_obj, std::string_view
     REQUIRE(actual == expected);
 }
 
-auto require_is(const int64_t expected, const object*& actual_obj, std::string_view input) -> void
+auto require_is(const int64_t expected, const object*& actual_obj, const std::string_view input) -> void
 {
     INFO(input,
          " expected: integer with: ",
@@ -544,7 +544,7 @@ auto require_is(const int64_t expected, const object*& actual_obj, std::string_v
     REQUIRE(actual == expected);
 }
 
-auto require_is(const double expected, const object*& actual_obj, std::string_view input) -> void
+auto require_is(const double expected, const object*& actual_obj, const std::string_view input) -> void
 {
     INFO(input,
          " expected: decimal with: ",
@@ -559,7 +559,7 @@ auto require_is(const double expected, const object*& actual_obj, std::string_vi
     REQUIRE(actual == dt::Approx(expected));
 }
 
-auto require_is(const std::string& expected, const object*& actual_obj, std::string_view input) -> void
+auto require_is(const std::string& expected, const object*& actual_obj, const std::string_view input) -> void
 {
     INFO(input,
          " expected: string with: ",
@@ -574,7 +574,7 @@ auto require_is(const std::string& expected, const object*& actual_obj, std::str
     REQUIRE(actual == expected);
 }
 
-auto require_is(const error& expected, const object*& actual_obj, std::string_view input) -> void
+auto require_is(const error& expected, const object*& actual_obj, const std::string_view input) -> void
 {
     INFO(input,
          " expected: error with: ",
@@ -589,7 +589,7 @@ auto require_is(const error& expected, const object*& actual_obj, std::string_vi
     REQUIRE(actual == expected.message);
 }
 
-auto require_array_object(const std::vector<int>& expected, const object*& actual, std::string_view input) -> void
+auto require_array_object(const std::vector<int>& expected, const object*& actual, const std::string_view input) -> void
 {
     INFO(input,
          " expected: array with: ",
@@ -608,7 +608,7 @@ auto require_array_object(const std::vector<int>& expected, const object*& actua
     }
 }
 
-auto require_hash_object(const hash& expected, const object*& actual, std::string_view input) -> void
+auto require_hash_object(const hash& expected, const object*& actual, const std::string_view input) -> void
 {
     INFO(input,
          " expected: hash with: ",
@@ -631,7 +631,7 @@ struct vt
 };
 
 template<typename... T>
-auto require_eq(const std::variant<T...>& expected, const object*& actual, std::string_view input) -> void
+auto require_eq(const std::variant<T...>& expected, const object*& actual, const std::string_view input) -> void
 {
     using enum object::object_type;
     std::visit(
@@ -670,7 +670,7 @@ TEST_SUITE_BEGIN("vm");
 
 TEST_CASE("integerArithmetics")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<int64_t> {"1", 1},
         vt<int64_t> {"2", 2},
         vt<int64_t> {"1 + 2", 3},
@@ -707,7 +707,7 @@ TEST_CASE("integerArithmetics")
 
 TEST_CASE("decimalArithmetics")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<double> {"4 / 2", 2.0},
         vt<double> {"5 // 2", 2.0},
         vt<double> {"1.1", 1.1},
@@ -719,7 +719,7 @@ TEST_CASE("decimalArithmetics")
 
 TEST_CASE("booleanExpressions")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<bool> {R"(true)", true},
         vt<bool> {R"(false)", false},
         vt<bool> {R"("a" < "b")", true},
@@ -780,7 +780,7 @@ TEST_CASE("booleanExpressions")
 
 TEST_CASE("conditionals")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<int64_t, null_type> {"if (true) { 10 }", 10},
         vt<int64_t, null_type> {"if (true) { 10 } else { 20 }", 10},
         vt<int64_t, null_type> {"if (false) { 10 } else { 20 } ", 20},
@@ -797,7 +797,7 @@ TEST_CASE("conditionals")
 
 TEST_CASE("globalLetStatements")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<int64_t> {"let one = 1; one", 1},
         vt<int64_t> {"let one = 1; let two = 2; one + two", 3},
         vt<int64_t> {"let one = 1; let two = one + one; one + two", 3},
@@ -898,7 +898,7 @@ TEST_CASE("indexExpressions")
 
 TEST_CASE("callFunctionsWithoutArgs")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<int64_t> {
             R"(let fivePlusTen = fn() { 5 + 10; };
                fivePlusTen();)",
@@ -923,7 +923,7 @@ TEST_CASE("callFunctionsWithoutArgs")
 
 TEST_CASE("callFunctionsWithReturnStatements")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<int64_t> {
             R"(let earlyExit = fn() { return 99; 100; };
                earlyExit();)",
@@ -959,7 +959,7 @@ TEST_CASE("callFunctionsWithNoReturnValue")
 
 TEST_CASE("callFirstClassFunctions")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<int64_t> {
             R"(let returnsOne = fn() { 1; };
                let returnsOneReturner = fn() { returnsOne; };
@@ -986,7 +986,7 @@ TEST_CASE("callFirstClassFunctions")
 
 TEST_CASE("callFunctionsWithBindings")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<int64_t> {
             R"(
             let one = fn() { let one = 1; one };
@@ -1038,7 +1038,7 @@ TEST_CASE("callFunctionsWithBindings")
 
 TEST_CASE("callFunctionsWithArgumentsAndBindings")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<int64_t> {
             R"(
         let identity = fn(a) { a; };
@@ -1197,7 +1197,7 @@ TEST_CASE("callBuiltins")
 
 TEST_CASE("closures")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<int64_t> {
             R"(
         let newClosure = fn(a) {
@@ -1214,7 +1214,7 @@ TEST_CASE("closures")
 
 TEST_CASE("recursiveFunction")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<int64_t> {
             R"(
         let countDown = fn(x) {
@@ -1266,7 +1266,7 @@ TEST_CASE("recursiveFunction")
 
 TEST_CASE("recursiveFibonacci")
 {
-    const std::array tests {
+    constexpr std::array tests {
         vt<int64_t> {
             R"(
         let fibonacci = fn(x) {

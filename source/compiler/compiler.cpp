@@ -72,24 +72,24 @@ auto compiler::add_constant(const object* obj) -> std::size_t
 auto compiler::add_instructions(const instructions& ins) -> std::size_t
 {
     auto& scope = m_scopes[m_scope_index];
-    auto pos = scope.instrs.size();
+    const auto pos = scope.instrs.size();
     std::copy(ins.cbegin(), ins.cend(), std::back_inserter(scope.instrs));
     return pos;
 }
 
-auto compiler::emit(opcodes opcode, const operands& operands) -> std::size_t
+auto compiler::emit(const opcodes opcode, const operands& operands) -> std::size_t
 {
     auto& scope = m_scopes[m_scope_index];
     scope.previous_instr = scope.last_instr;
 
-    auto instr = make(opcode, operands);
-    auto pos = add_instructions(instr);
+    const auto instr = make(opcode, operands);
+    const auto pos = add_instructions(instr);
     scope.last_instr.opcode = opcode;
     scope.last_instr.position = pos;
     return pos;
 }
 
-auto compiler::last_instruction_is(opcodes opcode) const -> bool
+auto compiler::last_instruction_is(const opcodes opcode) const -> bool
 {
     if (current_instrs().empty()) {
         return false;
@@ -106,13 +106,13 @@ auto compiler::remove_last_pop() -> void
 
 auto compiler::replace_last_pop_with_return() -> void
 {
-    auto last = m_scopes[m_scope_index].last_instr.position;
+    const auto last = m_scopes[m_scope_index].last_instr.position;
     using enum opcodes;
     replace_instruction(last, make(return_value));
     m_scopes[m_scope_index].last_instr.opcode = return_value;
 }
 
-auto compiler::replace_instruction(std::size_t pos, const instructions& instr) -> void
+auto compiler::replace_instruction(const std::size_t pos, const instructions& instr) -> void
 {
     auto& scope = m_scopes[m_scope_index];
     for (auto idx = 0UL; const auto& inst : instr) {
@@ -121,11 +121,11 @@ auto compiler::replace_instruction(std::size_t pos, const instructions& instr) -
     }
 }
 
-auto compiler::change_operand(std::size_t pos, std::size_t operand) -> void
+auto compiler::change_operand(const std::size_t pos, const std::size_t operand) -> void
 {
     auto& scope = m_scopes[m_scope_index];
-    auto opcode = static_cast<opcodes>(scope.instrs[pos]);
-    auto instr = make(opcode, operand);
+    const auto opcode = static_cast<opcodes>(scope.instrs[pos]);
+    const auto instr = make(opcode, operand);
     replace_instruction(pos, instr);
 }
 
@@ -139,7 +139,7 @@ auto compiler::byte_code() const -> bytecode
     return {.instrs = m_scopes[m_scope_index].instrs, .consts = m_consts};
 }
 
-auto compiler::enter_scope(bool inside_loop) -> void
+auto compiler::enter_scope(const bool inside_loop) -> void
 {
     m_scopes.resize(m_scopes.size() + 1);
     m_scope_index++;
@@ -336,7 +336,7 @@ void compiler::visit(const hash_literal& expr)
 
 void compiler::visit(const identifier& expr)
 {
-    auto maybe_symbol = resolve_symbol(expr.value);
+    const auto maybe_symbol = resolve_symbol(expr.value);
     if (!maybe_symbol.has_value()) {
         throw std::runtime_error(fmt::format("undefined variable {}", expr.value));
     }
@@ -348,13 +348,13 @@ void compiler::visit(const if_expression& expr)
 {
     expr.condition->accept(*this);
     using enum opcodes;
-    auto jump_not_truthy_pos = emit(jump_not_truthy, 0);
+    const auto jump_not_truthy_pos = emit(jump_not_truthy, 0);
     expr.consequence->accept(*this);
     if (last_instruction_is(pop)) {
         remove_last_pop();
     }
-    auto jump_pos = emit(jump, 0);
-    auto after_consequence = current_instrs().size();
+    const auto jump_pos = emit(jump, 0);
+    const auto after_consequence = current_instrs().size();
     change_operand(jump_not_truthy_pos, after_consequence);
 
     if (expr.alternative == nullptr) {
@@ -365,16 +365,16 @@ void compiler::visit(const if_expression& expr)
             remove_last_pop();
         }
     }
-    auto after_alternative = current_instrs().size();
+    const auto after_alternative = current_instrs().size();
     change_operand(jump_pos, after_alternative);
 }
 
 void compiler::visit(const while_statement& expr)
 {
     using enum opcodes;
-    auto loop_start_pos = current_instrs().size();
+    const auto loop_start_pos = current_instrs().size();
     expr.condition->accept(*this);
-    auto jump_not_truthy_pos = emit(jump_not_truthy, 0);
+    const auto jump_not_truthy_pos = emit(jump_not_truthy, 0);
 
     /* create a closure for the while loop body */
     enter_scope(/*inside_loop=*/true);
@@ -382,19 +382,18 @@ void compiler::visit(const while_statement& expr)
     /* add a continue opcode at the end, to detect whether break was called or not */
     emit(cont);
 
-    auto free = free_symbols();
+    const auto free = free_symbols();
     auto num_locals = number_symbol_definitions();
     auto instrs = leave_scope();
     for (const auto& sym : free) {
         load_symbol(sym);
     }
-    auto* cmpl = allocate<compiled_function_object>(std::move(instrs), num_locals, 0);
-    cmpl->inside_loop = true;
-    auto function_index = add_constant(cmpl);
+    const auto* compiled_fun = allocate<compiled_function_object>(std::move(instrs), num_locals, 0, true);
+    const auto function_index = add_constant(compiled_fun);
     emit(closure, {function_index, free.size()});
     emit(call, 0);
 
-    auto jump_on_break_pos = emit(jump_not_truthy, 0);
+    const auto jump_on_break_pos = emit(jump_not_truthy, 0);
     emit(jump, loop_start_pos);
 
     const auto after_body_pos = current_instrs().size();
@@ -512,13 +511,13 @@ void compiler::visit(const function_literal& expr)
     if (!last_instruction_is(return_value)) {
         emit(ret);
     }
-    auto free = free_symbols();
-    auto num_locals = number_symbol_definitions();
+    const auto free = free_symbols();
+    const auto num_locals = number_symbol_definitions();
     auto instrs = leave_scope();
     for (const auto& sym : free) {
         load_symbol(sym);
     }
-    auto function_index = add_constant(
+    const auto function_index = add_constant(
         allocate<compiled_function_object>(std::move(instrs), num_locals, static_cast<int>(expr.parameters.size())));
     emit(closure, {function_index, free.size()});
 }
@@ -558,15 +557,15 @@ auto check_no_parse_errors(const parser& prsr) -> bool
     return prsr.errors().empty();
 }
 
-using parsed_program = std::pair<program*, parser>;
+using parsed_program = std::pair<const program*, parser>;
 
-auto check_program(std::string_view input) -> parsed_program
+auto check_program(const std::string_view input) -> parsed_program
 {
     auto prsr = parser {lexer {input}};
-    auto prgrm = prsr.parse_program();
+    const auto prgrm = prsr.parse_program();
     INFO("while parsing: `", input, "`");
     CHECK(check_no_parse_errors(prsr));
-    return {std::move(prgrm), std::move(prsr)};
+    return {prgrm, std::move(prsr)};
 }
 
 using expected_value = std::variant<int64_t, std::string, std::vector<instructions>, std::monostate>;

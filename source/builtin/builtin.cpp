@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <cctype>
-#include <cstdint>
 #include <functional>
 #include <iterator>
 #include <string>
@@ -84,15 +83,13 @@ const builtin first {
         const auto& maybe_string_or_array = arguments.at(0);
         using enum object::object_type;
         if (maybe_string_or_array->is(string)) {
-            const auto& str = maybe_string_or_array->as<string_object>()->value;
-            if (!str.empty()) {
+            if (const auto& str = maybe_string_or_array->as<string_object>()->value; !str.empty()) {
                 return allocate<string_object>(str.substr(0, 1));
             }
             return null();
         }
         if (maybe_string_or_array->is(array)) {
-            const auto& arr = maybe_string_or_array->as<array_object>()->value;
-            if (!arr.empty()) {
+            if (const auto& arr = maybe_string_or_array->as<array_object>()->value; !arr.empty()) {
                 return arr.front();
             }
             return null();
@@ -111,15 +108,13 @@ const builtin last {
         const auto& maybe_string_or_array = arguments[0];
         using enum object::object_type;
         if (maybe_string_or_array->is(string)) {
-            const auto& str = maybe_string_or_array->as<string_object>()->value;
-            if (!str.empty()) {
+            if (const auto& str = maybe_string_or_array->as<string_object>()->value; !str.empty()) {
                 return allocate<string_object>(str.substr(str.length() - 1, 1));
             }
             return null();
         }
         if (maybe_string_or_array->is(array)) {
-            const auto& arr = maybe_string_or_array->as<array_object>()->value;
-            if (!arr.empty()) {
+            if (const auto& arr = maybe_string_or_array->as<array_object>()->value; !arr.empty()) {
                 return arr.back();
             }
             return null();
@@ -138,15 +133,13 @@ const builtin rest {
         const auto& maybe_string_or_array = arguments.at(0);
         using enum object::object_type;
         if (maybe_string_or_array->is(string)) {
-            const auto& str = maybe_string_or_array->as<string_object>()->value;
-            if (str.size() > 1) {
+            if (const auto& str = maybe_string_or_array->as<string_object>()->value; str.size() > 1) {
                 return allocate<string_object>(str.substr(1));
             }
             return null();
         }
         if (maybe_string_or_array->is(array)) {
-            const auto& arr = maybe_string_or_array->as<array_object>()->value;
-            if (arr.size() > 1) {
+            if (const auto& arr = maybe_string_or_array->as<array_object>()->value; arr.size() > 1) {
                 array_object::value_type rest;
                 std::copy(arr.cbegin() + 1, arr.cend(), std::back_inserter(rest));
                 return allocate<array_object>(std::move(rest));
