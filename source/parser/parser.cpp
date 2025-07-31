@@ -99,7 +99,7 @@ auto precedence_of_token(const token_type type) -> std::uint8_t
 }  // namespace
 
 parser::parser(const lexer& lxr)
-    : m_lxr{lxr}
+    : m_lxr {lxr}
 {
     next_token();
     next_token();

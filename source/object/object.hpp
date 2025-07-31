@@ -466,6 +466,7 @@ struct closure_object final : object
 };
 
 struct builtin;
+
 struct builtin_object final : object
 {
     explicit builtin_object(const builtin* bltn);
