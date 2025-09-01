@@ -47,10 +47,10 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "Clang 17 libc++",
+              name: "Clang 19 libc++",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:0159484e6e5f112f1313935309b921faeadb8f5a787ca910387d5199812db169",
-              CC: clang-17,
-              CXX: clang++-17,
+              CC: clang-19,
+              CXX: clang++-19,
               CFLAGS: "-stdlib=libc++",
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "-Werror;{1}",
@@ -59,10 +59,10 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "Clang 17 libstdc++",
+              name: "Clang 19 libstdc++",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:0159484e6e5f112f1313935309b921faeadb8f5a787ca910387d5199812db169",
-              CC: clang-17,
-              CXX: clang++-17,
+              CC: clang-19,
+              CXX: clang++-19,
               CFLAGS: "-stdlib=libstdc++",
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "-Werror;{1}",
@@ -71,10 +71,10 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "Clang 17 ASAN+UBSAN libstdc++",
+              name: "Clang 19 ASAN+UBSAN libstdc++",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:0159484e6e5f112f1313935309b921faeadb8f5a787ca910387d5199812db169",
-              CC: clang-17,
-              CXX: clang++-17,
+              CC: clang-19,
+              CXX: clang++-19,
               CFLAGS: "-fsanitize=address,undefined -fsanitize-address-use-after-scope -fno-sanitize-recover=address,undefined -stdlib=libstdc++",
               CMAKE_BUILD_TYPE: "Debug",
               WARNINGS: "-Werror;{1}",
@@ -84,10 +84,10 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "Clang 17 Release libstdc++",
+              name: "Clang 19 Release libstdc++",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:0159484e6e5f112f1313935309b921faeadb8f5a787ca910387d5199812db169",
-              CC: clang-17,
-              CXX: clang++-17,
+              CC: clang-19,
+              CXX: clang++-19,
               CFLAGS: "-stdlib=libstdc++",
               CMAKE_BUILD_TYPE: "Release",
               WARNINGS: "-Werror;{1}",
