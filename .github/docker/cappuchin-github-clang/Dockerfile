@@ -7,9 +7,11 @@ RUN \
     clang-19 \
     cmake \
     git \
+    libasan8 \
     libc++-19-dev \
     libc++abi-19-dev \
     libc6-dev \
+    libclang-rt-dev \
     ninja-build && \
     rm -rf /var/lib/apt/lists/*
 LABEL org.opencontainers.image.source="https://github.com/hrzlgnm/Cappuchin"
