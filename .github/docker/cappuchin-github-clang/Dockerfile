@@ -4,11 +4,11 @@ RUN \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
     build-essential \
     ca-certificates \
-    clang-17 \
+    clang-19 \
     cmake \
     git \
-    libc++-17-dev \
-    libc++abi-17-dev \
+    libc++-19-dev \
+    libc++abi-19-dev \
     libc6-dev \
     ninja-build && \
     rm -rf /var/lib/apt/lists/*
