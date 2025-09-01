@@ -1,4 +1,4 @@
-FROM ghcr.io/void-linux/void-musl@sha256:6d9937b50930da36adc43c9a8be4f605cd1079630988871a78a84b75065bee17
+FROM ghcr.io/void-linux/void-musl@sha256:8c224ce88aeb11b1a396907353a3dd5ff3af606536ab3d1f9a5ce66f6a743d49
 RUN xbps-install -Syu || xbps-install -yu xbps \
     && xbps-install -yu \
     && xbps-install -y \
