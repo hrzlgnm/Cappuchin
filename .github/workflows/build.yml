@@ -47,7 +47,7 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "Clang 13 libc++",
+              name: "Clang 17 libc++",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:0159484e6e5f112f1313935309b921faeadb8f5a787ca910387d5199812db169",
               CC: clang-13,
               CXX: clang++-13,
@@ -59,7 +59,7 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "Clang 13 libstdc++",
+              name: "Clang 17 libstdc++",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:0159484e6e5f112f1313935309b921faeadb8f5a787ca910387d5199812db169",
               CC: clang-13,
               CXX: clang++-13,
@@ -71,7 +71,7 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "Clang 13 ASAN+UBSAN libstdc++",
+              name: "Clang 17 ASAN+UBSAN libstdc++",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:0159484e6e5f112f1313935309b921faeadb8f5a787ca910387d5199812db169",
               CC: clang-13,
               CXX: clang++-13,
@@ -84,7 +84,7 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "Clang 13 Release libstdc++",
+              name: "Clang 17 Release libstdc++",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:0159484e6e5f112f1313935309b921faeadb8f5a787ca910387d5199812db169",
               CC: clang-13,
               CXX: clang++-13,
