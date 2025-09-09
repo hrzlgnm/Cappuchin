@@ -48,7 +48,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "Clang 19 libc++",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:39fa5395c1a24950e1cce286596d9c07792a9f95d9efbdc318584370757f0e87",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:d1628e358332cd9c8bc66b608dd2b432ba90eeddae70b85c59fe348a550a5a37",
               CC: clang-19,
               CXX: clang++-19,
               CFLAGS: "-stdlib=libc++",
@@ -60,7 +60,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "Clang 19 libstdc++",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:39fa5395c1a24950e1cce286596d9c07792a9f95d9efbdc318584370757f0e87",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:d1628e358332cd9c8bc66b608dd2b432ba90eeddae70b85c59fe348a550a5a37",
               CC: clang-19,
               CXX: clang++-19,
               CFLAGS: "-stdlib=libstdc++",
@@ -72,7 +72,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "Clang 19 ASAN+UBSAN libstdc++",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:39fa5395c1a24950e1cce286596d9c07792a9f95d9efbdc318584370757f0e87",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:d1628e358332cd9c8bc66b608dd2b432ba90eeddae70b85c59fe348a550a5a37",
               CC: clang-19,
               CXX: clang++-19,
               CFLAGS: "-fsanitize=address,undefined -fsanitize-address-use-after-scope -fno-sanitize-recover=address,undefined -stdlib=libstdc++",
@@ -85,7 +85,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "Clang 19 Release libstdc++",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:39fa5395c1a24950e1cce286596d9c07792a9f95d9efbdc318584370757f0e87",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-clang:v1@sha256:d1628e358332cd9c8bc66b608dd2b432ba90eeddae70b85c59fe348a550a5a37",
               CC: clang-19,
               CXX: clang++-19,
               CFLAGS: "-stdlib=libstdc++",
