@@ -168,7 +168,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "GCC 13",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:1bda74b7c1211db40b359d1a5cdc0aa59a00ac193fc66d03012126130978d09a",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:1517923439b4287f033723a481c4c1d9371c62190e82445fe18a39a1adcf0444",
               CC: gcc,
               CXX: g++,
               CFLAGS: "",
@@ -180,7 +180,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "GCC 13 ASAN+UBSAN",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:1bda74b7c1211db40b359d1a5cdc0aa59a00ac193fc66d03012126130978d09a",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:1517923439b4287f033723a481c4c1d9371c62190e82445fe18a39a1adcf0444",
               CC: gcc,
               CXX: g++,
               CFLAGS: "-fsanitize=address,undefined -fsanitize-address-use-after-scope -fno-sanitize-recover=address,undefined",
@@ -193,7 +193,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "GCC 13 Release",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:1bda74b7c1211db40b359d1a5cdc0aa59a00ac193fc66d03012126130978d09a",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:1517923439b4287f033723a481c4c1d9371c62190e82445fe18a39a1adcf0444",
               CC: gcc,
               CXX: g++,
               CFLAGS: "",
