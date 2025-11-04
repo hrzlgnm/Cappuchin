@@ -1,4 +1,4 @@
-FROM debian:trixie@sha256:58035749da00efb7c658f01ae1ef0afbcc4399433da24096a57a005b661ded59
+FROM debian:trixie@sha256:01a723bf5bfb21b9dda0c9a33e0538106e4d02cce8f557e118dd61259553d598
 RUN \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
