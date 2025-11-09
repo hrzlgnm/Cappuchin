@@ -37,14 +37,23 @@ foreach(file IN LISTS files)
         message(FATAL_ERROR "'${file}': formatter returned with ${result}")
     endif()
     if(NOT FIX AND output MATCHES "\n<replacement offset")
-        string(SUBSTRING "${file}" "${path_prefix_length}" -1 relative_file)
+        string(
+            SUBSTRING "${file}"
+            "${path_prefix_length}"
+            -1
+            relative_file
+        )
         list(APPEND badly_formatted "${relative_file}")
     endif()
     set(output "")
 endforeach()
 
 if(NOT badly_formatted STREQUAL "")
-    list(JOIN badly_formatted "\n" bad_list)
+    list(
+        JOIN badly_formatted
+        "\n"
+        bad_list
+    )
     message("The following files are badly formatted:\n\n${bad_list}\n")
     message(FATAL_ERROR "Run again with FIX=YES to fix these files.")
 endif()
