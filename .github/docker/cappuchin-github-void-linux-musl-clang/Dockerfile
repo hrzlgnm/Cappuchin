@@ -1,7 +1,7 @@
 FROM ghcr.io/void-linux/void-musl@sha256:024a793a6389acb6c3fe387f8b1b7ff6a117f9dd540c2c9cc16858285d340e0d
-RUN xbps-install -Syu || xbps-install -yu xbps \
-    && xbps-install -yu \
-    && xbps-install -y \
+RUN xbps-install -Syu xbps \
+    && xbps-install -Syu \
+    && xbps-install -Sy \
     bash \
     clang \
     clang-tools-extra \
