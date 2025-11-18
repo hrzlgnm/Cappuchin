@@ -46,18 +46,18 @@
             datasourceTemplate: 'pypi'
         },
         {
-            "customType": "regex",
-            "description": "Update CMake FetchContent GIT_TAGs",
-            "managerFilePatterns": [
-                "CMakeLists\\.txt$",
-                ".*\\.cmake$"
+            customType: "regex",
+            managerFilePatterns: [
+                'CMakeLists\\.txt$',
+                '.*\\.cmake$'
+                
             ],
-            "matchStrings": [
-                "FetchContent_Declare\\s*\\(\\s*(?<depName>[A-Za-z0-9_\\-]+)[\\s\\S]*?GIT_REPOSITORY\\s+\"?(?<repo>[^\"\\s]+)\"?[\\s\\S]*?GIT_TAG\\s+\"?(?<currentValue>[^\"\\s]+)\"?"
+            matchStrings: [
+                'FetchContent_Declare[ \\t]*\\([^)]*GIT_REPOSITORY[ \\t]*"https:\\\/\\\/github\\.com\\\/(?<packageName>[^"]*?)(.git)?"[^)]*GIT_TAG[ \\t]*"(?<currentValue>[^"]*)"'
             ],
-            "datasourceTemplate": "github-tags",
-            "depNameTemplate": "{{{repo}}}",
-            "versioningTemplate": "semver"
+            packageNameTemplate: "{{#if (equals currentValue.length 40)}}https://github.com/{{packageName}}.git{{else}}{{packageName}}{{/if}}",
+            datasourceTemplate: "{{#if (equals currentValue.length 40)}}git-refs{{else}}github-tags{{/if}}",
+            versioningTemplate: "{{#if (equals currentValue.length 40)}}git{{else}}loose{{/if}}",
         }
     ],
     packageRules: [
