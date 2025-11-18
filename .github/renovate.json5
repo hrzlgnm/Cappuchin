@@ -46,18 +46,17 @@
             datasourceTemplate: 'pypi'
         },
         {
-            customType: "regex",
+            customType: 'regex',
             managerFilePatterns: [
                 'CMakeLists\\.txt$',
                 '.*\\.cmake$'
-                
             ],
             matchStrings: [
-                'FetchContent_Declare[ \\t]*\\([^)]*GIT_REPOSITORY[ \\t]*"https:\\\/\\\/github\\.com\\\/(?<packageName>[^"]*?)(.git)?"[^)]*GIT_TAG[ \\t]*"(?<currentValue>[^"]*)"'
+                'FetchContent_Declare[ \\s]*\\([^)]*GIT_REPOSITORY[ \\s]*"https:\\/\\/github\\.com\\/(?<packageName>[^"]*?)(.git)?"[^)]*GIT_TAG[ \\s]*"(?<currentValue>[^"]*)'
             ],
-            packageNameTemplate: "{{#if (equals currentValue.length 40)}}https://github.com/{{packageName}}.git{{else}}{{packageName}}{{/if}}",
-            datasourceTemplate: "{{#if (equals currentValue.length 40)}}git-refs{{else}}github-tags{{/if}}",
-            versioningTemplate: "{{#if (equals currentValue.length 40)}}git{{else}}loose{{/if}}",
+            packageNameTemplate: '{{#if (equals currentValue.length 40)}}https://github.com/{{packageName}}.git{{else}}{{packageName}}{{/if}}',
+            datasourceTemplate: '{{#if (equals currentValue.length 40)}}git-refs{{else}}github-tags{{/if}}',
+            versioningTemplate: '{{#if (equals currentValue.length 40)}}git{{else}}loose{{/if}}'
         }
     ],
     packageRules: [
