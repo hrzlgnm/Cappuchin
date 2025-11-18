@@ -44,6 +44,21 @@
                 'pip\\s+install(\\s+--[^\\s]+)+?\\s+(?<depName>[^\\s]+?)==(?<currentValue>.+?)\\s'
             ],
             datasourceTemplate: 'pypi'
+        },
+        {
+            "customType": "regex",
+            "description": "Update CMake FetchContent GIT_TAGs",
+            "managerFilePatterns": [
+                "CMakeLists\\.txt$",
+                ".*\\.cmake$"
+            ],
+            "matchStrings": [
+                "FetchContent_Declare\\s*\\(\\s*(?<depName>[A-Za-z0-9_\\-]+)[\\s\\S]*?GIT_REPOSITORY\\s+\"?(?<repo>[^\"\\s]+)\"?[\\s\\S]*?GIT_TAG\\s+\"?(?<currentValue>[^\"\\s]+)\"?"
+            ],
+            "datasourceTemplate": "github-tags",
+            "depNameTemplate": "{{{repo}}}",
+            "versioningTemplate": "semver",
+            "autoReplaceStringTemplate": "GIT_TAG {{newValue}}"
         }
     ],
     packageRules: [
