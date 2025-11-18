@@ -48,8 +48,8 @@
         {
             customType: 'regex',
             managerFilePatterns: [
-                'CMakeLists\\.txt$',
-                '.*\\.cmake$'
+                '/CMakeLists\\.txt$/',
+                '/.*\\.cmake$/'
             ],
             matchStrings: [
                 'FetchContent_Declare[ \\s]*\\([^)]*GIT_REPOSITORY[ \\s]*"https:\\/\\/github\\.com\\/(?<packageName>[^"]*?)(.git)?"[^)]*GIT_TAG[ \\s]*"(?<currentValue>[^"]*)'
