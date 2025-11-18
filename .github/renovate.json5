@@ -57,8 +57,7 @@
             ],
             "datasourceTemplate": "github-tags",
             "depNameTemplate": "{{{repo}}}",
-            "versioningTemplate": "semver",
-            "autoReplaceStringTemplate": "GIT_TAG {{newValue}}"
+            "versioningTemplate": "semver"
         }
     ],
     packageRules: [
