@@ -264,12 +264,26 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" ${CMAKE_C_COMPILER+-DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}"} ${CMAKE_CXX_COMPILER+-DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}"} -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS}" -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS}" -DCMAKE_SHARED_LINKER_FLAGS="${CMAKE_SHARED_LINKER_FLAGS}" ${CMAKE_EXTRA_FLAGS} -S . -B ./build
         shell: bash
 
-      - name: build
+      - name: Build
         run: cmake --build ./build --config ${{matrix.toolchain.CMAKE_BUILD_TYPE}}
 
-      - name: test
+      - name: Test
         working-directory: ./build
         run: ctest --verbose --build-config ${{matrix.toolchain.CMAKE_BUILD_TYPE}}
+
+      - name: Run examples
+        shell: bash
+        run: |
+          shopt -s failglob
+          for n in examples/*.cp
+          do
+            echo "Running $n"
+            if [[ "$(uname -s)" == "MINGW"* || "$(uname -s)" == "CYGWIN"* || "$(uname -s)" == "MSYS"* ]]; then
+              time ./build/${{matrix.toolchain.CMAKE_BUILD_TYPE}}/cappuchin.exe "$n"
+            else
+              time ./build/cappuchin "$n"
+            fi
+          done
 
       - name: JUnit Report
         if: ${{ always() && !contains(matrix.toolchain.name, 'musl') }}
