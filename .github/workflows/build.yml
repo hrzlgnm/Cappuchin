@@ -279,9 +279,9 @@ jobs:
           do
             echo "Running $n"
             if [[ "$(uname -s)" == "MINGW"* || "$(uname -s)" == "CYGWIN"* || "$(uname -s)" == "MSYS"* ]]; then
-              ./build/${{matrix.toolchain.CMAKE_BUILD_TYPE}}/cappuchin.exe "$n"
+              time ./build/${{matrix.toolchain.CMAKE_BUILD_TYPE}}/cappuchin.exe "$n"
             else
-              ./build/cappuchin "$n"
+              time ./build/cappuchin "$n"
             fi
           done
 
