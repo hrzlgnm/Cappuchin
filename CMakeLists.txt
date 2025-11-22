@@ -95,7 +95,7 @@ target_link_libraries(
         fmt::fmt
 )
 
-# HACK(hrzgnm): disable compiler warnings on fmt library,
+# HACK(hrzlgnm): disable compiler warnings on fmt library,
 # by forcing fmt as SYSTEM include
 target_include_directories(cappuchin_lib SYSTEM PRIVATE $<TARGET_PROPERTY:fmt::fmt,INTERFACE_INCLUDE_DIRECTORIES>)
 
