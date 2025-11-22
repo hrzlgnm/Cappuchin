@@ -1,0 +1,19 @@
+name: "Reusable lint workflow"
+
+on:
+  workflow_call:
+
+jobs:
+  Lint:
+    runs-on: ubuntu-latest
+    container:
+      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:5e4b9a95dd826ee3b562cbe9a6891e7be9eaad99f86f90367c7223affff7ed6c"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+
+      - name: 📐 Check cmake format
+        run: gersemi --check --diff .
+
+      - name: 📐 Check clang-format
+        run: cmake -D FORMAT_COMMAND=clang-format -P cmake/lint.cmake
