@@ -1,26 +1,26 @@
 ---
-# Enable ALL the things! Except not really
-# misc-non-private-member-variables-in-classes: the options don't do anything
-# modernize-use-nodiscard: too aggressive, attribute is situationally useful
-Checks: "*,\
-  -google-readability-todo,\
-  -altera-*,\
-  -fuchsia-*,\
-  -llvm-header-guard,\
-  -llvm-include-order,\
-  -llvmlibc-*,\
-  -misc-non-private-member-variables-in-classes,\
-  -cert-dcl58-cpp,\
-  -misc-no-recursion,\
-  -cert-err58-cpp,\
-  -*c++98-compat-*,\
-  -*-use-ranges,\
-  -bugprone-easily-swappable-parameters,\
-  -readability-identifier-length,\
-  -hicpp-multiway-paths-covered,\
-  -cppcoreguidelines-owning-memory,\"
-  -cppcoreguidelines-pro-bounds-constant-array-index"
+# Enable ALL the things! Except not really useful ones
+Checks:
+  - "*"
+  - "-google-readability-todo"
+  - "-altera-*"
+  - "-fuchsia-*"
+  - "-llvm-header-guard"
+  - "-llvm-include-order"
+  - "-llvmlibc-*"
+  - "-misc-non-private-member-variables-in-classes"
+  - "-cert-dcl58-cpp"
+  - "-misc-no-recursion"
+  - "-cert-err58-cpp"
+  - "-*c++98-compat-*"
+  - "-*-use-ranges"
+  - "-bugprone-easily-swappable-parameters"
+  - "-readability-identifier-length"
+  - "-hicpp-multiway-paths-covered"
+  - "-cppcoreguidelines-owning-memory"
+  - "-cppcoreguidelines-pro-bounds-constant-array-index"
 WarningsAsErrors: ""
+HeaderFilterRegex: "source/.*"
 CheckOptions:
   - key: "bugprone-argument-comment.StrictMode"
     value: "true"
