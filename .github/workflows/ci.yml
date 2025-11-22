@@ -43,8 +43,8 @@ jobs:
               - '.github/docker/**'
               - '.github/workflows/docker-build.yml'
             code:
-              - '.github/workflows/build-and-test.yml
-              - '.github/workflows/static-analysis.yml
+              - '.github/workflows/build-and-test.yml'
+              - '.github/workflows/static-analysis.yml'
               - 'cmake/**'
               - 'source/**/*.hpp'
               - 'source/**/*.cpp'
