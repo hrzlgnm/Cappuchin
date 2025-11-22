@@ -16,10 +16,8 @@ Checks: >
   -llvm-header-guard,
   -llvm-include-order,
   -llvmlibc-*,
-  -misc-no-recursion,
-  -misc-non-private-member-variables-in-classes,
   -portability-avoid-pragma-once,
-  -readability-identifier-lengthChecks:
+  -readability-identifier-length
 WarningsAsErrors: ""
 HeaderFilterRegex: "source/.*"
 CheckOptions:
