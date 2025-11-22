@@ -1,0 +1,123 @@
+name: "CI"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  # measure against bitrot
+  # also rotates docker images monthly, by pushing new docker images
+  # the rotation will happen by renovate
+  schedule:
+    - cron: "0 0 1 * *"
+
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+
+concurrency:
+  # On main, we want all builds to complete even if merging happens faster to make it easier to discover at which point something broke.
+  group: ${{ github.ref == 'refs/heads/main' && format('ci-main-{0}', github.sha) || format('ci-{0}', github.ref) }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: "🔍 Detect Changes"
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.branch.outputs.branch }}
+      code: ${{ steps.filter.outputs.code }}
+      docker: ${{ steps.filter.outputs.docker }}
+      lint: ${{ steps.filter.outputs.lint }}
+      tests: ${{ steps.filter.outputs.tests }}
+    steps:
+      - name: 🔄 Checkout
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+
+      - name: 🔍 Check for changes
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+        id: filter
+        with:
+          filters: |
+            docker:
+              - '.github/docker/**'
+              - '.github/workflows/docker-build.yml'
+            code:
+              - '.github/workflows/build-and-test.yml
+              - '.github/workflows/static-analysis.yml
+              - 'cmake/**'
+              - 'source/**/*.hpp'
+              - 'source/**/*.cpp'
+            lint:
+              - '.clang-*'
+              - '.gersemirc'
+              - '.github/workflows/lint.yml'
+              - 'cppcheck/**'
+            tests:
+              - 'test/**'
+
+      - name: Output branch name
+        id: branch
+        run: |
+          echo "branch=${{ env.BRANCH_NAME }}" >> $GITHUB_OUTPUT
+
+  typos:
+    name: 📝 Check typos
+    if: always()
+    uses: ./.github/workflows/typos.yml
+
+  lint:
+    name: Lint
+    needs: changes
+    if: needs.changes.outputs.code == 'true' || needs.changes.outputs.lint == 'true'
+    uses: ./.github/workflows/lint.yml
+
+  build-and-test:
+    name: Build and Test
+    permissions:
+      checks: write # required for action-junit-report annotation
+    needs: changes
+    if: needs.changes.outputs.code == 'true' || needs.changes.outputs.tests == 'true'
+    uses: ./.github/workflows/build-and-test.yml
+
+  docker:
+    name: "🐳"
+    needs: changes
+    if: needs.changes.outputs.docker == 'true'
+    permissions:
+      contents: read
+      packages: write # Needed to push to GHCR
+
+    uses: ./.github/workflows/docker-build.yml
+    with:
+      branch: ${{ needs.changes.outputs.branch }}
+
+  static-analysis:
+    name: Static Analysis
+    needs: changes
+    if: needs.changes.outputs.code == 'true' || needs.changes.outputs.tests == 'true'
+    uses: ./.github/workflows/static-analysis.yml
+
+  always-run:
+    # used in branch protection rulesets as the only relevant step needing to pass
+    name: CI Status
+    runs-on: ubuntu-latest
+    needs: [typos, lint, build-and-test, docker]
+    if: always()
+    steps:
+      - name: Create JSON summary
+        id: summary
+        run: |
+          echo '${{ toJSON(needs) }}' > needs.json
+          cat needs.json | jq
+
+      - name: Aggregate results dynamically
+        run: |
+          jq -r 'to_entries[] | "\(.key) \(.value.result)"' needs.json | while read job result; do
+            echo "$job → $result"
+            if [[ "$result" == "failure" || "$result" == "cancelled" ]]; then
+              echo "❌ $job failed or was cancelled"
+              exit 1
+            fi
+          done
+          echo "✅ None of the required jobs failed."
