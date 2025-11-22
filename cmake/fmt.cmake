@@ -21,4 +21,3 @@ if(TARGET fmt)
                 ""
     )
 endif()
-
