@@ -2,10 +2,6 @@ include(FetchContent)
 
 FetchContent_Declare(fmt GIT_REPOSITORY "https://github.com/fmtlib/fmt.git" GIT_TAG "12.1.0")
 
-set(FMT_DOC OFF)
-set(FMT_TEST OFF)
-set(FMT_WARNINGS OFF)
-
 FetchContent_MakeAvailable(fmt)
 
 # HACK(hrzlgnm): disable all warnings for fmt library
