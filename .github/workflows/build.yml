@@ -10,10 +10,10 @@ jobs:
   Lint:
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:c162260c8e8ff31b47700b5df1b6cd5af7ed254797e8076574bc3954d8ba4a0a"
+      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:5e4b9a95dd826ee3b562cbe9a6891e7be9eaad99f86f90367c7223affff7ed6c"
     steps:
       - name: Checkout
-        uses: classabbyamp/treeless-checkout-action@bd3615a6e9d5546151e17d72193eea0d6f297398 # v1
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
 
       - name: 📐 Check cmake format
         if: always()
@@ -96,42 +96,8 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "Clang 17 musl",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:c162260c8e8ff31b47700b5df1b6cd5af7ed254797e8076574bc3954d8ba4a0a",
-              CC: clang,
-              CXX: clang++,
-              CFLAGS: "",
-              CMAKE_BUILD_TYPE: "Debug",
-              WARNINGS: "-Werror;{1}",
-              CMAKE_FLAGS: "-G Ninja",
-            }
-          - {
-              runs_on: ubuntu-latest,
-              name: "Clang 17 musl ASAN+UBSAN",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:c162260c8e8ff31b47700b5df1b6cd5af7ed254797e8076574bc3954d8ba4a0a",
-              CC: clang,
-              CXX: clang++,
-              CFLAGS: "-fsanitize=address,undefined -fsanitize-address-use-after-scope -fno-sanitize-recover=address,undefined",
-              CMAKE_BUILD_TYPE: "Debug",
-              WARNINGS: "-Werror;{1}",
-              CMAKE_FLAGS: "-G Ninja",
-              ASAN_OPTIONS: "strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1",
-            }
-          - {
-              runs_on: ubuntu-latest,
-              name: "Clang 17 musl Release",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:c162260c8e8ff31b47700b5df1b6cd5af7ed254797e8076574bc3954d8ba4a0a",
-              CC: clang,
-              CXX: clang++,
-              CFLAGS: "",
-              CMAKE_BUILD_TYPE: "Release",
-              WARNINGS: "-Werror;{1}",
-              CMAKE_FLAGS: "-G Ninja",
-            }
-          - {
-              runs_on: ubuntu-latest,
               name: "Clang 17 glibc",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:2ddbbdf37d97767b4010d9cbafa39c12c361da28d15349c7eda08de4532d6f87",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:5e4b9a95dd826ee3b562cbe9a6891e7be9eaad99f86f90367c7223affff7ed6c",
               CC: clang,
               CXX: clang++,
               CFLAGS: "",
@@ -143,7 +109,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "Clang 17 glibc ASAN+UBSAN",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:2ddbbdf37d97767b4010d9cbafa39c12c361da28d15349c7eda08de4532d6f87",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:5e4b9a95dd826ee3b562cbe9a6891e7be9eaad99f86f90367c7223affff7ed6c",
               CC: clang,
               CXX: clang++,
               CFLAGS: "-fsanitize=address,undefined -fsanitize-address-use-after-scope -fno-sanitize-recover=address,undefined",
@@ -156,7 +122,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "Clang 17 glibc Release",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:2ddbbdf37d97767b4010d9cbafa39c12c361da28d15349c7eda08de4532d6f87",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:5e4b9a95dd826ee3b562cbe9a6891e7be9eaad99f86f90367c7223affff7ed6c",
               CC: clang,
               CXX: clang++,
               CFLAGS: "",
@@ -250,12 +216,7 @@ jobs:
         if: ${{ matrix.toolchain.homebrew_packages }}
         run: brew install ${{ matrix.toolchain.homebrew_packages }}
 
-      - name: Checkout (non macos)
-        if: ${{ ! startsWith(matrix.toolchain.runs_on, 'macos') }}
-        uses: classabbyamp/treeless-checkout-action@bd3615a6e9d5546151e17d72193eea0d6f297398 # v1
-
-      - name: Checkout (macos)
-        if: ${{ startsWith(matrix.toolchain.runs_on, 'macos') }}
+      - name: Checkout
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
 
       - name: Configure
@@ -286,7 +247,7 @@ jobs:
           done
 
       - name: JUnit Report
-        if: ${{ always() && !contains(matrix.toolchain.name, 'musl') }}
+        if: always()
         uses: mikepenz/action-junit-report@e08919a3b1fb83a78393dfb775a9c37f17d8eea6 # v6
         with:
           report_paths: "**/junit.xml"
@@ -298,11 +259,11 @@ jobs:
   Static-Analysis:
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-musl-clang:v1@sha256:c162260c8e8ff31b47700b5df1b6cd5af7ed254797e8076574bc3954d8ba4a0a"
+      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:5e4b9a95dd826ee3b562cbe9a6891e7be9eaad99f86f90367c7223affff7ed6c"
 
     steps:
       - name: Checkout
-        uses: classabbyamp/treeless-checkout-action@bd3615a6e9d5546151e17d72193eea0d6f297398 # v1
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
 
       - name: Configure
         run: >-
