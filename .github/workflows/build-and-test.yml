@@ -232,7 +232,6 @@ jobs:
           done
 
       - name: JUnit Report
-        if: always()
         uses: mikepenz/action-junit-report@e08919a3b1fb83a78393dfb775a9c37f17d8eea6 # v6
         with:
           report_paths: "**/junit.xml"
