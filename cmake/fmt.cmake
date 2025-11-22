@@ -11,14 +11,13 @@ if(TARGET fmt)
     elseif(MSVC)
         target_compile_options(fmt PRIVATE /w)
     endif()
+    # HACK(hrzlgnm): disable analyzer checks on fmt library
+    set_target_properties(
+        fmt
+        PROPERTIES
+            CXX_CLANG_TIDY
+                ""
+            CXX_CPPCHECK
+                ""
+    )
 endif()
-
-# HACK(hrzlgnm): disable analyzer checks on fmt library
-set_target_properties(
-    fmt
-    PROPERTIES
-        CXX_CLANG_TIDY
-            ""
-        CXX_CPPCHECK
-            ""
-)
