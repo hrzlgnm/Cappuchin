@@ -13,7 +13,6 @@ RUN xbps-install -Syu xbps \
     jq \
     ninja \
     python3-pip \
-    rust-sccache \
     tar \
     wget \
     && xbps-remove -Ooy
