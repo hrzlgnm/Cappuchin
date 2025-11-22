@@ -4,7 +4,16 @@ FetchContent_Declare(fmt GIT_REPOSITORY "https://github.com/fmtlib/fmt.git" GIT_
 
 FetchContent_MakeAvailable(fmt)
 
-# HACK(hrzgnm): disable analyzer checks on fmt library
+# HACK(hrzlgnm): disable all warnings for fmt library
+if(TARGET fmt)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(fmt PRIVATE -w)
+    elseif(MSVC)
+        target_compile_options(fmt PRIVATE /w)
+    endif()
+endif()
+
+# HACK(hrzlgnm): disable analyzer checks on fmt library
 set_target_properties(
     fmt
     PROPERTIES

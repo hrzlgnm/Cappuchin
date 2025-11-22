@@ -1,7 +1,7 @@
 add_library(doctest INTERFACE)
 add_library(doctest::doctest ALIAS doctest)
 
-# HACK(hrzgnm): disable clang-tidy checks on doctest
+# HACK(hrzlgnm): disable clang-tidy checks on doctest
 target_include_directories(doctest SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library(doctest_dll dll.cpp)
@@ -34,7 +34,7 @@ add_test(
         $<TARGET_FILE:doctest_exe> --reporters=junit --out=junit.xml
 )
 
-# HACK(hrzgnm): disable analyzer checks on doctest targets
+# HACK(hrzlgnm): disable analyzer checks on doctest targets
 set_target_properties(
     doctest_exe
     PROPERTIES
