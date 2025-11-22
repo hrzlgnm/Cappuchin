@@ -1,25 +1,25 @@
 ---
-# Enable ALL the things! Except not really useful ones
-Checks:
-  - "*"
-  - "-*-use-ranges"
-  - "-*c++98-compat-*"
-  - "-altera-*"
-  - "-bugprone-easily-swappable-parameters"
-  - "-cert-dcl58-cpp"
-  - "-cert-err58-cpp"
-  - "-cppcoreguidelines-owning-memory"
-  - "-cppcoreguidelines-pro-bounds-constant-array-index"
-  - "-fuchsia-*"
-  - "-google-readability-todo"
-  - "-hicpp-multiway-paths-covered"
-  - "-llvm-header-guard"
-  - "-llvm-include-order"
-  - "-llvmlibc-*"
-  - "-misc-no-recursion"
-  - "-misc-non-private-member-variables-in-classes"
-  - "-portability-avoid-pragma-once"
-  - "-readability-identifier-length"
+# Enable ALL the things! Except not really useful ones, needs to be a string
+Checks: >
+  *,
+  -*-use-ranges,
+  -*c++98-compat-*,
+  -altera-*,
+  -bugprone-easily-swappable-parameters,
+  -cert-dcl58-cpp,
+  -cert-err58-cpp,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -fuchsia-*,
+  -google-readability-todo,
+  -hicpp-multiway-paths-covered,
+  -llvm-header-guard,
+  -llvm-include-order,
+  -llvmlibc-*,
+  -misc-no-recursion,
+  -misc-non-private-member-variables-in-classes,
+  -portability-avoid-pragma-once,
+  -readability-identifier-lengthChecks:
 WarningsAsErrors: ""
 HeaderFilterRegex: "source/.*"
 CheckOptions:
