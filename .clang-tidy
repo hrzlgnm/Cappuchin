@@ -18,7 +18,8 @@ Checks: >
   -llvmlibc-*,
   -misc-non-private-member-variables-in-classes,
   -portability-avoid-pragma-once,
-  -readability-identifier-length
+  -readability-identifier-length,
+  -llvm-prefer-static-over-anonymous-namespace
 WarningsAsErrors: ""
 HeaderFilterRegex: "source/.*"
 CheckOptions:
