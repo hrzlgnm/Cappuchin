@@ -43,13 +43,14 @@ jobs:
               - '.github/docker/**'
               - '.github/workflows/docker-build.yml'
             code:
+              - '.clang-tidy'
               - '.github/workflows/build-and-test.yml'
               - '.github/workflows/static-analysis.yml'
               - 'cmake/**'
               - 'source/**/*.hpp'
               - 'source/**/*.cpp'
             lint:
-              - '.clang-*'
+              - '.clang-format'
               - '.gersemirc'
               - '.github/workflows/lint.yml'
               - 'cppcheck/**'
