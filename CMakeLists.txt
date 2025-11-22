@@ -97,9 +97,7 @@ target_link_libraries(
 
 # HACK(hrzgnm): disable compiler warnings on fmt library,
 # by forcing fmt as SYSTEM include
-target_include_directories(cappuchin_lib SYSTEM PRIVATE
-    $<TARGET_PROPERTY:fmt::fmt,INTERFACE_INCLUDE_DIRECTORIES>
-)
+target_include_directories(cappuchin_lib SYSTEM PRIVATE $<TARGET_PROPERTY:fmt::fmt,INTERFACE_INCLUDE_DIRECTORIES>)
 
 add_executable(cappuchin_exe source/main.cpp)
 add_executable(cappuchin::exe ALIAS cappuchin_exe)
@@ -120,9 +118,6 @@ target_link_libraries(
 )
 # HACK(hrzgnm): disable compiler warnings on fmt library,
 # by forcing fmt as SYSTEM include
-target_include_directories(cappuchin_exe SYSTEM PRIVATE
-    $<TARGET_PROPERTY:fmt::fmt,INTERFACE_INCLUDE_DIRECTORIES>
-)
-
+target_include_directories(cappuchin_exe SYSTEM PRIVATE $<TARGET_PROPERTY:fmt::fmt,INTERFACE_INCLUDE_DIRECTORIES>)
 
 include(cmake/dev-mode.cmake)

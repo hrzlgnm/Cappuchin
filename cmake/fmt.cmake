@@ -13,5 +13,3 @@ set_target_properties(
         CXX_CPPCHECK
             ""
 )
-
-
