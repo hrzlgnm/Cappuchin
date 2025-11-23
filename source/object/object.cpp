@@ -621,14 +621,14 @@ auto integer_object::operator&(const object& other) const -> const object*
 
 auto decimal_object::operator==(const object& other) const -> const object*
 {
-    if (other.is(boolean)) {
-        return value_eq_helper(value, other.as<boolean_object>()->value_to<decimal_object>());
+    if (other.is(decimal)) {
+        return value_eq_helper(value, other.val<decimal_object>());
     }
     if (other.is(integer)) {
         return value_eq_helper(value, other.as<integer_object>()->value_to<decimal_object>());
     }
-    if (other.is(decimal)) {
-        return value_eq_helper(value, other.val<decimal_object>());
+    if (other.is(boolean)) {
+        return value_eq_helper(value, other.as<boolean_object>()->value_to<decimal_object>());
     }
     return fals();
 }
