@@ -27,6 +27,14 @@
 #include <overloaded.hpp>
 #include <parser/parser.hpp>
 
+namespace
+{
+constexpr auto as_size_t(std::int64_t a) -> std::size_t
+{
+    return static_cast<std::size_t>(a);
+}
+}  // namespace
+
 auto vm::create(bytecode code) -> vm
 {
     return create_with_state(std::move(code), allocate<constants>(globals_size));
@@ -177,13 +185,13 @@ auto vm::run() -> void
                 current_frame().ip += 1;
                 const auto local_index = instr[ip + 1UL];
                 const auto& frame = current_frame();
-                m_stack[frame.base_ptr + local_index] = pop();
+                m_stack[as_size_t(frame.base_ptr) + local_index] = pop();
             } break;
             case opcodes::get_local: {
                 current_frame().ip += 1;
                 const auto local_index = instr[ip + 1UL];
                 const auto& frame = current_frame();
-                push(m_stack[frame.base_ptr + local_index]);
+                push(m_stack[as_size_t(frame.base_ptr) + local_index]);
             } break;
             case opcodes::set_outer:
                 current_frame().ip += 3;
@@ -336,7 +344,7 @@ void vm::exec_set_outer(const int ip, const instructions& instr)
     const auto index = instr[ip + 3UL];
     const auto& frame = m_frames[m_frame_index - (level + 1)];
     if (scope == symbol_scope::local) {
-        m_stack[frame.base_ptr + index] = pop();
+        m_stack[as_size_t(frame.base_ptr) + index] = pop();
     } else if (scope == symbol_scope::free) {
         frame.cl->free[index] = pop();
     }
@@ -349,7 +357,7 @@ void vm::exec_get_outer(const int ip, const instructions& instr)
     const auto index = instr[ip + 3UL];
     const auto& frame = m_frames[m_frame_index - (level + 1)];
     if (scope == symbol_scope::local) {
-        push(m_stack[frame.base_ptr + index]);
+        push(m_stack[static_cast<std::size_t>(frame.base_ptr) + index]);
     } else if (scope == symbol_scope::free) {
         push(frame.cl->free[index]);
     } else if (scope == symbol_scope::function) {
@@ -371,7 +379,7 @@ auto vm::build_hash(const int start, const int end) const -> const object*
     hash_object::value_type hsh;
     for (auto idx = start; idx < end; idx += 2) {
         const auto* key = m_stack[idx];
-        const auto* val = m_stack[idx + 1];
+        const auto* val = m_stack[as_size_t(idx) + 1U];
         hsh[key->as<hashable>()->hash_key()] = val;
     }
     return allocate<hash_object>(std::move(hsh));
@@ -397,7 +405,7 @@ auto vm::exec_index(const object* left, const object* index) -> void
             push(null());
             return;
         }
-        push(left->as<array_object>()->value[static_cast<std::size_t>(idx)]);
+        push(left->as<array_object>()->value[as_size_t(idx)]);
         return;
     }
     if (left->is(string) && index->is(integer)) {
@@ -406,7 +414,7 @@ auto vm::exec_index(const object* left, const object* index) -> void
             push(null());
             return;
         }
-        push(allocate<string_object>(left->as<string_object>()->value.substr(static_cast<std::size_t>(idx), 1)));
+        push(allocate<string_object>(left->as<string_object>()->value.substr(as_size_t(idx), 1)));
         return;
     }
     if (left->is(hash) && index->is_hashable()) {
