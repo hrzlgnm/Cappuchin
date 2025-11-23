@@ -1,0 +1,49 @@
+name: Coverity Scan Reusable Workflow
+on:
+  workflow_call:
+    inputs:
+      project_name:
+        required: true
+        type: string
+
+jobs:
+  coverity:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+
+      - name: 🛠️ Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake curl ninja-build
+
+      - name: 📥 Download Coverity tool
+        run: |
+          curl -L "https://scan.coverity.com/download/linux64" \
+            --form project="${{ inputs.project_name }}" \
+            --form token="${{ secrets.COVERITY_SCAN_TOKEN }}" \
+            -o coverity_tool.tgz
+          mkdir cov
+          tar xzf coverity_tool.tgz --strip-components=1 -C cov
+
+      - name: ⚡Build project with Coverity using Ninja
+        run: |
+          mkdir -p build
+          cd build
+          cmake -G Ninja
+          ../cov/bin/cov-build --dir cov-int ninja -v
+
+      - name: 📦 Package Coverity results
+        run: |
+          tar czf cov-int.tgz cov-int
+
+      - name: 📤 Submit results to Coverity Scan
+        run: |
+          curl \
+            --form project="${{ inputs.project_name }}" \
+            --form token="${{ secrets.COVERITY_SCAN_TOKEN }}" \
+            --form email="${{ secrets.COVERITY_NOTIFY_EMAIL }}" \
+            --form file=@cov-int.tgz \
+            https://scan.coverity.com/builds

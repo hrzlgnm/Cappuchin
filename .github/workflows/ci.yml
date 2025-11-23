@@ -46,6 +46,7 @@ jobs:
               - '.clang-tidy'
               - '.github/workflows/build-and-test.yml'
               - '.github/workflows/static-analysis.yml'
+              - '.github/workflows/coverity.yml'
               - 'cmake/**'
               - 'source/**/*.hpp'
               - 'source/**/*.cpp'
@@ -80,6 +81,13 @@ jobs:
     needs: changes
     if: needs.changes.outputs.code == 'true' || needs.changes.outputs.tests == 'true'
     uses: ./.github/workflows/build-and-test.yml
+
+  coverity:
+    name: Coverity Scan
+    secrets: inherit
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    uses: ./.github/workflows/coverity.yml
 
   docker:
     name: "🐳"
