@@ -88,6 +88,8 @@ jobs:
     needs: changes
     if: needs.changes.outputs.code == 'true'
     uses: ./.github/workflows/coverity.yml
+    with:
+      project_name: hrzlgnm-cappuchin
 
   docker:
     name: "🐳"
