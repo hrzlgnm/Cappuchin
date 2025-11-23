@@ -1380,7 +1380,7 @@ TEST_CASE("emptyHashLiteral")
 TEST_CASE("nullLiteral")
 {
     auto [prgrm, _] = check_program(R"(null)");
-    auto* hash_lit = require_expression<null_literal>(prgrm);
+    require_expression<null_literal>(prgrm);
 }
 
 TEST_SUITE_END();
