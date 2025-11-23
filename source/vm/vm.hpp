@@ -7,9 +7,9 @@
 #include <compiler/compiler.hpp>
 #include <object/object.hpp>
 
-constexpr size_t stack_size = 2 * 2048UL;
-constexpr size_t globals_size = 65536UL;
-constexpr size_t max_frames = 1024UL;
+constexpr std::size_t stack_size = 2 * 2048UL;
+constexpr std::size_t globals_size = 65536UL;
+constexpr std::size_t max_frames = 1024UL;
 
 struct frame final
 {
