@@ -22,8 +22,6 @@ jobs:
       - name: 📥 Download Coverity tool
         run: |
           curl -L "https://scan.coverity.com/download/linux64" \
-            --form project="${{ inputs.project_name }}" \
-            --form token="${{ secrets.COVERITY_SCAN_TOKEN }}" \
             -o coverity_tool.tgz
           mkdir cov
           tar xzf coverity_tool.tgz --strip-components=1 -C cov
