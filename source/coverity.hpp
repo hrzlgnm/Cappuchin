@@ -1,6 +1,6 @@
 
 #ifdef COVERITY_BUILD
-void __coverity_panic__()
+static inline void __coverity_panic__()
 {
     abort();
 }
