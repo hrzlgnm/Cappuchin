@@ -19,6 +19,7 @@ target_link_libraries(
         cappuchin::lib
 )
 if(COVERITY_BUILD)
+    message(STATUS "Enabling COVERITY_BUILD for doctest_exe")
     target_compile_definitions(doctest_exe PRIVATE COVERITY_BUILD)
 endif()
 
