@@ -1,6 +1,9 @@
 
 #ifdef COVERITY_BUILD
-extern "C" void __coverity_panic__(void);
+void __coverity_panic__()
+{
+    abort();
+}
 
 template<typename T>
 static inline void coverity_require(const T& t)
