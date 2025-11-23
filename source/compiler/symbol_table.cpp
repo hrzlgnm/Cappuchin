@@ -77,7 +77,7 @@ auto symbol_table::define(const std::string& name) -> symbol
                .name = name,
                .scope = m_outer != nullptr ? local : global,
                .index = m_defs++,
-               .ptr {},
+               .ptr = {},
            };
 }
 
@@ -87,7 +87,7 @@ auto symbol_table::define_builtin(const int index, const std::string& name) -> s
                .name = name,
                .scope = symbol_scope::builtin,
                .index = index,
-               .ptr {},
+               .ptr = {},
            };
 }
 
@@ -97,7 +97,7 @@ auto symbol_table::define_function_name(const std::string& name) -> symbol
                .name = name,
                .scope = symbol_scope::function,
                .index = 0,
-               .ptr {},
+               .ptr = {},
            };
 }
 
@@ -166,7 +166,7 @@ auto symbol_table::define_free(const symbol& sym) -> symbol
                .name = sym.name,
                .scope = symbol_scope::free,
                .index = static_cast<int>(m_free.size()) - 1,
-               .ptr {},
+               .ptr = {},
            };
 }
 

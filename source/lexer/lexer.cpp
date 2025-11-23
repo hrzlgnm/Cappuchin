@@ -97,51 +97,61 @@ auto build_two_token_lookup() -> two_token_lookup
                    {
                        .type = equals,
                        .literal = "==",
+                       .loc = {},
                    }});
     lookup.insert({{exclamation, assign},
                    {
                        .type = not_equals,
                        .literal = "!=",
+                       .loc = {},
                    }});
     lookup.insert({{exclamation, assign},
                    {
                        .type = not_equals,
                        .literal = "!=",
+                       .loc = {},
                    }});
     lookup.insert({{less_than, less_than},
                    {
                        .type = shift_left,
                        .literal = "<<",
+                       .loc = {},
                    }});
     lookup.insert({{greater_than, greater_than},
                    {
                        .type = shift_right,
                        .literal = ">>",
+                       .loc = {},
                    }});
     lookup.insert({{ampersand, ampersand},
                    {
                        .type = logical_and,
                        .literal = "&&",
+                       .loc = {},
                    }});
     lookup.insert({{pipe, pipe},
                    {
                        .type = logical_or,
                        .literal = "||",
+                       .loc = {},
                    }});
     lookup.insert({{slash, slash},
                    {
                        .type = double_slash,
                        .literal = "//",
+                       .loc = {},
                    }});
     lookup.insert({{greater_than, assign},
                    {
                        .type = greater_equal,
                        .literal = ">=",
+                       .loc = {},
                    }});
     lookup.insert({{less_than, assign},
                    {
                        .type = less_equal,
                        .literal = "<=",
+                       .loc = {},
                    }});
     return lookup;
 }
@@ -197,7 +207,6 @@ auto lexer::next_token() -> token
     if (is_digit(m_byte)) {
         return read_number();
     }
-    auto literal = m_byte;
     return read_char(),
            token {
                .type = token_type::illegal,
