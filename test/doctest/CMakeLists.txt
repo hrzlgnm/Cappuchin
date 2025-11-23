@@ -18,6 +18,7 @@ target_link_libraries(
         fmt::fmt
         cappuchin::lib
 )
+
 add_executable(doctest::exe ALIAS doctest_exe)
 set_property(
     TARGET

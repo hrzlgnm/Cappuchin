@@ -30,11 +30,12 @@
 #include <fmt/ranges.h>
 #include <gc.hpp>
 #include <lexer/lexer.hpp>
+#include <lexer/location.hpp>
 #include <lexer/token.hpp>
 #include <lexer/token_type.hpp>
 #include <overloaded.hpp>
 
-#include "lexer/location.hpp"
+#include "coverity.hpp"
 
 namespace
 {
@@ -1251,6 +1252,7 @@ TEST_CASE("functionLiteral")
     REQUIRE_EQ(fn_expr->parameters[1]->value, "y");
 
     auto* block = dynamic_cast<const block_statement*>(fn_expr->body);
+    REQUIRE(block);
     REQUIRE_EQ(block->statements.size(), 1);
 
     auto* body_stmt = dynamic_cast<const expression_statement*>(block->statements[0]);
@@ -1374,7 +1376,8 @@ TEST_CASE("emptyHashLiteral")
     auto [prgrm, _] = check_program(R"({})");
     auto* hash_lit = require_expression<hash_literal>(prgrm);
     REQUIRE(hash_lit->pairs.empty());
-    REQUIRE(hash_lit->loc() == location {"<stdin>", 1, 1});
+    const auto expected_location = location {"<stdin>", 1, 1};
+    REQUIRE(hash_lit->loc() == expected_location);
 }
 
 TEST_CASE("nullLiteral")
