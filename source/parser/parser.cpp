@@ -30,11 +30,12 @@
 #include <fmt/ranges.h>
 #include <gc.hpp>
 #include <lexer/lexer.hpp>
+#include <lexer/location.hpp>
 #include <lexer/token.hpp>
 #include <lexer/token_type.hpp>
 #include <overloaded.hpp>
 
-#include "lexer/location.hpp"
+#include "coverity.hpp"
 
 namespace
 {
