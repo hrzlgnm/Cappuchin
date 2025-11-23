@@ -59,7 +59,7 @@ vm::vm(const frames& frames, const constants* consts, constants* globals)
 
 auto vm::run() -> void
 {
-    for (; current_frame().ip < current_frame().cl->fn->instrs.size(); current_frame().ip++) {
+    for (; as_size_t(current_frame().ip) < current_frame().cl->fn->instrs.size(); current_frame().ip++) {
         const auto ip = as_size_t(current_frame().ip);
         const auto& instr = current_frame().cl->fn->instrs;
         switch (const auto op = static_cast<opcodes>(instr[ip])) {
@@ -337,7 +337,7 @@ auto vm::exec_minus() -> void
     throw std::runtime_error(fmt::format("unsupported type for negation {}", operand->type()));
 }
 
-void vm::exec_set_outer(const int ip, const instructions& instr)
+void vm::exec_set_outer(const size_t ip, const instructions& instr)
 {
     const auto level = instr[ip + 1UL];
     const auto scope = static_cast<symbol_scope>(instr[ip + 2UL]);
@@ -350,7 +350,7 @@ void vm::exec_set_outer(const int ip, const instructions& instr)
     }
 }
 
-void vm::exec_get_outer(const int ip, const instructions& instr)
+void vm::exec_get_outer(const size_t ip, const instructions& instr)
 {
     const auto level = instr[ip + 1UL];
     const auto scope = static_cast<symbol_scope>(instr[ip + 2UL]);

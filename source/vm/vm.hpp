@@ -36,8 +36,8 @@ struct vm final
     auto exec_minus() -> void;
     auto exec_index(const object* left, const object* index) -> void;
     auto exec_call(int num_args) -> void;
-    void exec_set_outer(int ip, const instructions& instr);
-    void exec_get_outer(int ip, const instructions& instr);
+    void exec_set_outer(std::size_t ip, const instructions& instr);
+    void exec_get_outer(std::size_t ip, const instructions& instr);
     [[nodiscard]] auto build_array(int start, int end) const -> const object*;
     [[nodiscard]] auto build_hash(int start, int end) const -> const object*;
     auto current_frame() -> frame&;
