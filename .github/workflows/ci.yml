@@ -103,7 +103,7 @@ jobs:
     # used in branch protection rulesets as the only relevant step needing to pass
     name: CI Status
     runs-on: ubuntu-latest
-    needs: [typos, lint, build-and-test, docker]
+    needs: [typos, lint, build-and-test, docker, static-analysis]
     if: always()
     steps:
       - name: Create JSON summary
