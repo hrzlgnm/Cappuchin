@@ -628,7 +628,7 @@ auto require_hash_object(const hash& expected, const object*& actual, const std:
          actual->inspect(),
          " instead");
     REQUIRE(actual->is(object::object_type::hash));
-    const auto actual_hash = actual->as<hash_object>()->value;
+    const auto& actual_hash = actual->as<hash_object>()->value;
     REQUIRE_EQ(actual_hash.size(), expected.size());
 }
 
