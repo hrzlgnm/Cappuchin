@@ -15,7 +15,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(COVERITY_BUILD "Enables support for coverity understaing doctest" OFF)
+option(COVERITY_BUILD "Enables support for Coverity understanding doctest" OFF)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/fmt.cmake)
 
 # ---- Declare library ----
