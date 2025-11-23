@@ -11,6 +11,7 @@ on:
 
 jobs:
   changed-dockerfiles:
+    name: 🔍 Dockerfiles
     runs-on: ubuntu-latest
     outputs:
       packages: ${{ steps.packages.outputs.packages }}
@@ -39,6 +40,7 @@ jobs:
           echo "packages=$names" >> $GITHUB_OUTPUT
 
   build:
+    name: Build
     needs: changed-dockerfiles
     if: ${{ needs.changed-dockerfiles.outputs.packages != '[]' }}
     runs-on: ubuntu-latest
