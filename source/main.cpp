@@ -305,10 +305,10 @@ auto main(int argc, char* argv[]) -> int
 {
     const auto program = std::string_view(*argv);
     const auto opts = parse_command_line(program, argc - 1, ++argv);
-    if (opts.help) {
-        show_usage(program);
-    }
     try {
+        if (opts.help) {
+            show_usage(program);
+        }
         if (!opts.file.empty()) {
             return run_file(opts);
         }
