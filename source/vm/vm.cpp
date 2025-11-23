@@ -31,6 +31,7 @@ namespace
 {
 constexpr auto as_size_t(std::int64_t a) -> std::size_t
 {
+    assert(a >= 0);
     return static_cast<std::size_t>(a);
 }
 }  // namespace
