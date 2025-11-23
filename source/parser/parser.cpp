@@ -268,7 +268,7 @@ auto parser::parse_expression(const int precedence) -> expression*
     }
     auto* left_expr = unary();
     while (!peek_token_is(token_type::semicolon) && precedence < peek_precedence()) {
-        auto binary = m_binary_parsers[m_peek_token.type];
+        const auto binary = m_binary_parsers[m_peek_token.type];
         if (!binary) {
             return left_expr;
         }
