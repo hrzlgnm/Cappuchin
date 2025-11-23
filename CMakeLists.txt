@@ -103,7 +103,7 @@ target_include_directories(cappuchin_lib SYSTEM PRIVATE $<TARGET_PROPERTY:fmt::f
 add_executable(cappuchin_exe source/main.cpp)
 add_executable(cappuchin::exe ALIAS cappuchin_exe)
 target_compile_definitions(cappuchin_exe PRIVATE DOCTEST_CONFIG_DISABLE)
-if (COVERITY_BUILD)
+if(COVERITY_BUILD)
     target_compile_definitions(cappuchin_exe PRIVATE COVERITY_BUILD)
 endif()
 set_property(

@@ -18,7 +18,7 @@ target_link_libraries(
         fmt::fmt
         cappuchin::lib
 )
-if (COVERITY_BUILD)
+if(COVERITY_BUILD)
     target_compile_definitions(doctest_exe PRIVATE COVERITY_BUILD)
 endif()
 
