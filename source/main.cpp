@@ -139,9 +139,9 @@ auto parse_command_line(const std::string_view program, const int argc, char** a
     command_line_args opts {};
     for (std::string_view arg : std::span(argv, static_cast<std::size_t>(argc))) {
         if (arg[0] == '-' && arg.size() == 1) {
-            show_usage(program, fmt::format("invalid option {}", arg));
+            show_usage(program, "invalid option `-`");
         }
-        if (arg[0] == '-' && arg.size() > 1) {
+        if (arg[0] == '-' && arg.size() == 2) {
             switch (arg[1]) {
                 case 'i':
                     opts.mode = engine::eval;
@@ -153,14 +153,15 @@ auto parse_command_line(const std::string_view program, const int argc, char** a
                     opts.debug = true;
                     break;
                 default: {
-                    show_usage(program, fmt::format("invalid option {}", arg));
+                    const auto error_msg = std::string("invalid option `") + std::string(arg) + "`";
+                    show_usage(program, error_msg);
                 }
             }
         } else {
             if (opts.file.empty()) {
                 opts.file = arg;
             } else {
-                fmt::print("ignoring file argument {}, already have one set.\n", arg);
+                std::cerr << "Warning: more than one file provided, ignoring file: " << arg << "\n";
             }
         }
     }
