@@ -125,10 +125,10 @@ auto get_build_type() -> std::string
 {
     auto exit_code = EXIT_SUCCESS;
     if (!error_msg.empty()) {
-        fmt::print("Error: {}\n", error_msg);
+        std::cerr << "Error: " << error_msg << "\n";
         exit_code = EXIT_FAILURE;
     }
-    fmt::print("Usage: {} [-d] [-i] [-h] [<file>]\n\n", program);
+    std::cout << "Usage: " << program << " [-d] [-i] [-h] [<file>]\n\n";
     // NOLINTBEGIN(concurrency-mt-unsafe)
     exit(exit_code);
     // NOLINTEND(concurrency-mt-unsafe)
