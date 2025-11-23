@@ -105,6 +105,7 @@ add_executable(cappuchin::exe ALIAS cappuchin_exe)
 target_compile_definitions(cappuchin_exe PRIVATE DOCTEST_CONFIG_DISABLE)
 if(COVERITY_BUILD)
     message(STATUS "Enabling COVERITY_BUILD for cappuchin_exe")
+    target_compile_definitions(cappuchin_lib PUBLIC COVERITY_BUILD)
     target_compile_definitions(cappuchin_exe PRIVATE COVERITY_BUILD)
 endif()
 set_property(

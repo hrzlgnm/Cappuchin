@@ -18,10 +18,6 @@ target_link_libraries(
         fmt::fmt
         cappuchin::lib
 )
-if(COVERITY_BUILD)
-    message(STATUS "Enabling COVERITY_BUILD for doctest_exe")
-    target_compile_definitions(doctest_exe PRIVATE COVERITY_BUILD)
-endif()
 
 add_executable(doctest::exe ALIAS doctest_exe)
 set_property(
