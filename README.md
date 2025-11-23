@@ -1,5 +1,6 @@
 # Cappuchin
-
+[![Coverity Scan Build Status](https://img.shields.io/coverity/scan/32683.svg)](https://scan.coverity.com/projects/hrzlgnm-cappuchin)
+[![License: MIT](https://img.shields.io/github/license/hrzlgnm/Cappuchin)](https://github.com/hrzlgnm/Cappuchin/blob/main/LICENSE)  
 <!--toc:start-->
 
 - [cappuchin](#cappuchin)
