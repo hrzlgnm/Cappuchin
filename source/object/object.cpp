@@ -51,18 +51,20 @@ auto are_almost_equal(const double a, const double b) -> bool
 template<typename T>
 auto eq_helper(const T* t, const object& other) -> const object*
 {
-    if constexpr (std::is_same_v<T, decimal_object>) {
-        return native_bool_to_object(other.is(t->type()) && are_almost_equal(t->value, other.val<decimal_object>()));
+    if constexpr (std::is_same_v<std::decay<T>, decimal_object>) {
+        return native_bool_to_object(other.is(t->type()) && are_almost_equal(t->value, other.as<T>()->value));
     }
     return native_bool_to_object(other.is(t->type()) && t->value == other.as<T>()->value);
+}
+
+auto value_eq_helper(double lhs, double rhs) -> const object*
+{
+    return native_bool_to_object(are_almost_equal(lhs, rhs));
 }
 
 template<typename T>
 auto value_eq_helper(const T& lhs, const T& rhs) -> const object*
 {
-    if constexpr (std::is_same_v<T, double>) {
-        return native_bool_to_object(are_almost_equal(lhs, rhs));
-    }
     return native_bool_to_object(lhs == rhs);
 }
 
@@ -619,13 +621,16 @@ auto integer_object::operator&(const object& other) const -> const object*
 
 auto decimal_object::operator==(const object& other) const -> const object*
 {
-    if (other.is(boolean)) {
-        return value_eq_helper(value, other.as<boolean_object>()->value_to<decimal_object>());
+    if (other.is(decimal)) {
+        return value_eq_helper(value, other.val<decimal_object>());
     }
     if (other.is(integer)) {
         return value_eq_helper(value, other.as<integer_object>()->value_to<decimal_object>());
     }
-    return eq_helper(this, other);
+    if (other.is(boolean)) {
+        return value_eq_helper(value, other.as<boolean_object>()->value_to<decimal_object>());
+    }
+    return fals();
 }
 
 auto decimal_object::operator+(const object& other) const -> const object*

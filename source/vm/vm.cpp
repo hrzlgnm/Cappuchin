@@ -27,6 +27,15 @@
 #include <overloaded.hpp>
 #include <parser/parser.hpp>
 
+namespace
+{
+constexpr auto as_size_t(std::int64_t a) -> std::size_t
+{
+    assert(a >= 0);
+    return static_cast<std::size_t>(a);
+}
+}  // namespace
+
 auto vm::create(bytecode code) -> vm
 {
     return create_with_state(std::move(code), allocate<constants>(globals_size));
@@ -51,8 +60,8 @@ vm::vm(const frames& frames, const constants* consts, constants* globals)
 
 auto vm::run() -> void
 {
-    for (; current_frame().ip < current_frame().cl->fn->instrs.size(); current_frame().ip++) {
-        const auto ip = current_frame().ip;
+    for (; as_size_t(current_frame().ip) < current_frame().cl->fn->instrs.size(); current_frame().ip++) {
+        const auto ip = as_size_t(current_frame().ip);
         const auto& instr = current_frame().cl->fn->instrs;
         switch (const auto op = static_cast<opcodes>(instr[ip])) {
             case opcodes::constant: {
@@ -177,13 +186,13 @@ auto vm::run() -> void
                 current_frame().ip += 1;
                 const auto local_index = instr[ip + 1UL];
                 const auto& frame = current_frame();
-                m_stack[frame.base_ptr + local_index] = pop();
+                m_stack[as_size_t(frame.base_ptr) + local_index] = pop();
             } break;
             case opcodes::get_local: {
                 current_frame().ip += 1;
                 const auto local_index = instr[ip + 1UL];
                 const auto& frame = current_frame();
-                push(m_stack[frame.base_ptr + local_index]);
+                push(m_stack[as_size_t(frame.base_ptr) + local_index]);
             } break;
             case opcodes::set_outer:
                 current_frame().ip += 3;
@@ -226,10 +235,10 @@ auto vm::run() -> void
 auto vm::push(const object* obj) -> void
 {
     assert(obj != nullptr);
-    if (m_sp >= stack_size) {
+    if (as_size_t(m_sp) >= stack_size) {
         throw std::runtime_error("stack overflow");
     }
-    m_stack[m_sp] = obj;
+    m_stack[as_size_t(m_sp)] = obj;
     m_sp++;
 }
 
@@ -238,14 +247,14 @@ auto vm::pop() -> const object*
     if (m_sp == 0) {
         throw std::runtime_error("stack empty");
     }
-    const auto* const result = m_stack[m_sp - 1];
+    const auto* const result = m_stack[as_size_t(m_sp) - 1U];
     m_sp--;
     return result;
 }
 
 auto vm::last_popped() const -> const object*
 {
-    return m_stack[m_sp];
+    return m_stack[as_size_t(m_sp)];
 }
 
 namespace
@@ -329,27 +338,27 @@ auto vm::exec_minus() -> void
     throw std::runtime_error(fmt::format("unsupported type for negation {}", operand->type()));
 }
 
-void vm::exec_set_outer(const int ip, const instructions& instr)
+void vm::exec_set_outer(const size_t ip, const instructions& instr)
 {
     const auto level = instr[ip + 1UL];
     const auto scope = static_cast<symbol_scope>(instr[ip + 2UL]);
     const auto index = instr[ip + 3UL];
-    const auto& frame = m_frames[m_frame_index - (level + 1)];
+    const auto& frame = m_frames[as_size_t(m_frame_index) - (level + 1U)];
     if (scope == symbol_scope::local) {
-        m_stack[frame.base_ptr + index] = pop();
+        m_stack[as_size_t(frame.base_ptr) + index] = pop();
     } else if (scope == symbol_scope::free) {
         frame.cl->free[index] = pop();
     }
 }
 
-void vm::exec_get_outer(const int ip, const instructions& instr)
+void vm::exec_get_outer(const size_t ip, const instructions& instr)
 {
     const auto level = instr[ip + 1UL];
     const auto scope = static_cast<symbol_scope>(instr[ip + 2UL]);
     const auto index = instr[ip + 3UL];
-    const auto& frame = m_frames[m_frame_index - (level + 1)];
+    const auto& frame = m_frames[as_size_t(m_frame_index) - (level + 1U)];
     if (scope == symbol_scope::local) {
-        push(m_stack[frame.base_ptr + index]);
+        push(m_stack[static_cast<std::size_t>(frame.base_ptr) + index]);
     } else if (scope == symbol_scope::free) {
         push(frame.cl->free[index]);
     } else if (scope == symbol_scope::function) {
@@ -361,7 +370,7 @@ auto vm::build_array(const int start, const int end) const -> const object*
 {
     array_object::value_type arr;
     for (auto idx = start; idx < end; idx++) {
-        arr.push_back(m_stack[idx]);
+        arr.push_back(m_stack[as_size_t(idx)]);
     }
     return allocate<array_object>(std::move(arr));
 }
@@ -370,8 +379,8 @@ auto vm::build_hash(const int start, const int end) const -> const object*
 {
     hash_object::value_type hsh;
     for (auto idx = start; idx < end; idx += 2) {
-        const auto* key = m_stack[idx];
-        const auto* val = m_stack[idx + 1];
+        const auto* key = m_stack[as_size_t(idx)];
+        const auto* val = m_stack[as_size_t(idx) + 1U];
         hsh[key->as<hashable>()->hash_key()] = val;
     }
     return allocate<hash_object>(std::move(hsh));
@@ -397,7 +406,7 @@ auto vm::exec_index(const object* left, const object* index) -> void
             push(null());
             return;
         }
-        push(left->as<array_object>()->value[static_cast<std::size_t>(idx)]);
+        push(left->as<array_object>()->value[as_size_t(idx)]);
         return;
     }
     if (left->is(string) && index->is(integer)) {
@@ -406,7 +415,7 @@ auto vm::exec_index(const object* left, const object* index) -> void
             push(null());
             return;
         }
-        push(allocate<string_object>(left->as<string_object>()->value.substr(static_cast<std::size_t>(idx), 1)));
+        push(allocate<string_object>(left->as<string_object>()->value.substr(as_size_t(idx), 1)));
         return;
     }
     if (left->is(hash) && index->is_hashable()) {
@@ -418,7 +427,7 @@ auto vm::exec_index(const object* left, const object* index) -> void
 
 auto vm::exec_call(int num_args) -> void
 {
-    const auto* callee = m_stack[m_sp - 1 - num_args];
+    const auto* callee = m_stack[as_size_t(m_sp) - 1U - as_size_t(num_args)];
     using enum object::object_type;
     if (callee->is(closure)) {
         const auto* clsr = callee->as<closure_object>();
@@ -435,7 +444,7 @@ auto vm::exec_call(int num_args) -> void
         const auto* const builtin = callee->as<builtin_object>()->bltn;
         array_object::value_type args;
         for (auto idx = m_sp - num_args; idx < m_sp; idx++) {
-            args.push_back(m_stack[idx]);
+            args.push_back(m_stack[as_size_t(idx)]);
         }
         m_sp = m_sp - num_args - 1;
         const auto* result = builtin->body(std::move(args));
@@ -447,19 +456,19 @@ auto vm::exec_call(int num_args) -> void
 
 auto vm::current_frame() -> frame&
 {
-    return m_frames[m_frame_index - 1];
+    return m_frames[as_size_t(m_frame_index) - 1U];
 }
 
 auto vm::push_frame(const frame frm) -> void
 {
-    m_frames[m_frame_index] = frm;
+    m_frames[as_size_t(m_frame_index)] = frm;
     m_frame_index++;
 }
 
 auto vm::pop_frame() -> frame&
 {
     m_frame_index--;
-    return m_frames[m_frame_index];
+    return m_frames[as_size_t(m_frame_index)];
 }
 
 auto vm::push_closure(const uint16_t const_idx, const uint8_t num_free) -> void
@@ -471,7 +480,7 @@ auto vm::push_closure(const uint16_t const_idx, const uint8_t num_free) -> void
     }
     array_object::value_type free;
     for (auto i = 0UL; i < num_free; i++) {
-        free.push_back(m_stack[m_sp - num_free + i]);
+        free.push_back(m_stack[as_size_t(m_sp) - num_free + i]);
     }
     m_sp -= num_free;
     push(allocate<closure_object>(constant->as<compiled_function_object>(), free));

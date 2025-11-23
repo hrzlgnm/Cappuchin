@@ -226,4 +226,4 @@ auto builtin::builtins() -> const std::vector<const builtin*>&
 {
     static const std::vector<const builtin*> bltns {&len, &pts, &first, &last, &rest, &push, &type, &chr};
     return bltns;
-};
+}
