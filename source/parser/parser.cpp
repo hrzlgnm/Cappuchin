@@ -261,7 +261,7 @@ auto parser::parse_expression_statement() -> statement*
 
 auto parser::parse_expression(const int precedence) -> expression*
 {
-    const auto unary = m_unary_parsers[m_current_token.type];
+    const auto& unary = m_unary_parsers[m_current_token.type];
     if (!unary) {
         no_unary_expression_error(m_current_token.type);
         return {};
