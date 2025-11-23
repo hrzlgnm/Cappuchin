@@ -74,5 +74,5 @@ jobs:
           push: ${{ inputs.branch == 'main' }}
 
           tags: |
-            ghcr.io/${{ github.event.repository.owner }}/${{ matrix.package }}:v1
-            ghcr.io/${{ github.event.repository.owner }}/${{ matrix.package }}:latest
+            ghcr.io/${{ github.repository_owner }}/${{ matrix.package }}:v1
+            ghcr.io/${{ github.repository_owner }}/${{ matrix.package }}:latest
