@@ -13,6 +13,12 @@ static inline void coverity_require(const T& t)
     }
 }
 
-#    undef REQUIRE
-#    define REQUIRE(cond) ::coverity_require((cond))
+#    define DOCTEST_REQUIRE_ORIG REQUIRE
+
+#    define REQUIRE(...) \
+        do { \
+            coverity_require((__VA_ARGS__)); \
+            DOCTEST_REQUIRE_ORIG(__VA_ARGS__); \
+        } while (0)
+
 #endif

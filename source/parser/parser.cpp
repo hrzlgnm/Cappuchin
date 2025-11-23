@@ -1376,8 +1376,7 @@ TEST_CASE("emptyHashLiteral")
     auto [prgrm, _] = check_program(R"({})");
     auto* hash_lit = require_expression<hash_literal>(prgrm);
     REQUIRE(hash_lit->pairs.empty());
-    const auto expected_location = location {"<stdin>", 1, 1};
-    REQUIRE(hash_lit->loc() == expected_location);
+    REQUIRE(hash_lit->loc() == location {"<stdin>", 1, 1});
 }
 
 TEST_CASE("nullLiteral")
