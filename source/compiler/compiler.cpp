@@ -123,7 +123,7 @@ auto compiler::replace_instruction(const std::size_t pos, const instructions& in
 
 auto compiler::change_operand(const std::size_t pos, const std::size_t operand) -> void
 {
-    auto& scope = m_scopes[m_scope_index];
+    const auto& scope = m_scopes[m_scope_index];
     const auto opcode = static_cast<opcodes>(scope.instrs[pos]);
     const auto instr = make(opcode, operand);
     replace_instruction(pos, instr);
