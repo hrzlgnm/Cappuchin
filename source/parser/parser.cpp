@@ -800,6 +800,7 @@ TEST_CASE("letStatements")
     struct lt
     {
         std::string_view input;
+        // cppcheck-suppress unusedStructMember
         std::string expected_identifier;
         expected_value_type expected_value;
     };
@@ -822,6 +823,7 @@ TEST_CASE("assignmentExpressions")
     struct lt
     {
         std::string_view input;
+        // cppcheck-suppress unusedStructMember
         std::string expected_identifier;
         expected_value_type expected_value;
     };
