@@ -28,7 +28,7 @@ jobs:
           -DCMAKE_EXE_LINKER_FLAGS="-Wl,--allow-shlib-undefined,--as-needed,-z,noexecstack,-z,relro,-z,now"
           -DCMAKE_SHARED_LINKER_FLAGS="-Wl,--allow-shlib-undefined,--as-needed,-z,noexecstack,-z,relro,-z,now"
           -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
-          -DCMAKE_CXX_CPPCHECK="cppcheck;--inline-suppr;--check-level=exhaustive;--library=/__w/Cappuchin/Cappuchin/cppcheck/cappuchin.cfg;--suppress=*:fmt/*;--error-exitcode=2"
+          -DCMAKE_CXX_CPPCHECK="cppcheck;--inline-suppr;--check-level=exhaustive;--library=$(pwd)/cppcheck/cappuchin.cfg;--suppress=*:fmt/*;--error-exitcode=2"
           -DCMAKE_CXX_EXTENSIONS=OFF
           -DCMAKE_CXX_STANDARD=20
           -DCMAKE_CXX_STANDARD_REQUIRED=ON
