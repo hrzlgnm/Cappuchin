@@ -23,7 +23,7 @@ struct expression
     [[nodiscard]] virtual auto string() const -> std::string = 0;
     virtual void accept(visitor& visitor) const = 0;
 
-    [[nodiscard]] auto loc() const { return l; }
+    [[nodiscard]] auto loc() const -> const location& { return l; }
 
     location l;
 };

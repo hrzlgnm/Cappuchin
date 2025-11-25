@@ -800,6 +800,7 @@ TEST_CASE("letStatements")
     struct lt
     {
         std::string_view input;
+        // cppcheck-suppress unusedStructMember
         std::string expected_identifier;
         expected_value_type expected_value;
     };
@@ -822,6 +823,7 @@ TEST_CASE("assignmentExpressions")
     struct lt
     {
         std::string_view input;
+        // cppcheck-suppress unusedStructMember
         std::string expected_identifier;
         expected_value_type expected_value;
     };
@@ -922,6 +924,7 @@ TEST_CASE("unaryExpressions")
     {
         std::string_view input;
         token_type op;
+        // cppcheck-suppress unusedStructMember
         int64_t integer_value;
     };
 
@@ -947,8 +950,10 @@ TEST_CASE("binaryExpressions")
     struct bt
     {
         std::string_view input;
+        // cppcheck-suppress unusedStructMember
         int64_t left_value;
         token_type op;
+        // cppcheck-suppress unusedStructMember
         int64_t right_value;
     };
 

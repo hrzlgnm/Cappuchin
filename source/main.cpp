@@ -190,7 +190,7 @@ auto run_file(const command_line_args& opts) -> int
     const std::string contents {(std::istreambuf_iterator(ifs)), (std::istreambuf_iterator<char>())};
     auto lxr = lexer {contents, opts.file};
     auto prsr = parser {lxr};
-    auto* prgrm = prsr.parse_program();
+    const auto* prgrm = prsr.parse_program();
     if (!prsr.errors().empty()) {
         print_parse_errors(prsr.errors());
         return 1;
@@ -248,7 +248,7 @@ auto run_repl(const command_line_args& opts) -> int
     while (getline(std::cin, input)) {
         auto lxr = lexer {input};
         auto prsr = parser {lxr};
-        auto* prgrm = prsr.parse_program();
+        const auto* prgrm = prsr.parse_program();
         if (!prsr.errors().empty()) {
             print_parse_errors(prsr.errors());
             show_prompt();

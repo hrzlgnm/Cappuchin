@@ -260,7 +260,9 @@ TEST_SUITE("code")
         struct test
         {
             opcodes opcode;
+            // cppcheck-suppress unusedStructMember
             operands opers;
+            // cppcheck-suppress unusedStructMember
             instructions expected;
         };
         using enum opcodes;
@@ -322,7 +324,9 @@ TEST_SUITE("code")
         struct test
         {
             opcodes opcode;
+            // cppcheck-suppress unusedStructMember
             operands opers;
+            // cppcheck-suppress unusedStructMember
             int bytes_read;
         };
 

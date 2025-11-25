@@ -114,6 +114,7 @@ auto compiler::replace_last_pop_with_return() -> void
 
 auto compiler::replace_instruction(const std::size_t pos, const instructions& instr) -> void
 {
+    // cppcheck-suppress variableScope
     auto& scope = m_scopes[m_scope_index];
     for (auto idx = 0UL; const auto& inst : instr) {
         scope.instrs[pos + idx] = inst;
@@ -123,7 +124,7 @@ auto compiler::replace_instruction(const std::size_t pos, const instructions& in
 
 auto compiler::change_operand(const std::size_t pos, const std::size_t operand) -> void
 {
-    auto& scope = m_scopes[m_scope_index];
+    const auto& scope = m_scopes[m_scope_index];
     const auto opcode = static_cast<opcodes>(scope.instrs[pos]);
     const auto instr = make(opcode, operand);
     replace_instruction(pos, instr);
