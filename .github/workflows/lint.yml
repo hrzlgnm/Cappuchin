@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  Lint:
+  cmake-format:
     runs-on: ubuntu-latest
     container:
       image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:b09d1c6fc28d7597cb557eee961f97c10b469acb4294787b01b7fa08e513ecfc"
@@ -14,6 +14,14 @@ jobs:
 
       - name: 📐 Check cmake format
         run: gersemi --check --diff .
+
+  clang-format:
+    runs-on: ubuntu-latest
+    container:
+      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:b09d1c6fc28d7597cb557eee961f97c10b469acb4294787b01b7fa08e513ecfc"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
 
       - name: 📐 Check clang-format
         run: cmake -D FORMAT_COMMAND=clang-format -P cmake/lint.cmake
