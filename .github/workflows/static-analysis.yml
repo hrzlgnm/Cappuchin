@@ -15,10 +15,10 @@ jobs:
       image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:b09d1c6fc28d7597cb557eee961f97c10b469acb4294787b01b7fa08e513ecfc"
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      - name: 🔄 Checkout
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
 
-      - name: Configure
+      - name: ⚙️ Configure
         run: >-
           cmake
           -GNinja
@@ -35,9 +35,14 @@ jobs:
           -S .
           -B ../build
 
-      - name: Build
+      - name: 🔧⚠️Build with -Werror and many warnings enabled
+        if: always()
         run: |
           cmake --build ../build -j 2
+
+      - name: 📘🔍Cppcheck
+        if: always()
+        run: |
           echo "Checking with $(cppcheck --version)"
           cppcheck \
           --inline-suppr \
@@ -45,5 +50,5 @@ jobs:
           --project=../build/compile_commands.json \
           --library=cppcheck/cappuchin.cfg \
           --enable=style \
-          --suppress='*:fmt/*' 
+          --suppress='*:fmt/*' \
           --error-exitcode=2
