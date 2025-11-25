@@ -178,7 +178,7 @@ auto vm::run() -> void
                 push(return_value);
             } break;
             case opcodes::ret: {
-                auto& frame = pop_frame();
+                const auto& frame = pop_frame();
                 m_sp = frame.base_ptr - 1;
                 push(null());
             } break;

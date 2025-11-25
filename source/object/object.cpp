@@ -821,12 +821,12 @@ auto hash_object::inspect() const -> std::string
 {
     std::ostringstream strm;
     strm << "{";
-    for (bool first = true; const auto& [key, value] : value) {
+    for (bool first = true; const auto& [key, val] : value) {
         if (!first) {
             strm << ", ";
         }
         strm << key;
-        strm << ": " << value->inspect();
+        strm << ": " << val->inspect();
         first = false;
     }
     strm << "}";
@@ -895,7 +895,6 @@ auto check_op_defined(const object* res, const std::string_view op, const object
 {
     if (res == nullptr) {
         INFO("operator ", lhs.type(), " ", op, " ", rhs.type(), " is not defined ");
-        CHECK(res != nullptr);
         return false;
     }
     return true;

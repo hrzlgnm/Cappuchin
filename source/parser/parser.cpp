@@ -922,6 +922,7 @@ TEST_CASE("unaryExpressions")
     {
         std::string_view input;
         token_type op;
+        // cppcheck-suppress unusedStructMember
         int64_t integer_value;
     };
 
@@ -947,8 +948,10 @@ TEST_CASE("binaryExpressions")
     struct bt
     {
         std::string_view input;
+        // cppcheck-suppress unusedStructMember
         int64_t left_value;
         token_type op;
+        // cppcheck-suppress unusedStructMember
         int64_t right_value;
     };
 

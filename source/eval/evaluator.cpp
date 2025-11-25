@@ -970,6 +970,7 @@ TEST_CASE("errorHandling")
     struct et
     {
         std::string_view input;
+        // cppcheck-suppress unusedStructMember
         std::string expected_message;
     };
 
