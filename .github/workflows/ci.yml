@@ -41,18 +41,18 @@ jobs:
           filters: |
             docker:
               - '.github/docker/**'
-              - '.github/workflows/docker-build.yml'
+              - '.github/workflows/docker-reusable.yml'
             code:
               - '.clang-tidy'
-              - '.github/workflows/build-and-test.yml'
-              - '.github/workflows/static-analysis.yml'
+              - '.github/workflows/build-and-test-reusable.yml'
+              - '.github/workflows/static-analysis-reusable.yml'
               - 'cmake/**'
               - 'source/**/*.hpp'
               - 'source/**/*.cpp'
             lint:
               - '.clang-format'
               - '.gersemirc'
-              - '.github/workflows/lint.yml'
+              - '.github/workflows/lint-reusable.yml'
               - 'cppcheck/**'
             tests:
               - 'test/**'
@@ -65,13 +65,13 @@ jobs:
   typos:
     name: 📝 Check typos
     if: always()
-    uses: ./.github/workflows/typos.yml
+    uses: ./.github/workflows/typos-reusable.yml
 
   lint:
     name: Lint
     needs: changes
     if: needs.changes.outputs.code == 'true' || needs.changes.outputs.lint == 'true'
-    uses: ./.github/workflows/lint.yml
+    uses: ./.github/workflows/lint-reusable.yml
 
   build-and-test:
     name: Build and Test
@@ -79,7 +79,7 @@ jobs:
       checks: write # required for action-junit-report annotation
     needs: changes
     if: needs.changes.outputs.code == 'true' || needs.changes.outputs.tests == 'true'
-    uses: ./.github/workflows/build-and-test.yml
+    uses: ./.github/workflows/build-and-test-reusable.yml
 
   docker:
     name: "🐳"
@@ -89,7 +89,7 @@ jobs:
       contents: read
       packages: write # Needed to push to GHCR
 
-    uses: ./.github/workflows/docker-build.yml
+    uses: ./.github/workflows/docker-reusable.yml
     with:
       branch: ${{ needs.changes.outputs.branch }}
 
@@ -97,7 +97,7 @@ jobs:
     name: Static Analysis
     needs: changes
     if: needs.changes.outputs.code == 'true' || needs.changes.outputs.tests == 'true'
-    uses: ./.github/workflows/static-analysis.yml
+    uses: ./.github/workflows/static-analysis-reusable.yml
 
   all-required-green: # This job does nothing and is only used for the branch protection
     name: CI Status
