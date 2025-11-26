@@ -1,3 +1,6 @@
+// Copyright 2023-2025 hrzlgnm
+// SPDX-License-Identifier: MIT-0
+
 
 #ifdef COVERITY_BUILD
 static inline void __coverity_panic__()

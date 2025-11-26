@@ -1,3 +1,6 @@
+# Copyright 2023-2025 hrzlgnm
+# SPDX-License-Identifier: MIT-0
+
 set(SPELL_COMMAND typos CACHE STRING "Spell checker to use")
 
 add_custom_target(

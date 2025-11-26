@@ -1,3 +1,6 @@
+# Copyright 2023-2025 hrzlgnm
+# SPDX-License-Identifier: MIT-0
+
 include(FetchContent)
 
 FetchContent_Declare(fmt GIT_REPOSITORY "https://github.com/fmtlib/fmt.git" GIT_TAG "12.1.0")
