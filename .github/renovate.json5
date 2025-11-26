@@ -24,7 +24,7 @@
             matchStringsStrategy: 'any',
             customType: 'regex',
             managerFilePatterns: [
-                '/^\\.github/workflows/.*\\.yml$/',
+                '/^\\.github/workflows/.*\\-reusable.yml$/',
             ],
             depTypeTemplate: 'container',
             datasourceTemplate: 'docker',
