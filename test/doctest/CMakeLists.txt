@@ -1,3 +1,6 @@
+# Copyright 2023-2025 hrzlgnm
+# SPDX-License-Identifier: MIT-0
+
 add_library(doctest INTERFACE)
 add_library(doctest::doctest ALIAS doctest)
 

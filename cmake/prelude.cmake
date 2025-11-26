@@ -1,3 +1,6 @@
+# Copyright 2023-2025 hrzlgnm
+# SPDX-License-Identifier: MIT-0
+
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     message(
         FATAL_ERROR

@@ -1,3 +1,6 @@
+# Copyright 2023-2025 hrzlgnm
+# SPDX-License-Identifier: MIT-0
+
 # ---- Developer mode ----
 
 # Developer mode enables targets and code paths in the CMake scripts that are

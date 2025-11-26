@@ -1,3 +1,6 @@
+# Copyright 2023-2025 hrzlgnm
+# SPDX-License-Identifier: MIT-0
+
 cmake_minimum_required(VERSION 3.18)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
