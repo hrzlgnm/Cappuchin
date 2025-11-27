@@ -18,7 +18,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(COVERITY_BUILD "Enables support for Coverity understanding doctest" OFF)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/fmt.cmake)
 
 # ---- Declare library ----
@@ -106,11 +105,6 @@ target_include_directories(cappuchin_lib SYSTEM PRIVATE $<TARGET_PROPERTY:fmt::f
 add_executable(cappuchin_exe source/main.cpp)
 add_executable(cappuchin::exe ALIAS cappuchin_exe)
 target_compile_definitions(cappuchin_exe PRIVATE DOCTEST_CONFIG_DISABLE)
-if(COVERITY_BUILD)
-    message(STATUS "Enabling COVERITY_BUILD")
-    target_compile_definitions(cappuchin_lib PUBLIC COVERITY_BUILD)
-    target_compile_definitions(cappuchin_exe PRIVATE COVERITY_BUILD)
-endif()
 set_property(
     TARGET
         cappuchin_exe
