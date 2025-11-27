@@ -88,7 +88,7 @@ jobs:
       contents: read
       packages: write # Needed to push to GHCR
 
-    uses: hrzlgnm/actions/.github/workflows/docker-reusable.yml@main
+    uses: hrzlgnm/actions/.github/workflows/docker-reusable.yml@v1.0.0
     with:
       branch: ${{ needs.changes.outputs.branch }}
 
