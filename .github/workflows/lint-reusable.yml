@@ -7,7 +7,7 @@ jobs:
   cmake-format:
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:b09d1c6fc28d7597cb557eee961f97c10b469acb4294787b01b7fa08e513ecfc"
+      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:d2517c608e0601ceab484f9d22391c9a72a467269f5d5425e11fd5584e96a437"
     steps:
       - name: Checkout
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
@@ -18,7 +18,7 @@ jobs:
   clang-format:
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:b09d1c6fc28d7597cb557eee961f97c10b469acb4294787b01b7fa08e513ecfc"
+      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:d2517c608e0601ceab484f9d22391c9a72a467269f5d5425e11fd5584e96a437"
     steps:
       - name: Checkout
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
