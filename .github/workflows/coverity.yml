@@ -3,38 +3,10 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 7 * * SAT"
+
 jobs:
   coverity:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 🔄 Checkout
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
-
-      - name: 🛠️ Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            cmake \
-            curl \
-            ninja-build
-
-      - name: ⚙️ Configure using CMake and Ninja
-        run: |
-          cmake -S . -B build -G Ninja
-
-      - name: ⚡Scan with coverity
-        uses: vapier/coverity-scan-action@2068473c7bdf8c2fb984a6a40ae76ee7facd7a85 # v1.8.0
-        with:
-          email: ${{ secrets.COVERITY_NOTIFY_EMAIL }}
-          token: ${{ secrets.COVERITY_SCAN_TOKEN }}
-          command: ninja
-          working-directory: "${{ github.workspace }}/build"
-
-      - name: 📤 Offer analysis tarball for inspection
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-        with:
-          name: ${{ github.event.repository.name }}_coverity_scan_upload_${{ github.sha }}
-          path: build/cov-int.tgz
-          if-no-files-found: error
+    uses: hrzlgnm/actions/.github/workflows/coverity-reusable.yml@deb1f469a2c763fe930b922c8b9cebadc5e92313 # v1.2.0
+    with:
+      coverity-email: ${{ secrets.COVERITY_NOTIFY_EMAIL }}
+      coverity-token: ${{ secrets.COVERITY_SCAN_TOKEN }}
