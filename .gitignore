@@ -1,3 +1,5 @@
+# Hack to make ripgrep not ignore .github directory
+!.github/
 .idea/
 .vs/
 .vscode/
