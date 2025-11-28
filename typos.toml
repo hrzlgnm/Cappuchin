@@ -2,7 +2,10 @@
 extend-exclude = ["test/doctest/doctest/doctest.h"]
 
 [default.extend-words]
+# Replacement keywords for false, true, while as enums
 fals = "fals"
 tru = "tru"
-thr = "thr"
 hwile = "hwile"
+
+# -Wjump-seh-finally
+seh = "seh"
