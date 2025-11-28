@@ -64,7 +64,7 @@ jobs:
   typos:
     name: 📝 Check typos
     if: always()
-    uses: hrzlgnm/actions/.github/workflows/typos-reusable.yml@deb1f469a2c763fe930b922c8b9cebadc5e92313 # v1.2.0
+    uses: hrzlgnm/actions/.github/workflows/typos-reusable.yml@40746ba5343db4158adaa0898a7316508ef5e007 # v1.2.2
 
   lint:
     name: Lint
@@ -88,7 +88,7 @@ jobs:
       contents: read
       packages: write # Needed to push to GHCR
 
-    uses: hrzlgnm/actions/.github/workflows/docker-reusable.yml@deb1f469a2c763fe930b922c8b9cebadc5e92313 # v1.2.0
+    uses: hrzlgnm/actions/.github/workflows/docker-reusable.yml@40746ba5343db4158adaa0898a7316508ef5e007 # v1.2.2
     with:
       branch: ${{ needs.changes.outputs.branch }}
 
