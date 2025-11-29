@@ -26,6 +26,7 @@ jobs:
     runs-on: ubuntu-slim
     outputs:
       branch: ${{ steps.branch.outputs.branch }}
+      cmake: ${{ steps.filter.outputs.cmake }}
       code: ${{ steps.filter.outputs.code }}
       docker: ${{ steps.filter.outputs.docker }}
       lint: ${{ steps.filter.outputs.lint }}
@@ -48,9 +49,12 @@ jobs:
               - 'cmake/**'
               - 'source/**/*.hpp'
               - 'source/**/*.cpp'
+            cmake:
+              - '**/CMakeLists.txt'
+              - '**/*.cmake'
+              - '.gersemirc'
             lint:
               - '.clang-format'
-              - '.gersemirc'
               - '.github/workflows/lint-reusable.yml'
               - 'cppcheck/**'
             tests:
@@ -72,12 +76,18 @@ jobs:
     if: needs.changes.outputs.code == 'true' || needs.changes.outputs.lint == 'true'
     uses: ./.github/workflows/lint-reusable.yml
 
+  gersemi:
+    name: 📐 Check CMake format
+    needs: changes
+    if: needs.changes.outputs.cmake == 'true'
+    uses: hrzlgnm/actions/.github/workflows/gersemi-reusable.yml@acb5bddd856e0fd20697dc5f3f90ccddd813d8f0 # v1.3.0
+
   build-and-test:
     name: Build and Test
     permissions:
       checks: write # required for action-junit-report annotation
     needs: changes
-    if: needs.changes.outputs.code == 'true' || needs.changes.outputs.tests == 'true'
+    if: needs.changes.outputs.code == 'true' || needs.changes.outputs.tests == 'true' || needs.changes.outputs.cmake == 'true'
     uses: ./.github/workflows/build-and-test-reusable.yml
 
   docker:
@@ -104,6 +114,7 @@ jobs:
     needs:
       - build-and-test
       - docker
+      - gersemi
       - lint
       - static-analysis
       - typos
@@ -115,6 +126,7 @@ jobs:
           allowed-skips: >-
             build-and-test,
             docker,
+            gersemi,
             lint,
             static-analysis
           jobs: ${{ toJSON(needs) }}

@@ -37,17 +37,6 @@
         {
             customType: 'regex',
             managerFilePatterns: [
-                '/^\\.github/docker/.*/Dockerfile$/',
-            ],
-            matchStringsStrategy: 'any',
-            matchStrings: [
-                'pip\\s+install(\\s+--[^\\s]+)+?\\s+(?<depName>[^\\s]+?)==(?<currentValue>.+?)\\s'
-            ],
-            datasourceTemplate: 'pypi'
-        },
-        {
-            customType: 'regex',
-            managerFilePatterns: [
                 '/CMakeLists\\.txt$/',
                 '/.*\\.cmake$/'
             ],
