@@ -6,7 +6,6 @@ RUN xbps-install -Syu xbps \
     clang \
     clang-tools-extra \
     cmake \
-    cppcheck \
     curl \
     git \
     gzip \
