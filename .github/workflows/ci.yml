@@ -28,9 +28,9 @@ jobs:
       branch: ${{ steps.branch.outputs.branch }}
       clang-format: ${{ steps.filter.outputs.clang-format }}
       cmake: ${{ steps.filter.outputs.cmake }}
+      cppcheck: ${{ steps.filter.outputs.cppcheck }}
       code: ${{ steps.filter.outputs.code }}
       docker: ${{ steps.filter.outputs.docker }}
-      lint: ${{ steps.filter.outputs.lint }}
       tests: ${{ steps.filter.outputs.tests }}
     steps:
       - name: 🔄 Checkout
@@ -56,7 +56,7 @@ jobs:
               - '.gersemirc'
             clang-format:
               - '.clang-format'
-            lint:
+            cppcheck:
               - 'cppcheck/**'
             tests:
               - 'test/**'
@@ -106,7 +106,7 @@ jobs:
   static-analysis:
     name: Static Analysis
     needs: changes
-    if: needs.changes.outputs.code == 'true' || needs.changes.outputs.tests == 'true'
+    if: needs.changes.outputs.code == 'true' || needs.changes.outputs.tests == 'true' || needs.changes.outptus.cppcheck == 'true'
     uses: ./.github/workflows/static-analysis-reusable.yml
 
   all-required-green: # This job does nothing and is only used for the branch protection
