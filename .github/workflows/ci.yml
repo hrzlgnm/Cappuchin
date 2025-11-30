@@ -83,6 +83,12 @@ jobs:
     if: needs.changes.outputs.cmake == 'true'
     uses: hrzlgnm/actions/.github/workflows/gersemi-reusable.yml@7b9f9b43588d85fc180bca626cc1cc0365025fe7 # v1.4.0
 
+  cppcheck:
+    name: 📘🔍Cppcheck
+    needs: changes
+    if: needs.changes.outputs.code == 'true' || needs.changes.outputs.cppcheck == 'true'
+    uses: hrzlgnm/actions/.github/workflows/cppcheck-reusable.yml@ef8f60ad40bc76903e9bf94384d1f96a8e3ce207 # v1.5.0
+
   build-and-test:
     name: Build and Test
     permissions:
@@ -115,6 +121,7 @@ jobs:
     needs:
       - build-and-test
       - clang-format
+      - cppcheck
       - docker
       - gersemi
       - static-analysis
@@ -127,6 +134,7 @@ jobs:
           allowed-skips: >-
             build-and-test,
             clang-format,
+            cppcheck,
             docker,
             gersemi,
             static-analysis

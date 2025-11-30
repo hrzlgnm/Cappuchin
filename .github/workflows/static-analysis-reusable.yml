@@ -36,19 +36,5 @@ jobs:
           -B ../build
 
       - name: 🔧⚠️Build with -Werror and many warnings enabled
-        if: always()
         run: |
           cmake --build ../build -j 2
-
-      - name: 📘🔍Cppcheck
-        if: always()
-        run: |
-          echo "Checking with $(cppcheck --version)"
-          cppcheck \
-          --inline-suppr \
-          --check-level=exhaustive \
-          --project=../build/compile_commands.json \
-          --library=cppcheck/cappuchin.cfg \
-          --enable=style \
-          --suppress='*:fmt/*' \
-          --error-exitcode=2
