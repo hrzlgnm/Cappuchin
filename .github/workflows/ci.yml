@@ -26,6 +26,7 @@ jobs:
     runs-on: ubuntu-slim
     outputs:
       branch: ${{ steps.branch.outputs.branch }}
+      clang-format: ${{ steps.filter.outputs.clang-format }}
       cmake: ${{ steps.filter.outputs.cmake }}
       code: ${{ steps.filter.outputs.code }}
       docker: ${{ steps.filter.outputs.docker }}
@@ -53,9 +54,9 @@ jobs:
               - '**/CMakeLists.txt'
               - '**/*.cmake'
               - '.gersemirc'
-            lint:
+            clang-format:
               - '.clang-format'
-              - '.github/workflows/lint-reusable.yml'
+            lint:
               - 'cppcheck/**'
             tests:
               - 'test/**'
@@ -70,11 +71,11 @@ jobs:
     if: always()
     uses: hrzlgnm/actions/.github/workflows/typos-reusable.yml@acb5bddd856e0fd20697dc5f3f90ccddd813d8f0 # v1.3.0
 
-  lint:
-    name: Lint
+  clang-format:
+    name: 📐 Check code format
     needs: changes
-    if: needs.changes.outputs.code == 'true' || needs.changes.outputs.lint == 'true'
-    uses: ./.github/workflows/lint-reusable.yml
+    if: needs.changes.outputs.code == 'true' || needs.changes.outputs.clang-format == 'true'
+    uses: hrzlgnm/actions/.github/workflows/clang-format-reusable.yml@7b9f9b43588d85fc180bca626cc1cc0365025fe7 # v1.4.0
 
   gersemi:
     name: 📐 Check CMake format
@@ -113,9 +114,9 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-and-test
+      - clang-format
       - docker
       - gersemi
-      - lint
       - static-analysis
       - typos
     if: always()
@@ -125,8 +126,8 @@ jobs:
         with:
           allowed-skips: >-
             build-and-test,
+            clang-format,
             docker,
             gersemi,
-            lint,
             static-analysis
           jobs: ${{ toJSON(needs) }}
