@@ -82,7 +82,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "Clang 17 glibc",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:5ec3c16924ac51dab05dbd0c9ad8320ea8b83f4e161078d2b26a1723beb3507a",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:eb5a8c866ff7a8f93eea7640c7e73e077af56d35f3da4247334b898f1ef7615a",
               CC: clang,
               CXX: clang++,
               CFLAGS: "",
@@ -94,7 +94,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "Clang 17 glibc ASAN+UBSAN",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:5ec3c16924ac51dab05dbd0c9ad8320ea8b83f4e161078d2b26a1723beb3507a",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:eb5a8c866ff7a8f93eea7640c7e73e077af56d35f3da4247334b898f1ef7615a",
               CC: clang,
               CXX: clang++,
               CFLAGS: "-fsanitize=address,undefined -fsanitize-address-use-after-scope -fno-sanitize-recover=address,undefined",
@@ -107,7 +107,7 @@ jobs:
           - {
               runs_on: ubuntu-latest,
               name: "Clang 17 glibc Release",
-              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:5ec3c16924ac51dab05dbd0c9ad8320ea8b83f4e161078d2b26a1723beb3507a",
+              container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:eb5a8c866ff7a8f93eea7640c7e73e077af56d35f3da4247334b898f1ef7615a",
               CC: clang,
               CXX: clang++,
               CFLAGS: "",
