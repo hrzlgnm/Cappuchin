@@ -195,7 +195,6 @@ auto parser::parse_statement() -> statement*
 auto parser::parse_let_statement() -> statement*
 {
     auto* stmt = allocate<let_statement>(m_current_token.loc);
-    stmt->l = m_current_token.loc;
     using enum token_type;
     if (!get(ident)) {
         return {};
