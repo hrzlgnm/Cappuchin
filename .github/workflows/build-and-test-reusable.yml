@@ -19,8 +19,8 @@ jobs:
       matrix:
         toolchain:
           - {
-              runs_on: macos-14,
-              name: "macOS Clang",
+              runs_on: macos-latest,
+              name: "macOS Clang Latest",
               CC: clang,
               CXX: clang++,
               CFLAGS: "",
@@ -81,7 +81,7 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "Clang 17 glibc",
+              name: "Clang 21 glibc",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:66dda14813894d254476c32c7cc469e9f0c50183fa843f09cac929c293a24c9a",
               CC: clang,
               CXX: clang++,
@@ -93,7 +93,7 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "Clang 17 glibc ASAN+UBSAN",
+              name: "Clang 21 glibc ASAN+UBSAN",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:66dda14813894d254476c32c7cc469e9f0c50183fa843f09cac929c293a24c9a",
               CC: clang,
               CXX: clang++,
@@ -106,7 +106,7 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "Clang 17 glibc Release",
+              name: "Clang 21 glibc Release",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:66dda14813894d254476c32c7cc469e9f0c50183fa843f09cac929c293a24c9a",
               CC: clang,
               CXX: clang++,
@@ -118,7 +118,7 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "GCC 13",
+              name: "GCC 14",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:cc715f5f54f47598f7e54bbddc2687cf99c677d7449e3a8b8a67ab2bef0fed57",
               CC: gcc,
               CXX: g++,
@@ -130,7 +130,7 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "GCC 13 ASAN+UBSAN",
+              name: "GCC 14 ASAN+UBSAN",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:cc715f5f54f47598f7e54bbddc2687cf99c677d7449e3a8b8a67ab2bef0fed57",
               CC: gcc,
               CXX: g++,
@@ -143,7 +143,7 @@ jobs:
             }
           - {
               runs_on: ubuntu-latest,
-              name: "GCC 13 Release",
+              name: "GCC 14 Release",
               container_image: "ghcr.io/hrzlgnm/cappuchin-github-gcc:v1@sha256:cc715f5f54f47598f7e54bbddc2687cf99c677d7449e3a8b8a67ab2bef0fed57",
               CC: gcc,
               CXX: g++,
@@ -193,6 +193,11 @@ jobs:
         ) }}
 
     steps:
+      - name: Print compiler version
+        if: ${{ !contains(matrix.toolchain.runs_on, 'windows') }}
+        shell: bash
+        run: ${{ matrix.toolchain.CC }} --version
+
       - name: Run sccache-action
         if: ${{ matrix.toolchain.sccache }}
         uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
