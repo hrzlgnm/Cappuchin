@@ -14,7 +14,7 @@ project(
         CXX
 )
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -89,7 +89,7 @@ target_compile_definitions(cappuchin_lib PUBLIC DOCTEST_CONFIG_SUPER_FAST_ASSERT
 if(MSVC)
     target_compile_definitions(cappuchin_lib PUBLIC DOCTEST_CONFIG_NO_EXCEPTIONS_BUT_WITH_ALL_ASSERTS)
 endif()
-target_compile_features(cappuchin_lib PUBLIC cxx_std_20)
+target_compile_features(cappuchin_lib PUBLIC cxx_std_23)
 target_link_libraries(
     cappuchin_lib
     PRIVATE
@@ -112,7 +112,7 @@ set_property(
         OUTPUT_NAME
             cappuchin
 )
-target_compile_features(cappuchin_exe PRIVATE cxx_std_20)
+target_compile_features(cappuchin_exe PRIVATE cxx_std_23)
 target_link_libraries(
     cappuchin_exe
     PRIVATE
