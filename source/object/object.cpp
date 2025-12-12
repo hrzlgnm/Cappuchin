@@ -7,6 +7,7 @@
 #include <ios>
 #include <iterator>
 #include <ostream>
+#include <ranges>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -106,7 +107,7 @@ auto multiply_sequence_helper(const T* source, const integer_object::value_type 
 {
     typename T::value_type target;
     for (integer_object::value_type i = 0; i < count; i++) {
-        std::copy(source->value.cbegin(), source->value.cend(), std::back_inserter(target));
+        std::ranges::copy(source->value, std::back_inserter(target));
     }
     return allocate<T>(std::move(target));
 }
@@ -779,11 +780,8 @@ auto array_object::operator==(const object& other) const -> const object*
         if (other_value.size() != value.size()) {
             return fals();
         }
-        const auto eq = std::equal(value.cbegin(),
-                                   value.cend(),
-                                   other_value.cbegin(),
-                                   other_value.cend(),
-                                   [](const object* a, const object* b) { return object_eq(*a, *b); });
+        const auto eq = std::ranges::equal(
+            value, other_value, [](const object* a, const object* b) -> bool { return object_eq(*a, *b); });
         return native_bool_to_object(eq);
     }
     return fals();
@@ -802,7 +800,7 @@ auto array_object::operator+(const object& other) const -> const object*
     if (other.is(array)) {
         value_type concat = value;
         const auto& other_value = other.as<array_object>()->value;
-        std::copy(other_value.cbegin(), other_value.cend(), std::back_inserter(concat));
+        std::ranges::copy(other_value, std::back_inserter(concat));
         return allocate<array_object>(std::move(concat));
     }
     return nullptr;
@@ -812,9 +810,9 @@ auto operator<<(std::ostream& strm, const hashable::key_type& t) -> std::ostream
 {
     std::visit(
         overloaded {
-            [&](const int64_t val) { strm << val; },
-            [&](const std::string& val) { strm << '"' << val << '"'; },
-            [&](const bool val) { strm << std::boolalpha << val; },
+            [&](const int64_t val) -> void { strm << val; },
+            [&](const std::string& val) -> void { strm << '"' << val << '"'; },
+            [&](const bool val) -> void { strm << std::boolalpha << val; },
         },
         t);
     return strm;
@@ -843,14 +841,13 @@ auto hash_object::operator==(const object& other) const -> const object*
         if (other_value.size() != value.size()) {
             return fals();
         }
-        const auto eq = std::all_of(value.cbegin(),
-                                    value.cend(),
-                                    [&other_value](const auto& pair)
-                                    {
-                                        const auto& [key, value] = pair;
-                                        auto it = other_value.find(key);
-                                        return it != other_value.cend() && object_eq(*(it->second), *value);
-                                    });
+        const auto eq = std::ranges::all_of(value,
+                                            [&other_value](const auto& pair) -> auto
+                                            {
+                                                const auto& [key, value] = pair;
+                                                auto it = other_value.find(key);
+                                                return it != other_value.cend() && object_eq(*(it->second), *value);
+                                            });
         return native_bool_to_object(eq);
     }
     return object::operator==(other);

@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: MIT-0
 
 #include <algorithm>
-#include <cctype>
 #include <functional>
 #include <iterator>
+#include <ranges>
 #include <string>
 #include <utility>
 #include <vector>
@@ -144,7 +144,7 @@ const builtin rest {
         if (maybe_string_or_array->is(array)) {
             if (const auto& arr = maybe_string_or_array->as<array_object>()->value; arr.size() > 1) {
                 array_object::value_type rest;
-                std::copy(arr.cbegin() + 1, arr.cend(), std::back_inserter(rest));
+                std::ranges::copy(arr | std::ranges::views::drop(1), std::back_inserter(rest));
                 return allocate<array_object>(std::move(rest));
             }
             return null();

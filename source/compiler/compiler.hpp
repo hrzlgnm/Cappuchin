@@ -45,6 +45,7 @@ struct compiler final : visitor
 
     [[nodiscard]] auto add_constant(const object* obj) -> std::size_t;
     [[nodiscard]] auto add_instructions(const instructions& ins) -> std::size_t;
+
     auto emit(opcodes opcode, const operands& operands = {}) -> std::size_t;
 
     auto emit(const opcodes opcode, const std::size_t operand) -> std::size_t

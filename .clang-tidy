@@ -2,7 +2,7 @@
 # Enable ALL the things! Except not really useful ones, needs to be a string
 Checks: >
   *,
-  -*-use-ranges,
+  -misc-no-recursion,
   -*c++98-compat-*,
   -altera-*,
   -bugprone-easily-swappable-parameters,
