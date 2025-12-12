@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <iterator>
 #include <optional>
+#include <ranges>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -76,7 +77,7 @@ auto compiler::add_instructions(const instructions& ins) -> std::size_t
 {
     auto& scope = m_scopes[m_scope_index];
     const auto pos = scope.instrs.size();
-    std::copy(ins.cbegin(), ins.cend(), std::back_inserter(scope.instrs));
+    std::ranges::copy(ins, std::back_inserter(scope.instrs));
     return pos;
 }
 
@@ -117,10 +118,9 @@ auto compiler::replace_last_pop_with_return() -> void
 
 auto compiler::replace_instruction(const std::size_t pos, const instructions& instr) -> void
 {
-    // cppcheck-suppress variableScope
-    auto& scope = m_scopes[m_scope_index];
+    auto& target_instrs = m_scopes[m_scope_index].instrs;
     for (auto idx = 0UL; const auto& inst : instr) {
-        scope.instrs[pos + idx] = inst;
+        target_instrs[pos + idx] = inst;
         idx++;
     }
 }
@@ -549,7 +549,7 @@ auto flatten(const std::vector<std::vector<T>>& arrs) -> std::vector<T>
 {
     std::vector<T> result;
     for (const auto& arr : arrs) {
-        std::copy(arr.cbegin(), arr.cend(), std::back_inserter(result));
+        std::ranges::copy(arr, std::back_inserter(result));
     }
     return result;
 }

@@ -648,14 +648,14 @@ auto require_eq(const std::variant<T...>& expected, const object*& actual, const
     using enum object::object_type;
     std::visit(
         overloaded {
-            [&](const int64_t exp) { require_is(exp, actual, input); },
-            [&](const double exp) { require_is(exp, actual, input); },
-            [&](const bool exp) { require_is(exp, actual, input); },
-            [&](const null_type& /*null*/) { REQUIRE(actual->is_null()); },
-            [&](const std::string& exp) { require_is(exp, actual, input); },
-            [&](const ::error& exp) { require_is(exp, actual, input); },
-            [&](const std::vector<int>& exp) { require_array_object(exp, actual, input); },
-            [&](const ::hash& exp) { require_hash_object(exp, actual, input); },
+            [&](const int64_t exp) -> auto { require_is(exp, actual, input); },
+            [&](const double exp) -> auto { require_is(exp, actual, input); },
+            [&](const bool exp) -> auto { require_is(exp, actual, input); },
+            [&](const null_type& /*null*/) -> auto { REQUIRE(actual->is_null()); },
+            [&](const std::string& exp) -> auto { require_is(exp, actual, input); },
+            [&](const ::error& exp) -> auto { require_is(exp, actual, input); },
+            [&](const std::vector<int>& exp) -> auto { require_array_object(exp, actual, input); },
+            [&](const ::hash& exp) -> auto { require_hash_object(exp, actual, input); },
         },
         expected);
 }

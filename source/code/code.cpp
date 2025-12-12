@@ -3,8 +3,10 @@
 
 #include <array>
 #include <cstdint>
+#include <iterator>
 #include <optional>
 #include <ostream>
+#include <ranges>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -251,7 +253,7 @@ auto flatten(const std::vector<std::vector<T>>& arrs) -> std::vector<T>
 {
     std::vector<T> result;
     for (const auto& arr : arrs) {
-        std::copy(arr.cbegin(), arr.cend(), std::back_inserter(result));
+        std::ranges::copy(arr, std::back_inserter(result));
     }
     return result;
 }
