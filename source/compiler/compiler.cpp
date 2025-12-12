@@ -119,8 +119,8 @@ auto compiler::replace_last_pop_with_return() -> void
 auto compiler::replace_instruction(const std::size_t pos, const instructions& instr) -> void
 {
     auto& target_instrs = m_scopes[m_scope_index].instrs;
-    for (auto [idx, inst] : std::ranges::views::enumerate(instr)) {
-        target_instrs[pos + idx] = inst;
+    for (std::size_t idx = 0; idx < instr.size(); ++idx) {
+        target_instrs[pos + idx] = instr[idx];
     }
 }
 
