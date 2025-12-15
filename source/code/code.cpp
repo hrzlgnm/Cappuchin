@@ -1,12 +1,12 @@
 // Copyright 2023-2025 hrzlgnm
 // SPDX-License-Identifier: MIT-0
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <iterator>
 #include <optional>
 #include <ostream>
-#include <ranges>
 #include <stdexcept>
 #include <string>
 #include <utility>
