@@ -72,25 +72,25 @@ jobs:
   typos:
     name: 📝 Check typos
     if: always()
-    uses: hrzlgnm/actions/.github/workflows/typos-reusable.yml@815317ed5e6366a56c5a8abeb20493f92ae0084d # v1.5.6
+    uses: hrzlgnm/actions/.github/workflows/typos-reusable.yml@bcd08c5dd39fd9c834b814e87b7bbe46a4e94a8b # v1.5.7
 
   clang-format:
     name: 📐 Check code format
     needs: changes
     if: needs.changes.outputs.code == 'true' || needs.changes.outputs.clang-format == 'true'
-    uses: hrzlgnm/actions/.github/workflows/clang-format-reusable.yml@815317ed5e6366a56c5a8abeb20493f92ae0084d # v1.5.6
+    uses: hrzlgnm/actions/.github/workflows/clang-format-reusable.yml@bcd08c5dd39fd9c834b814e87b7bbe46a4e94a8b # v1.5.7
 
   gersemi:
     name: 📐 Check CMake format
     needs: changes
     if: needs.changes.outputs.cmake == 'true'
-    uses: hrzlgnm/actions/.github/workflows/gersemi-reusable.yml@815317ed5e6366a56c5a8abeb20493f92ae0084d # v1.5.6
+    uses: hrzlgnm/actions/.github/workflows/gersemi-reusable.yml@bcd08c5dd39fd9c834b814e87b7bbe46a4e94a8b # v1.5.7
 
   cppcheck:
     name: 📘🔍Cppcheck
     needs: changes
     if: needs.changes.outputs.code == 'true' || needs.changes.outputs.cppcheck == 'true'
-    uses: hrzlgnm/actions/.github/workflows/cppcheck-reusable.yml@815317ed5e6366a56c5a8abeb20493f92ae0084d # v1.5.6
+    uses: hrzlgnm/actions/.github/workflows/cppcheck-reusable.yml@bcd08c5dd39fd9c834b814e87b7bbe46a4e94a8b # v1.5.7
 
   build-and-test:
     name: Build and Test
@@ -108,7 +108,7 @@ jobs:
       contents: read
       packages: write # Needed to push to GHCR
 
-    uses: hrzlgnm/actions/.github/workflows/docker-reusable.yml@815317ed5e6366a56c5a8abeb20493f92ae0084d # v1.5.6
+    uses: hrzlgnm/actions/.github/workflows/docker-reusable.yml@bcd08c5dd39fd9c834b814e87b7bbe46a4e94a8b # v1.5.7
     with:
       branch: ${{ needs.changes.outputs.branch }}
 
