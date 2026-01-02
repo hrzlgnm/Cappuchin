@@ -61,6 +61,7 @@ jobs:
               - '.clang-format'
             cppcheck:
               - 'cppcheck/**'
+              - '.github/workflows/ci.yml
             tests:
               - 'test/**'
 
