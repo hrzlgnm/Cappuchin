@@ -9,8 +9,8 @@ on:
   # measure against bitrot
   # also rotates docker images monthly, by pushing new docker images
   # the rotation will happen by renovate
-  # rotate the images in the middle of the month, 
-  # to avoid duplicate rotations at the beginning of the month, 
+  # rotate the images in the middle of the month,
+  # to avoid duplicate rotations at the beginning of the month,
   # as the source docker images are also mostly rotated once a month
   schedule:
     - cron: "0 0 15 * *"
@@ -90,7 +90,7 @@ jobs:
     name: 📘🔍Cppcheck
     needs: changes
     if: needs.changes.outputs.code == 'true' || needs.changes.outputs.cppcheck == 'true'
-    uses: hrzlgnm/actions/.github/workflows/cppcheck-reusable.yml@c6837576f65628a8e7ffb69d0f4aadd2c42338f9 # v1.5.8
+    uses: hrzlgnm/actions/.github/workflows/cppcheck-reusable.yml@ec4527cb6c6e6e2df1c13f639f33df62fd268d7b # v1.5.8
 
   build-and-test:
     name: Build and Test
