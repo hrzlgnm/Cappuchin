@@ -9,8 +9,8 @@ on:
   # measure against bitrot
   # also rotates docker images monthly, by pushing new docker images
   # the rotation will happen by renovate
-  # rotate the images in the middle of the month, 
-  # to avoid duplicate rotations at the beginning of the month, 
+  # rotate the images in the middle of the month,
+  # to avoid duplicate rotations at the beginning of the month,
   # as the source docker images are also mostly rotated once a month
   schedule:
     - cron: "0 0 15 * *"
@@ -46,6 +46,7 @@ jobs:
           filters: |
             docker:
               - '.github/docker/**'
+              - '.github/workflows/ci.yml'
             code:
               - '.clang-tidy'
               - '.github/workflows/build-and-test-reusable.yml'
@@ -53,16 +54,21 @@ jobs:
               - 'cmake/**'
               - 'source/**/*.hpp'
               - 'source/**/*.cpp'
+              - '.github/workflows/ci.yml'
             cmake:
               - '**/CMakeLists.txt'
               - '**/*.cmake'
               - '.gersemirc'
+              - '.github/workflows/ci.yml'
             clang-format:
               - '.clang-format'
+              - '.github/workflows/ci.yml'
             cppcheck:
               - 'cppcheck/**'
+              - '.github/workflows/ci.yml'
             tests:
               - 'test/**'
+              - '.github/workflows/ci.yml'
 
       - name: Output branch name
         id: branch
