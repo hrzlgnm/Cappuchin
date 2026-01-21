@@ -12,7 +12,7 @@ jobs:
   Static-Analysis:
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:b13501320ddbade0daca2188874b6690ab6f73afcfc0084182ed9f8d2508f93e"
+      image: "ghcr.io/hrzlgnm/cappuchin-github-void-linux-glibc-clang:v1@sha256:ac269cbe941bbef6431c9ac66b5244f65b7bf0790d56dbb8d7042eca92b845b7"
 
     steps:
       - name: 🔄 Checkout
